@@ -1,0 +1,12 @@
+// how to access PID elems for each event.
+
+
+// why would it use ntracks to fill? This would be a problem for the wire chamber stuff.
+
+
+What is it doing?
+
+flags for reconstruct all cb photons, and all taps photons.
+Loops round getNtracks for this! then fills. See the prefilling allocation in processeventwithoutfilling and notice that the cluster energy is filled from tracks.
+
+

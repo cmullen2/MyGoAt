@@ -1,0 +1,21 @@
+src/goat_main.cc:    if(!analysis->BaseConfig(argc, argv, "Acqu", "GoAT"))
+src/goat_main.cc:    if(!analysis->Init())
+src/goat_main.cc:    analysis->TraverseFiles();
+src/pi0_example_main.cc:    if(!analysis->BaseConfig(argc, argv, "GoAT", "Physics"))
+src/pi0_example_main.cc:    if(!analysis->Init())
+src/pi0_example_main.cc:    analysis->TraverseFiles();
+src/my-pi0_example.cc~:    if(!analysis->BaseConfig(argc, argv, "GoAT", "Physics"))
+src/my-pi0_example.cc~:    if(!analysis->Init())
+src/my-pi0_example.cc~:    analysis->TraverseFiles();
+src/chrispi0_example_main.cc~:    if(!analysis->BaseConfig(argc, argv, "GoAT", "Physics"))
+src/chrispi0_example_main.cc~:    if(!analysis->Init())
+src/chrispi0_example_main.cc~:    analysis->TraverseFiles();
+src/chrispi0_example_main.cc:    if(!analysis->BaseConfig(argc, argv, "GoAT", "Physics"))
+src/chrispi0_example_main.cc:    if(!analysis->Init())
+src/chrispi0_example_main.cc:    analysis->TraverseFiles();
+src/my-pi0_example.cc:    if(!analysis->BaseConfig(argc, argv, "GoAT", "Physics"))
+src/my-pi0_example.cc:    if(!analysis->Init())
+src/my-pi0_example.cc:    analysis->TraverseFiles();
+src/pi0_example_main.cc.bk:    if(!analysis->BaseConfig(argc, argv, "GoAT", "Physics"))
+src/pi0_example_main.cc.bk:    if(!analysis->Init())
+src/pi0_example_main.cc.bk:    analysis->TraverseFiles();

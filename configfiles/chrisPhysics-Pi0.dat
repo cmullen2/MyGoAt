@@ -1,0 +1,54 @@
+#=======================================================================
+# Config file for a Pi0 Analysis of GoAT-Trees
+#=======================================================================
+#
+
+#Set directories
+#Input-Directory: /home/chris/Documents/PhD/GoatOut/DeuteriumTarget/NeutronMain/NeutronGood
+#Input-Directory: /home/chris/Documents/PhD/GoatOut/DeuteriumTarget/ProtonMain/ProtonGood
+#Input-Directory: /home/chris/Documents/PhD/GoatOut/DeuteriumTarget/NeutronMain/NeutronBad
+Input-Directory: /home/chris/Documents/PhD/GoatOut/DeuteriumTarget/ProtonMain/ProtonBad
+
+
+
+
+
+#Output-Directory: /home/chris/Documents/PhD/GoatOut/DeuteriumTarget/NeutronMain/NeutronGood/chrisPhysicsRun
+#Output-Directory: /home/chris/Documents/PhD/GoatOut/DeuteriumTarget/ProtonMain/ProtonGood/chrisPhysicsRun
+#Output-Directory: /home/chris/Documents/PhD/GoatOut/DeuteriumTarget/NeutronMain/NeutronBad/chrisPhysicsRun
+Output-Directory: /home/chris/Documents/PhD/GoatOut/DeuteriumTarget/ProtonMain/ProtonBad/chrisPhysicsRun
+
+
+
+
+
+
+#Input-Directory: /home/chris/Documents/PhD/GoatOut/DeuteriumTarget/NeutronMain/
+#Output-Directory: /home/chris/Documents/PhD/GoatOut/DeuteriumTarget/NeutronMain/chrisPhysicsRun
+
+
+
+#Input-Directory: /scratch/chris/AcquMC/GP_PPi0/SecondaryTest/BIC/ARGoatOut/
+#Output-Directory: /scratch/chris/AcquMC/GP_PPi0/SecondaryTest/BIC/ARGoatOut/PhysicsRun
+#Input-Directory: /scratch/chris/AcquMC/GP_PPi0/InitialTest/POL/ARGoatOut/
+#Output-Directory: /scratch/chris/AcquMC/GP_PPi0/InitialTest/POL/ARGoatOut/PhysicsRun
+
+
+
+# Set prompt and random windows (standard library and GH1 library)
+Set-Prompt-Cut: -6 6
+Add-Random-Cut: -500 -10
+Add-Random-Cut: 10 500
+
+
+
+
+# Set target mass (for standard physics library)
+Target-Mass:1875.612
+#Target-Mass: 938.272
+
+# cut on the tagger channel (for standard physics library)
+Tagger-Channel-Cut: 200 300
+
+# where are the tagger scalers?
+Tagger-Scalers: 268 619

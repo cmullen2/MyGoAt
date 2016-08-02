@@ -1,0 +1,23 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Ignore build directory
+build
+
+# some files usually ignored
+/CMakeLists.txt.user
+*.root
+
+# Ignore jobs directory for farming
+jobs

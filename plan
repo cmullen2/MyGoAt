@@ -1,0 +1,7 @@
+// Wire Chamber positions and vectors, check back through to see what inters are etc?
+// Pid including passing through the counter. 
+//
+
+/*
+Wire Chamber note... as I am looking further back and propagating things through, remember that in the chrisPPi0 file that the wire chamber counts are currently restricted by the if statements since thiss is where the filling takes place so would require their own tree to correct this and the filling point to change.
+*/
