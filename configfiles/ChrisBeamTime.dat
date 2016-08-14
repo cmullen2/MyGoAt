@@ -1,23 +1,20 @@
-#=======================================================================
-# Config file for a Pi0 Analysis of GoAT-Trees
-#=======================================================================
 #
 
 #Set directories
 
 
-Input-Directory: /home/chrism/TestFiles/GoatOut
+Input-Directory: /scratch/chrism/RealData/GoatOut/Run14922
 #Input-Directory: /home/chrism/TestFiles/GoatOut/RealData
 
 
-Output-Directory: /home/chrism/TestFiles/GoatOut/chrisPhysicsRun
+Output-Directory: /scratch/chrism/RealData/ChrisGoatOut/Run14922
 #Output-Directory: /home/chrism/TestFiles/GoatOut/RealData/chrisPhysicsRun
 
 
 # Set prompt and random windows (standard library and GH1 library)
-Set-Prompt-Cut: -6 6
-Add-Random-Cut: -500 -10
-Add-Random-Cut: 10 500
+Set-Prompt-Cut: -25 25
+Add-Random-Cut: -90 -40
+Add-Random-Cut: 40 90
 
 
 
@@ -27,7 +24,9 @@ Target-Mass:1875.612
 #Target-Mass: 938.272
 
 # cut on the tagger channel (for standard physics library)
-Tagger-Channel-Cut: 200 300
+Tagger-Channel-Cut:  0 352
+
 
 # where are the tagger scalers?
 Tagger-Scalers: 268 619
+

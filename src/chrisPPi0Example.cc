@@ -82,7 +82,10 @@ chrisPPi0Example::chrisPPi0Example()
   treeselected->Branch("ProtonCandidate.",&ProtonCan);
   treeselected->Branch("MissingMass.",&MissingM);
   treeselected->Branch("BeamHelicity.",&BeamHelicity);
+  treeselected->Branch("TaggedTime.",&time_beam);
 
+//  treeselected->Branch("PromptRegion.",&PromptRegion);
+//  treeselected->Branch("RandomRegion.",&RandomRegion);
 
 //tree pidhits
   treepid->Branch("PidHits",&PidHitIndex);
@@ -99,7 +102,7 @@ Bool_t	chrisPPi0Example::Init()
 	cout << "Initialising physics analysis..." << endl;
 	cout << "--------------------------------------------------" << endl << endl;
 
-	target.SetXYZM(0.0,0.0,-6.5,1875.613);	//NEEDS CHANGING currently deuteron
+	target.SetXYZM(0.0,0.0,0,1875.613);	//NEEDS CHANGING currently deuteron
 	if(!InitBackgroundCuts()) return kFALSE;
 	if(!InitTargetMass()) return kFALSE;
 	if(!InitTaggerChannelCuts()) return kFALSE;
@@ -136,7 +139,7 @@ void	chrisPPi0Example::ProcessEvent()
 //	For FillChamber the extra parameter is an integer for the axis of the wc 1=x 2=y 3=z. The first param is the chamber number.
 //      For FillnChamber the extra parameter is an integer for the Chamber number 
 
-    
+   
 
     FillnChamber(*GetMWPCHitsChris(),nChamberHitsin1,1);
     FillnChamber(*GetMWPCHitsChris(),nChamberHitsin2,2);
@@ -175,7 +178,7 @@ else
 }
 
 
-    targetPosition.SetXYZ(0.,0.,-6.5);   //NEEDS CHANGING and the one at the top
+    targetPosition.SetXYZ(0.,0.,0);   //NEEDS CHANGING and the one at the top
 
 if  (Chamber1_Vec.X()==-1000){ //Can I get rid of all events if theres no hit in wc1 cos I wont be able to form the vectors properly.
 
@@ -208,7 +211,9 @@ if (NPidhits>0){
 
 //PID plan create an array of length 24 to store the elements of the PID phi.  Put this in the header later andd tidy header.
 
-        Double_t PIDElemPhi[24] = {172.5,157.5,142.5,127.5,112.5,97.5,82.5,67.5,52.5,37.5,22.5,7.5,-7.5,-22.5,-37.5,-52.5, -67.5, -82.5,-97.5, -112.5,-127.5,-142.5, -157.5,-172.5}; 
+
+        Double_t PIDElemPhi[24] = {8.574,22.974,37.379,51.784,66.188,80.593,94.997,109.402,123.806,138.211,152.615,167.02,-178.93,-163.16,-147.39,-131.62,-115.85,-100.08,-84.31,-68.54,-52.77,-37.01,-21.24,-5.47}; 
+
 
         PIDPhi = PIDElemPhi[PidHitIndex]; //here
 
@@ -295,7 +300,7 @@ else{
 	energy_beam = GetTagger()->GetTaggedEnergy(i);
 	beam.SetXYZM(0.,0.,energy_beam,0.);
 		    
-
+	time_beam = GetTagger()->GetTaggedTime(i);
 
      // Loop over the different combination of photons and set the different vectors for each
             for(Int_t l=0;l<3;l++){
@@ -365,7 +370,7 @@ else{
      	
 	    
 	//Invariant mass cut here! that can be commented out to get both plots.
-	if (inv_M_value > 120.0 && inv_M_value <150.0){    
+	if (inv_M_value > 100.0 && inv_M_value <170.0){    
 
 
 //	energy_beam = GetTagger()->GetTaggedEnergy(i);
@@ -376,7 +381,7 @@ else{
 	
 	ReconProton = missingp4;
 
-	if (MissingM > 1880.0 && MissingM <1980.0){    
+	if (MissingM > 1700.0 && MissingM <2100.0){    
 
 
 	//Angular Distribution of particles		    

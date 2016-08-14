@@ -63,15 +63,16 @@ private:
 
   TLorentzVector NewEnergy;
   Int_t detectornum;
-
+  Int_t PromptRegion;
+  Int_t RandomRegion;
 
  Int_t test;
  
   Double_t Chamber1_VecPhi;
   Double_t Phidiff;
   Double_t BeamHelicity;
-
-
+  Double_t time_beam;
+ 
   TLorentzVector Mp41;
   TLorentzVector Mp42;
   TLorentzVector Mp43;

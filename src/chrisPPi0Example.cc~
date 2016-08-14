@@ -82,7 +82,10 @@ chrisPPi0Example::chrisPPi0Example()
   treeselected->Branch("ProtonCandidate.",&ProtonCan);
   treeselected->Branch("MissingMass.",&MissingM);
   treeselected->Branch("BeamHelicity.",&BeamHelicity);
+  treeselected->Branch("TaggedTime.",&time_beam);
 
+//  treeselected->Branch("PromptRegion.",&PromptRegion);
+//  treeselected->Branch("RandomRegion.",&RandomRegion);
 
 //tree pidhits
   treepid->Branch("PidHits",&PidHitIndex);
@@ -99,7 +102,7 @@ Bool_t	chrisPPi0Example::Init()
 	cout << "Initialising physics analysis..." << endl;
 	cout << "--------------------------------------------------" << endl << endl;
 
-	target.SetXYZM(0.0,0.0,-6.5,1875.613);	//NEEDS CHANGING currently deuteron
+	target.SetXYZM(0.0,0.0,0,1875.613);	//NEEDS CHANGING currently deuteron
 	if(!InitBackgroundCuts()) return kFALSE;
 	if(!InitTargetMass()) return kFALSE;
 	if(!InitTaggerChannelCuts()) return kFALSE;
@@ -136,7 +139,7 @@ void	chrisPPi0Example::ProcessEvent()
 //	For FillChamber the extra parameter is an integer for the axis of the wc 1=x 2=y 3=z. The first param is the chamber number.
 //      For FillnChamber the extra parameter is an integer for the Chamber number 
 
-    
+   
 
     FillnChamber(*GetMWPCHitsChris(),nChamberHitsin1,1);
     FillnChamber(*GetMWPCHitsChris(),nChamberHitsin2,2);
@@ -175,7 +178,7 @@ else
 }
 
 
-    targetPosition.SetXYZ(0.,0.,0.);   //NEEDS CHANGING and the one at the top
+    targetPosition.SetXYZ(0.,0.,0);   //NEEDS CHANGING and the one at the top
 
 if  (Chamber1_Vec.X()==-1000){ //Can I get rid of all events if theres no hit in wc1 cos I wont be able to form the vectors properly.
 
@@ -295,7 +298,7 @@ else{
 	energy_beam = GetTagger()->GetTaggedEnergy(i);
 	beam.SetXYZM(0.,0.,energy_beam,0.);
 		    
-
+	time_beam = GetTagger()->GetTaggedTime(i);
 
      // Loop over the different combination of photons and set the different vectors for each
             for(Int_t l=0;l<3;l++){

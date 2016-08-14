@@ -6,24 +6,16 @@
 # General Setup
 #-----------------------------------------------------------------------
 
-
-#Input-Directory: /home/chris/Documents/PhD/AcquIn/AcquOut/ProtonMain
-#Output-Directory:/home/chris/Documents/PhD/GoatOut/DeuteriumTarget/ProtonMain
-
-
-#Input-Directory: /home/chris/Documents/PhD/AcquIn/AcquOut/NeutronMain/NeutronGood
-#Input-Directory: /home/chris/Documents/PhD/AcquIn/AcquOut/NeutronMain/NeutronBad
-#Input-Directory: /home/chris/Documents/PhD/AcquIn/AcquOut/ProtonMain/ProtonBad
-Input-Directory: /home/chris/Documents/PhD/AcquIn/AcquOut/ProtonMain/ProtonGood
-
-#Output-Directory:/home/chris/Documents/PhD/GoatOut/DeuteriumTarget/NeutronMain/NeutronGood
-#Output-Directory:/home/chris/Documents/PhD/GoatOut/DeuteriumTarget/NeutronMain/NeutronBad
-#Output-Directory:/home/chris/Documents/PhD/GoatOut/DeuteriumTarget/ProtonMain/ProtonBad
-Output-Directory:/home/chris/Documents/PhD/GoatOut/DeuteriumTarget/ProtonMain/ProtonGood
+#GOAT REQUIRES FULL PATH DON'T USE $HOME (either that or I messed with $HOME)
+#Input-Directory: $HOME/TestFiles/AcquOut/ProtonBad
+Input-Directory: /home/chrism/TestFiles/AcquOut/ProtonBad
+#Input-Directory: /home/chrism/TestFiles/AcquOut/RealData
 
 
-#Input-Directory: /home/chris/Documents/PhD/
-#Output-Directory:/home/chris/Documents/PhD/GoatOut
+#Output-Directory: $HOME/TestFiles/GoatOut/ProtonBad
+Output-Directory: /home/chrism/TestFiles/GoatOut
+#Output-Directory: /home/chrism/TestFiles/GoatOut/RealData
+
 
 
 
