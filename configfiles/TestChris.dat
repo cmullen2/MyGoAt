@@ -1,0 +1,39 @@
+#
+
+#Set directories
+
+
+Input-Directory: /w/work14/chris/scratchBackup/GoatOut/Para/Testing/
+#Input-Directory: /scratch/chris/RealData/GoatOut/Para/Run14919/
+#Input-Directory: /home/chrism/TestFiles/GoatOut/RealData
+
+#Output-Directory: /home/chris/GoAT/
+Output-Directory: /scratch/chris/RealData/Testing
+#Output-Directory: /home/chrism/TestFiles/GoatOut/RealData/chrisPhysicsRun
+
+
+#Period-Macro:   1000
+
+Period-Macro:   100000
+
+
+# Set prompt and random windows (standard library and GH1 library)
+Set-Prompt-Cut: -25 25
+Add-Random-Cut: -90 -40
+Add-Random-Cut: 40 90
+
+#Set Period Macro
+#Period-Macro:1000
+
+
+# Set target mass (for standard physics library)
+Target-Mass:1875.612
+#Target-Mass: 938.272
+
+# cut on the tagger channel (for standard physics library)
+Tagger-Channel-Cut:  0 352
+
+
+# where are the tagger scalers?
+Tagger-Scalers: 268 619
+

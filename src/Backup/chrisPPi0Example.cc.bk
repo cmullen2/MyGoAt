@@ -1,0 +1,567 @@
+#include "chrisPPi0Example.h"
+
+chrisPPi0Example::chrisPPi0Example()
+{ 
+ 
+//CAM 17/5/16 Adding wire chamber hits
+    nChamberHitsin1 = new GH1("nChamberHitsin1", 	"nChamberHitsin1",	10,	0, 9);
+    //Chamber1X = new GH1("Chamber1X", 	"Chamber1X",	180,	-90, 90);
+    //Chamber1Y = new GH1("Chamber1Y", 	"Chamber1Y",	180,	-90, 90);
+    //Chamber1Z = new GH1("Chamber1Z", 	"Chamber1Z",	1400,	-700, 700);
+    nChamberHitsin2 = new GH1("nChamberHitsin2", 	"Chamber2",	18,	0, 17);
+    //Chamber2X = new GH1("Chamber2X", 	"Chamber2X",	220,	-110, 110);
+    //Chamber2Y = new GH1("Chamber2Y", 	"Chamber2Y",	220,	-110, 110);
+    //Chamber2Z = new GH1("Chamber2Z", 	"Chamber2Z",	680,	-340, 340);
+
+   // Create Tree(Different method than the function based one for filling above)
+  tree1r = new TTree("Tree1rootino","Event selection tree"); //2gamma and 1 rootino tree
+  
+  // Define branches of TTree
+
+  tree1r->Branch("Beam_Energy",&energy_beam);	   // beam energy
+  tree1r->Branch("inv_M",&inv_M_value);            //  invariant mass
+  tree1r->Branch("MissingM",&MissingM);            // Missing mass from pion recon(should be protons)
+  tree1r->Branch("MissingP4",&missingp4);                // Missing 4-mom (should be protons)
+  tree1r->Branch("Pion_phi",&phiPi);		   // phi for two photons (the pion)
+  tree1r->Branch("Proton_phi",&phiProton);	   // phi for rootino (the proton)
+  tree1r->Branch("Coplanarity",&coplanarity);	   // Difference in the phi angles of the proton and pion candidates
+  tree1r->Branch("Pion_Theta",&thetaPi);	   // theta for two photons (the pion)
+  tree1r->Branch("Proton_Theta",&thetaProton);	   // theta for rootino (the proton)
+  tree1r->Branch("Theta_diff",&thetadiff);	   // difference in theta angles of the proton and pion candidates
+
+
+
+  tree1r->Branch("Cut_Proton_Phi",&cutphiProton);  
+  tree1r->Branch("Cut_Proton_Theta",&cutthetaProton);  
+  tree1r->Branch("Cut_Pion_Phi",&cutphiPion);  
+  tree1r->Branch("Cut_Pion_Theta",&cutthetaPion);  
+  tree1r->Branch("Cut_inv_M",&cutinv_M_value);  
+  tree1r->Branch("Cut_Coplanarity",&cutcoplanarity);  
+  tree1r->Branch("Cut_Beam_Energy",&cutenergy_beam);  
+  tree1r->Branch("Cut_MissingM",&cutMissingM);  
+  tree1r->Branch("Cut_MissingP4",&cutmissingp4);  
+  tree1r->Branch("Cut_Theta_diff",&cutthetadiff);  
+
+  tree1r->Branch("Recon_Proton",&ReconProton);  
+  tree1r->Branch("Recon_Proton_Phi",&ReconphiProton);  
+  tree1r->Branch("Recon_Coplanarity",&Reconcoplanarity);  
+  tree1r->Branch("Recon_Proton_Theta",&ReconthetaProton);  
+  tree1r->Branch("Recon_Theta_diff",&Reconthetadiff);  
+
+//  tree1r->Branch("MWPC_Cham1_X",&MWPC_Cham1_X);
+  tree1r->Branch("MWPC_Chamber1",&Chamber1_Vec);
+  tree1r->Branch("MWPC_Chamber2",&Chamber2_Vec);
+  tree1r->Branch("VectorOtoWC1_Position",&PVector1);
+  tree1r->Branch("VectorWC1toWC2_Position",&PVector2);
+  
+  tree1r-> Branch("Num_PID_Hits",&NPidhits);
+  tree1r->Branch("ChamberTestX",&ChamberTest);
+  tree1r->Branch("ChamberTestY",&ChamberTest2);
+  tree1r->Branch("ChamberTestZ",&ChamberTest3);
+
+
+//  tree1r->Branch("gamma_Theta",&theta1);	   // theta for two photons (the pion)
+//  tree1r->Branch("Rootino_Theta",&theta2);	   // theta for rootino (the proton)
+//  tree1r->Branch("gamma_phi",&phi1);               // phi for two photons (the pion)
+//  tree1r->Branch("Rootino_phi",&phi2);             // phi for rootino (the proton)
+//  tree1r->Branch("Phi_diff_method2",&coplanarity23); //Rubbish method for coplanarity and theta difference
+//  tree1r->Branch("Theta_diff_method2",&thetadiff2);  //Rubbish method for coplanarity and theta difference
+//  tree1r->Branch("Phi_From_Missingp4",&phiMissingp4);
+//  tree1r->Branch("Coplanarity_From_Missingp4",&CoplanMissingp4);
+//  tree1r->Branch("PionTLorentz",&PionTLorentz);
+//  tree1r->Branch("cosTheta",&cosine_CMS);
+//  tree1r->Branch("CMS_Energy",&Energy_CMS);
+//  tree->Branch("time",&timev);                   // creates time leaf under the tree directory
+//  tree->Branch("timeTagg",&timeT);                   // creates time leaf under the tree directory
+//  tree->Branch("timeP",&timep);                   // creates time leaf under the tree directory
+//  tree->Branch("Lin_pol_tagged",&pb);
+//  tree->Branch("Lin_pol",&pb2);
+//  tree->Branch("Target_pol",&pt);
+//  tree->Branch("Edge_plane",&edgeplane);
+//  tree->Branch("Edge_setting",&edge_setting); // General edge setting
+//  tree->Branch("Edge_position",&edge_position); // Precise edge position
+
+
+  tree3g =  new TTree("Tree3gamma","Event selection tree"); //3 gamma tree 
+
+  // Define branches of TTree
+
+  tree3g->Branch("Beam_Energy",&energy_beam);       // Beam Energy distribution
+  tree3g->Branch("inv_M",&inv_M_value);             // Invariant mass 
+  tree3g->Branch("MissingM",&MissingM);             // Missing mass distribution
+  tree3g->Branch("MissingP4",&missingp4);                  // Missing mass
+  tree3g->Branch("Pion_phi",&phiPi);                // Pi0 phi
+  tree3g->Branch("Proton_phi",&phiProton);             // Missing Mass phi
+  tree3g->Branch("Coplanarity",&coplanarity);       // Coplanarity between Pi0 and Missing Mass phi
+  tree3g->Branch("Pion_Theta",&thetaPi);            // Pi0 theta
+  tree3g->Branch("Proton_Theta",&thetaProton);         // Missing Mass theta
+  tree3g->Branch("Theta_Difference",&thetadiff);    // Difference between Pi0 and Missing Mass theta
+  
+//  tree3g->Branch("ZeroProton",&ZeroProton);
+//  tree3g->Branch("ZeroPion",&ZeroPion);
+//  tree3g->Branch("ZeroCoplan",&Zerocoplanarity);
+//  tree3g->Branch("Zeromissingp4",&Zeromissingp4);
+//  tree3g->Branch("MissingCoplan",&ZeromissingCoplan);
+
+
+//  tree3g->Branch("Theta_Diff_MMg3",&thetadiff2);    // Difference between Pi0 and Missing Mass theta
+//  tree3g->Branch("Lin_pol",&pb);                    // Linear polarisation distribution
+//  tree3g->Branch("Target_pol",&pt);                 // Target Polarisation
+//  tree3g->Branch("Edge_plane",&edgeplane);          // Edge plane: para or perp
+//  tree3g->Branch("Edge_setting",&edge_setting);     // General edge setting
+//  tree3g->Branch("Edge_position",&edge_position);   // Precise edge position
+//  tree3g->Branch("CMS_Energy",&Energy_CMS);         // Boosted Energy distribution
+//  tree3g->Branch("C1_M",&C1_M_value);               // Invariant mass for photon combination C1
+//  tree3g->Branch("C2_M",&C2_M_value);               // Invariant mass for photon combination C2
+//  tree3g->Branch("C3_M",&C3_M_value);               // Invariant mass for photon combination C3
+//  tree3g->Branch("MissingM_C1",&MissingM_C1);       // Missing mass distribution for photon combination C1
+//  tree3g->Branch("MissingM_C2",&MissingM_C2);       // Missing mass distribution for photon combination C2
+//  tree3g->Branch("MissingM_C3",&MissingM_C3);       // Missing mass distribution for photon combination C3
+//  tree3g->Branch("MM1",&C1missingp4);               // Missing mass for photon combination C1
+//  tree3g->Branch("MM2",&C2missingp4);               // Missing mass for photon combination C2
+//  tree3g->Branch("MM3",&C3missingp4);               // Missing mass for photon combination C3
+//  tree->Branch("time",&time);                     // Time distribution for Pi0
+//  tree3g->Branch("CoPl_MMg3",&coplanarity2);       // Coplanarity between Pi0 and Missing Mass phi
+//  tree3g->Branch("cosTheta",&cosine_CMS);           // Boosted CosTheta distribution
+
+//  tree->Print();
+  
+
+}
+
+chrisPPi0Example::~chrisPPi0Example()
+{
+}
+
+Bool_t	chrisPPi0Example::Init()
+{
+	cout << "Initialising physics analysis..." << endl;
+	cout << "--------------------------------------------------" << endl << endl;
+
+	target.SetXYZM(0.0,0.0,0.0,938.0);	
+	if(!InitBackgroundCuts()) return kFALSE;
+	if(!InitTargetMass()) return kFALSE;
+	if(!InitTaggerChannelCuts()) return kFALSE;
+	if(!InitTaggerScalers()) return kFALSE;
+	cout << "--------------------------------------------------" << endl;
+	return kTRUE;
+}
+
+Bool_t	chrisPPi0Example::Start()
+{
+    if(!IsGoATFile())
+    {
+        cout << "ERROR: Input File is not a GoAT file." << endl;
+        return kFALSE;
+    }
+    SetAsPhysicsFile();
+
+    TraverseValidEvents();
+
+    return kTRUE;
+}
+
+void	chrisPPi0Example::ProcessEvent()
+{
+
+  
+  if(usePeriodMacro == 1)
+    {
+      if(GetEventNumber() % period == 0)
+	cout << "Events: " << GetEventNumber() << "  Events Accepted: " << nEventsWritten << endl;
+    }
+	//CAM 17/5/16 Fill wire chamber info.
+
+//	For FillChamber the extra parameter is an integer for the axis of the wc 1=x 2=y 3=z. The first param is the chamber number.
+//      For FillnChamber the extra parameter is an integer for the Chamber number 
+  //Should have just used a for loop or 2 for this
+   // FillChamber(*GetNeutralPions(),*GetMWPCHitsChris(),Chamber1X,1,1);
+   // FillChamber(*GetNeutralPions(),*GetMWPCHitsChris(),Chamber1Y,1,2);
+   // FillChamber(*GetNeutralPions(),*GetMWPCHitsChris(),Chamber1Z,1,3);
+    FillnChamber(*GetMWPCHitsChris(),nChamberHitsin1,1);
+   // FillChamber(*GetNeutralPions(),*GetMWPCHitsChris(),Chamber2X,2,1);
+   // FillChamber(*GetNeutralPions(),*GetMWPCHitsChris(),Chamber2Y,2,2);
+   // FillChamber(*GetNeutralPions(),*GetMWPCHitsChris(),Chamber2Z,2,3);
+    FillnChamber(*GetMWPCHitsChris(),nChamberHitsin2,2);
+  
+	//This is not correct as doesn't take account of multiple hits in the wire chamber in the same event need to propagate through properly. 
+    Int_t iii = 0;
+//    MWPC_Cham1_X = GetMWPCHitsChris()->GetMWPCChamber1X(iii);
+//    if (MWPC_Cham1_X >0.05 || MWPC_Cham1_X <-0.05){
+
+//    std::cout << MWPC_Cham1_X << std::endl;
+//}
+
+	//Constructing a wire chamber vector for the hit position
+
+    Chamber1_Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber1X(iii),GetMWPCHitsChris()->GetMWPCChamber1Y(iii),GetMWPCHitsChris()->GetMWPCChamber1Z(iii));
+    Chamber2_Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber2X(iii),GetMWPCHitsChris()->GetMWPCChamber2Y(iii),GetMWPCHitsChris()->GetMWPCChamber2Z(iii));
+
+
+    targetPosition.SetXYZ(0.,0.,0.);
+    PVector1 = Chamber1_Vec - targetPosition;
+    PVector2 = Chamber2_Vec - PVector1;
+
+    if (GetMWPCHitsChris()->GetMWPCChamber1X(1) > 0.05){
+    ChamberTest =GetMWPCHitsChris()->GetMWPCChamber1X(1);
+    ChamberTest2 = GetMWPCHitsChris()->GetMWPCChamber1Y(1);
+    ChamberTest3 = GetMWPCHitsChris()->GetMWPCChamber1Z(1);
+
+}
+
+
+
+
+//  ************************************************************************************************************
+  // Loop over tagged events 
+  for(Int_t i=0; i<=GetTagger()->GetNTagged() ;i++)
+    {
+      
+//      cout << "File polarisation plane = " << GetLinpol()->GetPolarizationPlane() << endl;
+
+	
+	
+
+      // Select number and type of events. Event selection loop.
+
+      if((GetRootinos()->GetNParticles()==1 && GetPhotons()->GetNParticles()==2)  ) 
+      
+	{
+
+	  // Timing calculation
+//	  timev = GetTagger()->GetTaggedTime(i) - 0.5*(GetPhotons()->GetTime(0) + GetPhotons()->GetTime(1));
+//	  timeT = GetTagger()->GetTaggedTime(i);
+//	  timep = 0.5*(GetPhotons()->GetTime(0) + GetPhotons()->GetTime(1)); // Check on photon time distribution
+	  //	  if (i%10000==0) cout << timev << endl; // checks to see if timev is actually getting values.
+	  
+	  
+//Own Method Start &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+        //Proton and pion candidate declarations
+	ProtonCan =GetRootinos()->Particle(0); 
+	PionCan =GetPhotons()->Particle(0) + GetPhotons()->Particle(1);
+
+	//Invariant Mass
+	inv_M_value = PionCan.M();
+
+	// Missing Mass calculation (in MeV)
+
+	energy_beam = GetTagger()->GetTaggedEnergy(i);
+	beam.SetXYZM(0.,0.,energy_beam,0.);
+	missingp4     = beam + target - PionCan;
+	MissingM  = missingp4.M();
+	
+  // Angular distribution of particles
+	//Method 1
+	phiPi= (PionCan.Phi()* TMath::RadToDeg()); 
+	phiProton = (ProtonCan.Phi()* TMath::RadToDeg());
+	coplanarity  = TMath::Abs((ProtonCan.TLorentzVector::DeltaPhi(PionCan))*TMath::RadToDeg()); //changed to only one peak using absolute 
+	//Method 2
+//	phi1 = ( (GetPhotons()->Particle(0) + GetPhotons()->Particle(1)).Phi()* TMath::RadToDeg() );
+//	phi2 = ((GetRootinos()->Particle(0) ).Phi()* TMath::RadToDeg());
+//	coplanarity23 = (phi2 - phi1);
+//	if(coplanarity23<0) coplanarity23 = coplanarity23 + 360;
+	
+	//Method1
+	thetaPi = (PionCan.Theta()* TMath::RadToDeg()); 
+	thetaProton = (ProtonCan.Theta()* TMath::RadToDeg());
+	thetadiff  = ProtonCan.TLorentzVector::Angle(PionCan.Vect())*TMath::RadToDeg();
+	//Method2
+//	theta1 = (GetPhotons()->Particle(0) + GetPhotons()->Particle(1)).Theta()* TMath::RadToDeg();
+//	theta2 = (GetRootinos()->Particle(0) ).Theta()* TMath::RadToDeg();
+//	thetadiff2 = (theta2 - theta1);
+
+
+//Testing phi of missing p4.
+//	phiMissingp4 = (missingp4.Phi()* TMath::RadToDeg());
+//	CoplanMissingp4 = (missingp4.TLorentzVector::DeltaPhi(PionCan))*TMath::RadToDeg();
+
+//Testing if pions are all zero when proton phi is 0
+//	if (phiProton==0){
+//	PionTLorentz = PionCan;
+//}
+
+
+
+
+	//Reconstructing the proton from missing p4 of pion
+	ReconProton = missingp4; 
+	ReconphiProton = (ReconProton.Phi()* TMath::RadToDeg());
+	Reconcoplanarity  = (ReconProton.TLorentzVector::DeltaPhi(PionCan))*TMath::RadToDeg(); 
+	ReconthetaProton = (ReconProton.Theta()* TMath::RadToDeg());
+	Reconthetadiff  = ReconProton.TLorentzVector::Angle(PionCan.Vect())*TMath::RadToDeg();
+
+
+	//Trying to get PID info. 
+	NPidhits = GetDetectorHits()->GetNPIDHits();
+
+
+
+// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+	  // Invariant Mass
+//	  inv_M_value = (GetPhotons()->Particle(0) + GetPhotons()->Particle(1)).M();
+	  
+	  
+	  // Cut PID angle, cut inv mass, plot mm then loose cut after looking at mm on mm. Phi plots of pi0 and identify scattered vecs using recons.
+	  // Phi asyms change pol and run a diff sim name for it. Read simons paper properly.  
+	  
+
+	  
+
+	  // Angular distribution of particles
+//	  phi1 = ( (GetPhotons()->Particle(0) + GetPhotons()->Particle(1)).Phi()* TMath::RadToDeg() );
+//	  phi2 = ((GetRootinos()->Particle(0) ).Phi()* TMath::RadToDeg());
+//	  Rootino4Vec = GetRootinos()->Particle(0);
+
+
+	  //theta1 = (GetPhotons()->Particle(0) + GetPhotons()->Particle(1)).Theta()* TMath::RadToDeg();
+//	  theta1 = (missingp4).Theta()* TMath::RadToDeg();
+//	  theta2 = (GetRootinos()->Particle(0) ).Theta()* TMath::RadToDeg();
+//	  thetadiff2 = (theta1 - theta2);
+//	thetadiff  = P.TLorentzVector::Angle(meson.Vect())*TMath::RadToDeg(); // Theta difference between pion candidate and 3rd gamma	      
+//coplanarity  = (boost_G3vec.TLorentzVector::DeltaPhi(boost_4vec))*TMath::RadToDeg(); // Phi difference between pion candidate and 3rd gamma		 	  
+	  
+	  // Coplanarity of rootino and 2 photons
+//	  coplanarity23 = (phi1 - phi2);
+//	  if(coplanarity23<0) coplanarity23 = coplanarity23 + 360; // Corrects values to one peak around 180 degrees
+	  
+	  
+	  // Boost system //
+//	  boost_4vec = CMVector((GetPhotons()->Particle(0) + GetPhotons()->Particle(1)), target, beam);
+//	  cosine_CMS = boost_4vec.CosTheta();
+//	  Energy_CMS = boost_4vec.Energy();
+	  
+
+ 	//Cuts on invariant mass and coplanarity
+	if (inv_M_value > 100 && inv_M_value < 160){
+	if (coplanarity <-160 || coplanarity>160 ){
+
+  	
+  	cutinv_M_value = PionCan.M();  
+  	cutmissingp4  = beam + target - PionCan;
+  	cutenergy_beam =  GetTagger()->GetTaggedEnergy(i);  
+	cutMissingM = cutmissingp4.M();  
+	
+	cutphiProton = (ProtonCan.Phi()* TMath::RadToDeg());
+  	cutthetaProton = (ProtonCan.Theta()* TMath::RadToDeg()); 
+ 
+  	cutphiPion = (PionCan.Phi()* TMath::RadToDeg());  
+  	cutthetaPion = (PionCan.Theta()* TMath::RadToDeg()); ;  
+  	
+  	 
+  	cutthetadiff = ProtonCan.TLorentzVector::Angle(PionCan.Vect())*TMath::RadToDeg();
+  	cutcoplanarity = (ProtonCan.TLorentzVector::DeltaPhi(PionCan))*TMath::RadToDeg();  
+
+
+	
+
+} //closing coplanar if
+
+
+} //closing inv_mass if
+
+
+
+
+
+	  tree1r->Fill();
+
+
+
+}
+
+       else if ( (GetPhotons()->GetNParticles()==3))
+	{
+		
+     // Loop over the different combination of photons and set the different vectors for each
+            for(Int_t l=0;l<3;l++){
+		if(l==0) { l_g1 = 1; l_g2 = 2;
+	  	g1_Vec1 = GetPhotons()->Particle(l_g1);
+	  	g2_Vec1 = GetPhotons()->Particle(l_g2);
+	  	C1 = g1_Vec1 + g2_Vec1;  //pion candidate
+	  	IMDiff1 = TMath::Abs(C1.M() - 134.97);
+	  	P1 = GetPhotons()->Particle(0); // proton candidate
+	  	CopDiff1 = TMath::Abs(C1.TLorentzVector::DeltaPhi(-P1)*TMath::RadToDeg() )/180;
+//	  	AngDiff1 = TMath::Abs(C1.TLorentzVector::Angle(P1.Vect())*TMath::RadToDeg() )/180;
+//	  	SumDiff1 = ((IMDiff1)*(IMDiff1)) + ((CopDiff1)*(CopDiff1)) + ((AngDiff1)*(AngDiff1));
+	  	SumDiff1 = ((IMDiff1)*(IMDiff1)) + ((CopDiff1)*(CopDiff1)) ;
+	  	//T1 = 0.5*(GetPhotons()->GetTime(l_g1) + GetPhotons()->GetTime(l_g2));
+		}
+		if(l==1) { l_g1 = 2; l_g2 = 0;
+	  	g1_Vec2 = GetPhotons()->Particle(l_g1);
+	  	g2_Vec2 = GetPhotons()->Particle(l_g2);
+	  	C2 = g1_Vec2 + g2_Vec2;
+	  	IMDiff2 = TMath::Abs(C2.M() - 134.97);
+	  	P2 = GetPhotons()->Particle(1);
+	  	CopDiff2 = TMath::Abs(C2.TLorentzVector::DeltaPhi(-P2)*TMath::RadToDeg() )/180;
+//	  	AngDiff2 = TMath::Abs(C2.TLorentzVector::Angle(P2.Vect())*TMath::RadToDeg() )/180;
+//	  	SumDiff2 = ((IMDiff2)*(IMDiff2)) + ((CopDiff2)*(CopDiff2)) + ((AngDiff2)*(AngDiff2));
+	  	SumDiff2 = ((IMDiff2)*(IMDiff2)) + ((CopDiff2)*(CopDiff2)) ;
+	  	//T2 = 0.5*(GetPhotons()->GetTime(l_g1) + GetPhotons()->GetTime(l_g2));
+		}
+		if(l==2) { l_g1 = 0; l_g2 = 1;
+	  	g1_Vec3 = GetPhotons()->Particle(l_g1);
+	  	g2_Vec3 = GetPhotons()->Particle(l_g2);
+	  	C3 = g1_Vec3 + g2_Vec3;
+	  	IMDiff3 = TMath::Abs(C3.M() - 134.97);
+	  	P3 = GetPhotons()->Particle(2);
+	  	CopDiff3 = TMath::Abs(C3.TLorentzVector::DeltaPhi(-P3)*TMath::RadToDeg() )/180;
+//	  	AngDiff3 = TMath::Abs(C3.TLorentzVector::Angle(P3.Vect())*TMath::RadToDeg() )/180;
+//	  	SumDiff3 = ((IMDiff3)*(IMDiff3)) + ((CopDiff3)*(CopDiff3)) + ((AngDiff3)*(AngDiff3));
+	  	SumDiff3 = ((IMDiff3)*(IMDiff3)) + ((CopDiff3)*(CopDiff3)) ;
+	  	//T3 = 0.5*(GetPhotons()->GetTime(l_g1) + GetPhotons()->GetTime(l_g2));
+		}
+	
+      	   } //closing for candidate loop
+      
+      		if( SumDiff1 < SumDiff2 && SumDiff1 < SumDiff3){
+//		meson_Vec.SetXYZM(C1.X(),C1.Y(),C1.Z(),C1.M());
+		PionCan.SetXYZM(C1.X(),C1.Y(),C1.Z(),C1.M());
+		//T = T1;
+		ProtonCan = P1;
+      	  	}
+      		else if(SumDiff2 < SumDiff1 && SumDiff2 < SumDiff3){
+//		meson_Vec.SetXYZM(C2.X(),C2.Y(),C2.Z(),C2.M());
+		PionCan.SetXYZM(C2.X(),C2.Y(),C2.Z(),C2.M());
+		//T = T2;
+		ProtonCan = P2;
+	      }
+	      else if(SumDiff3 < SumDiff1 && SumDiff3 < SumDiff2){
+//		meson_Vec.SetXYZM(C3.X(),C3.Y(),C3.Z(),C3.M());
+		PionCan.SetXYZM(C3.X(),C3.Y(),C3.Z(),C3.M());
+		//T = T3;
+		ProtonCan = P3;
+	      }
+  
+//      	meson.SetXYZM(meson_Vec.X(),meson_Vec.Y(),meson_Vec.Z(),134.97); //Should I set mass directly or use reconstructed from photons?
+      
+      	// Invariant Mass
+//     	C1_M_value = C1.M();
+//     	C2_M_value = C2.M();
+//     	C3_M_value = C3.M();
+      	inv_M_value = PionCan.M();
+
+	  
+     	// Loop over tagged events
+//     	time = GetTagger()->GetTaggedTime(i) - T;
+	
+	// Restrict tagger range to reduce file size (but keep a meaningful background range)
+//	if(time > -50 && time < 50){
+
+//	edge_setting  = GetLinpol()->GetEdgeSetting();
+//	energy_beam   = GetTagger()->GetTaggedEnergy(i);
+//	edge_position = GetLinpol()->GetEdge();
+	    
+//	pb = GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(i));
+//	if(pb == -1) continue;
+//	    
+	    
+	//Invariant mass cut here! that can be commented out to get both plots.
+	if (inv_M_value > 100.0){    
+	energy_beam = GetTagger()->GetTaggedEnergy(i);
+	beam.SetXYZM(0.,0.,energy_beam,0.);
+		    
+	missingp4     = beam + target - PionCan;
+	MissingM = missingp4.M();
+	
+	//Angular Distribution of particles		    
+
+	phiPi= (PionCan.Phi()* TMath::RadToDeg()); 
+	phiProton = (ProtonCan.Phi()* TMath::RadToDeg());
+	coplanarity  = TMath::Abs((ProtonCan.TLorentzVector::DeltaPhi(PionCan))*TMath::RadToDeg()); //Changed
+		  	
+	//Method1
+	thetaPi = (PionCan.Theta()* TMath::RadToDeg()); 
+	thetaProton = (ProtonCan.Theta()* TMath::RadToDeg());
+	thetadiff  = ProtonCan.TLorentzVector::Angle(PionCan.Vect())*TMath::RadToDeg();
+
+
+//	if (phiProton ==0){
+//	std::cout <<" Proton Phi = " << phiProton<< std::endl;
+//	ZeroProton = ProtonCan;
+//	ZeroPion = PionCan;
+//	Zerocoplanarity  = (ProtonCan.TLorentzVector::DeltaPhi(PionCan))*TMath::RadToDeg(); 
+//	Zeromissingp4 = missingp4;
+//	ZeromissingCoplan = (missingp4.TLorentzVector::DeltaPhi(PionCan))*TMath::RadToDeg(); 
+//}
+	// Boost system //
+//	boost_4vec  = CMVector(meson, target, beam);
+//	boost_MMvec = CMVector(missingp4, target, beam);
+//	boost_G3vec = CMVector(P, target, beam);
+		    
+//	cosine_CMS = boost_4vec.CosTheta();
+//	Energy_CMS = boost_4vec.Energy();
+	    
+	    
+	// Missing Mass calculation (in MeV)
+//	C1missingp4  = beam + target - C1;
+//	C2missingp4  = beam + target - C2;
+//	C3missingp4  = beam + target - C3;
+		    
+//	MissingM_C1  = C1missingp4.M();
+//	MissingM_C2  = C2missingp4.M();
+//	MissingM_C3  = C3missingp4.M();
+//	MissingM     = boost_MMvec.M();
+	    
+	    
+	// Angular distribution of particles
+//	phi1 = (boost_4vec).Phi()* TMath::RadToDeg();
+//	phi2 = boost_MMvec.Phi()*TMath::RadToDeg();
+//	phiP = P.Phi()*TMath::RadToDeg();
+		    
+//	theta1 = boost_4vec.Theta()* TMath::RadToDeg();
+//	theta2 = boost_MMvec.Theta()*TMath::RadToDeg();
+//	thetaP = boost_G3vec.Theta()*TMath::RadToDeg();
+	    
+	//thetadiff  = (theta1 - thetaP); // Theta difference between pion candidate and 3rd gamma	      
+	//thetadiff2 = (theta2 - thetaP); // Theta difference between pion candidate and missing mass vector
+	//thetadiff  = boost_G3vec.TLorentzVector::Angle(boost_4vec.Vect())*TMath::RadToDeg(); // Theta difference between pion candidate and 3rd gamma	      
+	//thetadiff2 = boost_G3vec.TLorentzVector::Angle(boost_MMvec.Vect())*TMath::RadToDeg(); // Theta difference between pion candidate and missing mass vector
+//	thetadiff  = P.TLorentzVector::Angle(meson.Vect())*TMath::RadToDeg(); // Theta difference between pion candidate and 3rd gamma	      
+//	thetadiff2 = P.TLorentzVector::Angle(missingp4.Vect())*TMath::RadToDeg(); // Theta difference between pion candidate and missing mass vector
+	    
+	//coplanarity  = phi1 - phiP; // Phi difference between pion candidate and 3rd gamma	      
+	//coplanarity2 = phi2 - phiP;	// Phi difference between pion candidate and missing mass vector
+//	coplanarity  = (boost_G3vec.TLorentzVector::DeltaPhi(boost_4vec))*TMath::RadToDeg(); // Phi difference between pion candidate and 3rd gamma	      
+//	coplanarity2 = (boost_G3vec.TLorentzVector::DeltaPhi(boost_MMvec))*TMath::RadToDeg();	// Phi difference between pion candidate and missing mass vector
+	    
+	    
+	//boost_4vec = CMVector(meson, target, -beam); // May need to unboost meson 4vec
+   	//  if(coplanarity < -155 || coplanarity > 155){
+    	//if(thetadiff2 > 0 && thetadiff2 < 20){
+	tree3g->Fill();
+		//}
+		//}
+
+} //Closing invariant mass cut
+
+	} //closing elif
+	
+
+} //closing for loop
+} //closing function
+
+
+void	chrisPPi0Example::ProcessScalerRead()
+{
+	// Fill Tagger Scalers
+	//FillScalers(GetTC_scaler_min(),GetTC_scaler_max(),TaggerAccScal);
+}
+
+Bool_t	chrisPPi0Example::Write()
+{
+
+//    tree1r->Write();
+//    tree1r->Reset();
+
+//    tree3g->Write();
+//    tree3g->Reset();
+//    return 0;
+
+    // Write all GH1's and TObjects defined in this class
+    return GTreeManager::Write();
+}
+
+
