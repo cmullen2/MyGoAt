@@ -3,21 +3,29 @@
 #Set directories
 
 
-Input-Directory: /scratch/chrism/RealData/GoatOut/Run14922
+#Input-Directory: /w/work14/chris/scratchBackup/GoatOut/Para/Run14919/
+#Input-Directory: /scratch/chris/RealData/GoatOut/Para/
 #Input-Directory: /home/chrism/TestFiles/GoatOut/RealData
+#Input-Directory: /w/work14/chris/Run101016/GoatOutput/Perp/
+Input-Directory: /w/work14/chris/Run101016/GoatOutput/Para/
 
+#Input-Directory: /w/work14/chris/Run101016/GoatOutput/Para/SingleRun/
 
-Output-Directory: /scratch/chrism/RealData/ChrisGoatOut/Run14922
+#Output-Directory: /home/chris/GoAT/
+#Output-Directory: /scratch/chris/RealData/ChrisGoatOut/Para/
 #Output-Directory: /home/chrism/TestFiles/GoatOut/RealData/chrisPhysicsRun
+#Output-Directory: /w/work14/chris/Run101016/ChrisOutput/Perp/
+Output-Directory: /w/work14/chris/Run101016/ChrisOutput/Para/
 
+#Output-Directory: /w/work14/chris/Run101016/ChrisOutput/Para/SingleRun/
 
 # Set prompt and random windows (standard library and GH1 library)
 Set-Prompt-Cut: -25 25
 Add-Random-Cut: -90 -40
 Add-Random-Cut: 40 90
 
-
-
+#SetPeriodMacro
+Period-Macro:	100000
 
 # Set target mass (for standard physics library)
 Target-Mass:1875.612

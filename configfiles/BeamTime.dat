@@ -8,15 +8,15 @@
 
 #GOAT REQUIRES FULL PATH DON'T USE $HOME (either that or I messed with $HOME)
 
-Input-Directory: /scratch/chrism/RealData/AcquOutput/Run14922
+#Input-Directory: /scratch/chris/RealData/AcquOutput/Perp/
+#Input-Directory: /scratch/chris/RealData/AcquOutput/Testing
+#Input-Directory: /w/work14/chris/Run101016/AcquOutput/Perp/
+Input-Directory: /w/work14/chris/Run101016/AcquOutput/Para/
 
-
-
-
-Output-Directory: /scratch/chrism/RealData/GoatOut/Run14922
-
-
-
+#Output-Directory: /scratch/chris/RealData/GoatOut/Perp/
+#Output-Directory: /scratch/chris/RealData/GoatOut/Testing
+#Output-Directory: /w/work14/chris/Run101016/GoatOutput/Perp/
+Output-Directory: /w/work14/chris/Run101016/GoatOutput/Para/
 
 
 Period-Macro:	100000
@@ -27,8 +27,7 @@ Period-Macro:	100000
 Do-Particle-Reconstruction: 1
 
 
-#Added Chris Mullen to only reconstruct photons in TAPs and CB rather than rooti
-nos.
+#Added Chris Mullen to only reconstruct photons in TAPs and CB rather than rootinos.
 CB-all-photons: 1
 TAPS-all-photons: 1
 
