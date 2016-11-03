@@ -39,7 +39,6 @@ private:
     Double_t	Chamber2Z[GTreeMWPCHit_MAX];
 
 
-
 protected:
     virtual void    SetBranchAdresses();
     virtual void    SetBranches();

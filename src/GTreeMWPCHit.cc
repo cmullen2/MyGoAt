@@ -37,6 +37,7 @@ void    GTreeMWPCHit::SetBranchAdresses()
     inputTree->SetBranchAddress("Chamber2X", &Chamber2X);
     inputTree->SetBranchAddress("Chamber2Y", &Chamber2Y);
     inputTree->SetBranchAddress("Chamber2Z", &Chamber2Z);
+    //inputTree->SetBranchAddress("Chamber1Hits", &Chamber1Hits);
 	
     //inputTree->SetBranchAddress("Chamber1XPosition", &Chamber1XPosition);
 
@@ -51,13 +52,15 @@ void    GTreeMWPCHit::SetBranches()
     //outputTree->Branch("MWPCHits",&MWPCHits,"MWPCHits/I");
    // outputTree->Branch("nChamberHitsin3",nChamberHitsin2,"nChamberHitsin3/I");
     outputTree->Branch("nChamberHitsin1",&nChamberHitsin1,"nChamberHitsin1/I");
-    outputTree->Branch("Chamber1X",Chamber1X,"Chamber1X/D");
-    outputTree->Branch("Chamber1Y",Chamber1Y,"Chamber1Y/D");
-    outputTree->Branch("Chamber1Z",Chamber1Z,"Chamber1Z/D");
+    outputTree->Branch("Chamber1X",Chamber1X,"Chamber1X[nChamberHitsin1]/D"); 	//CAMChange
+    outputTree->Branch("Chamber1Y",Chamber1Y,"Chamber1Y[nChamberHitsin1]/D");	//CAMChange
+    outputTree->Branch("Chamber1Z",Chamber1Z,"Chamber1Z[nChamberHitsin1]/D");   //CAMChange
     outputTree->Branch("nChamberHitsin2",&nChamberHitsin2,"nChamberHitsin2/I");
-    outputTree->Branch("Chamber2X",Chamber2X,"Chamber2X/D");
-    outputTree->Branch("Chamber2Y",Chamber2Y,"Chamber2Y/D");
-    outputTree->Branch("Chamber2Z",Chamber2Z,"Chamber2Z/D");
+    outputTree->Branch("Chamber2X",Chamber2X,"Chamber2X[nChamberHitsin2]/D");   //CAMChange
+    outputTree->Branch("Chamber2Y",Chamber2Y,"Chamber2Y[nChamberHitsin2]/D");   //CAMChange
+    outputTree->Branch("Chamber2Z",Chamber2Z,"Chamber2Z[nChamberHitsin2]/D");   //CAMChange
+
+    //outputTree->Branch("Chamber1Hits",&Chamber1Hits,"Chamber1Hits/D");
 
     //outputTree->Branch("Chamber1XPosition",Chamber1XPosition,"Chamber1XPosition/D");
 

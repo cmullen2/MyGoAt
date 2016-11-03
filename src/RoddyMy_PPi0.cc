@@ -104,6 +104,8 @@ void	My_PPi0::ProcessEvent()
 	  P1 = GetPhotons()->Particle(0);
 	  CopDiff1 = TMath::Abs(C1.TLorentzVector::DeltaPhi(-P1)*TMath::RadToDeg() )/180;
 	  AngDiff1 = TMath::Abs(C1.TLorentzVector::Angle(P1.Vect())*TMath::RadToDeg() )/180;
+rentzVector missingp4;
+
 	  SumDiff1 = ((IMDiff1)*(IMDiff1)) + ((CopDiff1)*(CopDiff1)) + ((AngDiff1)*(AngDiff1));
 	  T1 = 0.5*(GetPhotons()->GetTime(l_g1) + GetPhotons()->GetTime(l_g2));
 	}

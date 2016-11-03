@@ -378,9 +378,11 @@ Bool_t  GTreeManager::TraverseValidEvents_GoATTreeFile()
         while(eventParameters->GetEventNumber()<scalers->GetEventNumber())
         {
             event++;
+	  //  cout << "Event = "<< event << maxEvent <<endl;
             if(event>=maxEvent)
                 break;
             GetAndUnpack(event);
+	   // cout << "here1" << endl;
             ProcessEvent();
         }
         if(i!=0)
