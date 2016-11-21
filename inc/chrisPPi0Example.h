@@ -42,7 +42,9 @@ private:
 
 
 
-
+//Selection Criteria 
+Double_t MMPi0Criteria;
+Double_t IMPi0Criteria;
 
 
 //First Branch Parameters 1 rootino branch
