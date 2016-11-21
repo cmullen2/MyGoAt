@@ -7,17 +7,34 @@
 #Input-Directory: /scratch/chris/RealData/GoatOut/Para/
 #Input-Directory: /home/chrism/TestFiles/GoatOut/RealData
 #Input-Directory: /w/work14/chris/Run101016/GoatOutput/Perp/
-Input-Directory: /w/work14/chris/Run101016/GoatOutput/Para/
+#HEREInput-Directory: /w/work14/chris/Run101016/GoatOutput/Para/
 
 #Input-Directory: /w/work14/chris/Run101016/GoatOutput/Para/SingleRun/
+
+
+
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/BeamAsym/NegPolarisation/
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/BeamAsym/PosPolarisation/
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/ScatAsym/NegPolQF/
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/ScatAsym/NegPolNoQF/
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/ScatAsym/PosPolQF/
+Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/ScatAsym/PosPolNoQF/
+
 
 #Output-Directory: /home/chris/GoAT/
 #Output-Directory: /scratch/chris/RealData/ChrisGoatOut/Para/
 #Output-Directory: /home/chrism/TestFiles/GoatOut/RealData/chrisPhysicsRun
 #Output-Directory: /w/work14/chris/Run101016/ChrisOutput/Perp/
-Output-Directory: /w/work14/chris/Run101016/ChrisOutput/Para/
+#HEREOutput-Directory: /w/work14/chris/Run101016/ChrisOutput/Para/
 
 #Output-Directory: /w/work14/chris/Run101016/ChrisOutput/Para/SingleRun/
+
+
+
+#Output-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/ChrisGoatOut/Deuterium/BeamAsym/PosPolarisation/
+#Output-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/ChrisGoatOut/Deuterium/BeamAsym/NegPolarisation/
+Output-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/ChrisGoatOut/Deuterium/ScatAsym/
+
 
 # Set prompt and random windows (standard library and GH1 library)
 Set-Prompt-Cut: -25 25

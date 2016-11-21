@@ -6,12 +6,14 @@
 #Set directories
 
 
-Input-Directory: /home/chrism/TestFiles/GoatOut
+#Input-Directory: /home/chrism/TestFiles/GoatOut
 #Input-Directory: /home/chrism/TestFiles/GoatOut/RealData
+Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Non-Polarised
 
 
-Output-Directory: /home/chrism/TestFiles/GoatOut/chrisPhysicsRun
+#Output-Directory: /home/chrism/TestFiles/GoatOut/chrisPhysicsRun
 #Output-Directory: /home/chrism/TestFiles/GoatOut/RealData/chrisPhysicsRun
+Output-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/ChrisGoatOut/Non-Polarised
 
 
 # Set prompt and random windows (standard library and GH1 library)
@@ -23,8 +25,8 @@ Add-Random-Cut: 10 500
 
 
 # Set target mass (for standard physics library)
-Target-Mass:1875.612
-#Target-Mass: 938.272
+#Target-Mass:1875.612
+Target-Mass: 938.272
 
 # cut on the tagger channel (for standard physics library)
 Tagger-Channel-Cut: 200 300

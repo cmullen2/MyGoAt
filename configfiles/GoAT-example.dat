@@ -8,16 +8,22 @@
 
 #GOAT REQUIRES FULL PATH DON'T USE $HOME (either that or I messed with $HOME)
 #Input-Directory: $HOME/TestFiles/AcquOut/ProtonBad
-Input-Directory: /home/chrism/TestFiles/AcquOut/ProtonBad
+#Input-Directory: /home/chrism/TestFiles/AcquOut/ProtonBad
 #Input-Directory: /home/chrism/TestFiles/AcquOut/RealData
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/BeamAsym/PosPolarisation
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/BeamAsym/NegPolarisation
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/ScatAsym/NegPolQF
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/ScatAsym/NegPolNoQF
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/ScatAsym/PosPolQF
+Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/ScatAsym/PosPolNoQF
 
 
 #Output-Directory: $HOME/TestFiles/GoatOut/ProtonBad
-Output-Directory: /home/chrism/TestFiles/GoatOut
+#Output-Directory: /home/chrism/TestFiles/GoatOut
 #Output-Directory: /home/chrism/TestFiles/GoatOut/RealData
-
-
-
+#Output-Directory:  /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/BeamAsym/PosPolarisation
+#Output-Directory:  /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/BeamAsym/NegPolarisation
+Output-Directory:  /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/ScatAsym/
 
 Period-Macro:	100000
 
