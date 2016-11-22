@@ -12,8 +12,8 @@ chrisPPi0Example::chrisPPi0Example()
   treeselected->Branch("Chamber2.",&Chamber2_Vec);
   treeselected->Branch("Phidiff.",&Phidiff);       //Wire chamber phi minus PID phi
   treeselected->Branch("Ebeam.",&energy_beam);
-  treeselected->Branch("ESum.",&energySum);
-  treeselected->Branch("Multiplicity.",&multiplicity);
+  treeselected->Branch("ESum.",&energySum); // To get use 	energySum =GetTrigger()->GetEnergySum();
+  treeselected->Branch("Multiplicity.",&multiplicity); // To get use 	multiplicity = GetTrigger()->GetMultiplicity();
   treeselected->Branch("Inv_Mass_Pion.",&inv_M_value);
  // removed 17/10/16 treeselected->Branch("PidIndex.",&PidHitIndex);
  // removed 17/10/16 treeselected->Branch("Eventno.",&EventNumber);
@@ -157,6 +157,8 @@ void	chrisPPi0Example::ProcessEvent()
     
     if ( (GetPhotons()->GetNParticles()==3)){
 
+      multiplicity = GetTrigger()->GetMultiplicity();
+      energySum =GetTrigger()->GetEnergySum();
       energy_beam = GetTagger()->GetTaggedEnergy(i);
       beam.SetXYZM(0.,0.,energy_beam,0.);  
       time_beam = GetTagger()->GetTaggedTime(i);
