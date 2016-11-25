@@ -7,7 +7,7 @@ chrisPPi0Example::chrisPPi0Example()
   treeselected =  new TTree("Selected","Event selection tree"); // selected tree   
   
   //Define branches of TTree selected
-  treeselected->Branch("Pion",&PionCan);
+  treeselected->Branch("Pion.",&PionCan);
   treeselected->Branch("Chamber1.",&Chamber1_Vec);
   treeselected->Branch("Chamber2.",&Chamber2_Vec);
   treeselected->Branch("Phidiff.",&Phidiff);       //Wire chamber phi minus PID phi
@@ -125,7 +125,7 @@ void	chrisPPi0Example::ProcessEvent()
   NPidhits = GetDetectorHits()->GetNPIDHits();
 
   if (NPidhits>0){
-    PidHitIndex = GetDetectorHits()->GetPIDHits(0);    //The parameter in the pidhits is the number of pid hits in the event
+    PidHitIndex = GetDetectorHits()->GetPIDHits(0);    //The parameter in the Npidhits is the number of pid hits in the event while getPIDHits is the element number of a hit
     PIDPhi = PIDElemPhi[PidHitIndex]; //here
 
     if (Chamber1_Vec.X()==-1000){
