@@ -15,10 +15,10 @@ chrisPPi0Example::chrisPPi0Example()
   treeselected->Branch("ESum.",&energySum); // To get use 	energySum =GetTrigger()->GetEnergySum();
   treeselected->Branch("Multiplicity.",&multiplicity); // To get use 	multiplicity = GetTrigger()->GetMultiplicity();
   treeselected->Branch("Inv_Mass_Pion.",&inv_M_value);
- // removed 17/10/16 treeselected->Branch("PidIndex.",&PidHitIndex);
+  treeselected->Branch("PidIndex.",&PidHitIndex);
  // removed 17/10/16 treeselected->Branch("Eventno.",&EventNumber);
- // removed 17/10/16 treeselected->Branch("PIDPhi.",&PIDPhi);
-// removed 17/10/16  treeselected->Branch("Chamber1Phi.",&Chamber1_VecPhi);
+  treeselected->Branch("PIDPhi.",&PIDPhi);
+  treeselected->Branch("Chamber1Phi.",&Chamber1_VecPhi);
   treeselected->Branch("ProtonCandidate.",&ProtonCan);
   treeselected->Branch("MissingMass.",&MissingM);
   treeselected->Branch("BeamHelicity.",&BeamHelicity);
@@ -136,8 +136,8 @@ void	chrisPPi0Example::ProcessEvent()
       Chamber1_VecPhi =Chamber1_Vec.Phi()*TMath::RadToDeg() ;
     }
 
-    PIDPhi = PIDPhi + 180;
-    Chamber1_VecPhi =Chamber1_VecPhi +180;
+  //  PIDPhi = PIDPhi + 180;
+  //  Chamber1_VecPhi =Chamber1_VecPhi +180;
     Phidiff = TMath::Abs( PIDPhi - Chamber1_VecPhi) ;   
 
     if (Phidiff >180){
@@ -146,11 +146,17 @@ void	chrisPPi0Example::ProcessEvent()
 
   } //closingpihits
 
-  else{
-    Phidiff = -10;
-    PIDPhi = -10;
-    Chamber1_VecPhi = -10;
+//  else{  //Changing from -10 to -1000
+ //   Phidiff = -10;
+ //   PIDPhi = -10;
+ //   Chamber1_VecPhi = -10;
+ // }
+
+
+  if (Phidiff< -100){
+     Phidiff = -100;
   }
+
 
   // Loop over tagged events 
   for(Int_t i=0; i<=GetTagger()->GetNTagged() ;i++){
