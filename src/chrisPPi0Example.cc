@@ -24,6 +24,8 @@ chrisPPi0Example::chrisPPi0Example()
   treeselected->Branch("BeamHelicity.",&BeamHelicity);
   treeselected->Branch("TaggedTime.",&time_beam);
 // removed 17/10/16  treeselected->Branch("TestChamber.",&TestChamber); //Not needed 
+  treeselected->Branch("Cluster1Pi.",&cluster1_pi);
+  treeselected->Branch("Cluster2Pi.",&cluster2_pi);
 
 }
 
@@ -219,16 +221,24 @@ void	chrisPPi0Example::ProcessEvent()
       if( SumDiff1 < SumDiff2 && SumDiff1 < SumDiff3){
 	PionCan.SetXYZM(C1.X(),C1.Y(),C1.Z(),C1.M());
 	ProtonCan = P1;
-      }
+	cluster1_pi=GetPhotons()->Particle(1);
+	cluster2_pi=GetPhotons()->Particle(2); 
+     }
       	
       else if(SumDiff2 < SumDiff1 && SumDiff2 < SumDiff3){
 	PionCan.SetXYZM(C2.X(),C2.Y(),C2.Z(),C2.M());
 	ProtonCan = P2;
+	cluster1_pi=GetPhotons()->Particle(2);
+        cluster2_pi=GetPhotons()->Particle(0);   
+
       }
 	  
       else if(SumDiff3 < SumDiff1 && SumDiff3 < SumDiff2){
 	PionCan.SetXYZM(C3.X(),C3.Y(),C3.Z(),C3.M());
 	ProtonCan = P3;
+        cluster1_pi=GetPhotons()->Particle(0);
+        cluster2_pi=GetPhotons()->Particle(1);   
+
       }  
      
       // Invariant Mass

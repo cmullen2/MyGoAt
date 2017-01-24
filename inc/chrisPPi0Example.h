@@ -85,6 +85,8 @@ Double_t IMPi0Criteria;
   Double_t MMDiff2;
   Double_t MMDiff3;
 
+  TLorentzVector cluster1_pi;
+  TLorentzVector cluster2_pi;
 
 
   TVector3 TestChamber;
