@@ -121,7 +121,7 @@ void	chrisPPi0Example::ProcessEvent()
     PVector2 = Chamber2_Vec - PVector1;
   }
 
-  //PID info
+  //PID info(This section needs a serious revision over christmas)
   NPidhits = GetDetectorHits()->GetNPIDHits();
 
   if (NPidhits>0){
@@ -135,9 +135,9 @@ void	chrisPPi0Example::ProcessEvent()
     else{
       Chamber1_VecPhi =Chamber1_Vec.Phi()*TMath::RadToDeg() ;
     }
-
-  //  PIDPhi = PIDPhi + 180;
-  //  Chamber1_VecPhi =Chamber1_VecPhi +180;
+//Need to justify this (why not simple difference!!)
+    PIDPhi = PIDPhi + 180;
+    Chamber1_VecPhi =Chamber1_VecPhi +180;
     Phidiff = TMath::Abs( PIDPhi - Chamber1_VecPhi) ;   
 
     if (Phidiff >180){
@@ -146,11 +146,11 @@ void	chrisPPi0Example::ProcessEvent()
 
   } //closingpihits
 
-//  else{  //Changing from -10 to -1000
- //   Phidiff = -10;
- //   PIDPhi = -10;
- //   Chamber1_VecPhi = -10;
- // }
+  else{  //Changing from -10 to -1000
+    Phidiff = -10;
+    PIDPhi = -10;
+    Chamber1_VecPhi = -10;
+  }
 
 
   if (Phidiff< -100){
