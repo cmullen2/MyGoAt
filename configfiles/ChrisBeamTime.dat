@@ -13,12 +13,14 @@
 
 
 
-Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/BeamAsym/NegPolarisation/
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/BeamAsym/NegPolarisation/
 #Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/BeamAsym/PosPolarisation/
 #Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/ScatAsym/NegPolQF/
 #Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/ScatAsym/NegPolNoQF/
 #Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/ScatAsym/PosPolQF/
+#This was prev.
 #Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/ScatAsym/PosPolNoQF/
+Input-Directory: /w/work14/chris/Comparison/CBE/GoatOut/
 
 
 #Output-Directory: /home/chris/GoAT/
@@ -33,8 +35,10 @@ Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/B
 
 #Output-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/ChrisGoatOut/Deuterium/BeamAsym/PosPolarisation/
 #Output-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/ChrisGoatOut/Deuterium/BeamAsym/NegPolarisation/
+#This was prev.
 #Output-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/ChrisGoatOut/Deuterium/ScatAsym/
-Output-Directory: /scratch/chris/Simulations/16d11m16y/
+Output-Directory:  /w/work14/chris/Comparison/CBE/ChrisGoatout/
+#Output-Directory: /scratch/chris/Simulations/16d11m16y/
 
 # Set prompt and random windows (standard library and GH1 library)
 Set-Prompt-Cut: -25 25

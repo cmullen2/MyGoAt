@@ -11,20 +11,22 @@
 #Input-Directory: /home/chrism/TestFiles/AcquOut/ProtonBad
 #Input-Directory: /home/chrism/TestFiles/AcquOut/RealData
 #Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/BeamAsym/PosPolarisation
-Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/BeamAsym/NegPolarisation
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/BeamAsym/NegPolarisation
 #Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/ScatAsym/NegPolQF
 #Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/ScatAsym/NegPolNoQF
 #Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/ScatAsym/PosPolQF
+#This was prev.
 #Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/ScatAsym/PosPolNoQF
-
+Input-Directory: /w/work14/chris/Comparison/CBE/AcquRootOut/
 
 #Output-Directory: $HOME/TestFiles/GoatOut/ProtonBad
 #Output-Directory: /home/chrism/TestFiles/GoatOut
 #Output-Directory: /home/chrism/TestFiles/GoatOut/RealData
 #Output-Directory:  /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/BeamAsym/PosPolarisation
-Output-Directory:  /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/BeamAsym/NegPolarisation
+#Output-Directory:  /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/BeamAsym/NegPolarisation
+#This was prev.
 #Output-Directory:  /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/ScatAsym/
-
+Output-Directory: /w/work14/chris/Comparison/CBE/GoatOut
 Period-Macro:	100000
 
 #-----------------------------------------------------------------------
@@ -59,7 +61,7 @@ TAPS-all-photons: 1
 # Sort on number of raw particle tracks (total, CB, and TAPS)
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #		     Total 	CB		TAPS
-SortRaw-NTracks:     3-		0+		0+
+#SortRaw-NTracks:     3-		0+		0+
 
 
 # Sort on Trigger conditions (Crystal Ball Energy Sum)
