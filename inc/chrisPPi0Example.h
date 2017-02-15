@@ -87,7 +87,7 @@ Double_t IMPi0Criteria;
 
   TLorentzVector cluster1_pi;
   TLorentzVector cluster2_pi;
-
+  Double_t cluster_pi_ang_diff;
 
   TVector3 TestChamber;
 

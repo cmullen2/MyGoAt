@@ -26,7 +26,7 @@ chrisPPi0Example::chrisPPi0Example()
 // removed 17/10/16  treeselected->Branch("TestChamber.",&TestChamber); //Not needed 
   treeselected->Branch("Cluster1Pi.",&cluster1_pi);
   treeselected->Branch("Cluster2Pi.",&cluster2_pi);
-
+  treeselected->Branch("ClusterPiAngDiff.",&cluster_pi_ang_diff);
 }
 
 chrisPPi0Example::~chrisPPi0Example()
@@ -160,7 +160,7 @@ void	chrisPPi0Example::ProcessEvent()
   }
 
 
-  // Loop over tagged events 
+  // Loop over tagged events     Needs change from Roddy, Not = to
   for(Int_t i=0; i<=GetTagger()->GetNTagged() ;i++){
     
     if ( (GetPhotons()->GetNParticles()==3)){
@@ -223,6 +223,7 @@ void	chrisPPi0Example::ProcessEvent()
 	ProtonCan = P1;
 	cluster1_pi=GetPhotons()->Particle(1);
 	cluster2_pi=GetPhotons()->Particle(2); 
+	cluster_pi_ang_diff = cluster1_pi.TLorentzVector::Angle(cluster2_pi.Vect())*TMath::RadToDeg()/180 ;
      }
       	
       else if(SumDiff2 < SumDiff1 && SumDiff2 < SumDiff3){
@@ -230,7 +231,7 @@ void	chrisPPi0Example::ProcessEvent()
 	ProtonCan = P2;
 	cluster1_pi=GetPhotons()->Particle(2);
         cluster2_pi=GetPhotons()->Particle(0);   
-
+	cluster_pi_ang_diff = cluster1_pi.TLorentzVector::Angle(cluster2_pi.Vect())*TMath::RadToDeg()/180 ;
       }
 	  
       else if(SumDiff3 < SumDiff1 && SumDiff3 < SumDiff2){
@@ -238,6 +239,7 @@ void	chrisPPi0Example::ProcessEvent()
 	ProtonCan = P3;
         cluster1_pi=GetPhotons()->Particle(0);
         cluster2_pi=GetPhotons()->Particle(1);   
+	cluster_pi_ang_diff = cluster1_pi.TLorentzVector::Angle(cluster2_pi.Vect())*TMath::RadToDeg()/180 ;
 
       }  
      
