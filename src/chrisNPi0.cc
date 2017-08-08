@@ -1,53 +1,50 @@
-#include "chrisPPi0Example.h"
+#include "chrisNPi0.h"
+#include "TROOT.h"
 
-chrisPPi0Example::chrisPPi0Example()
+chrisNPi0::chrisNPi0()
 { 
-
-   // Create Tree,
+  gROOT->ProcessLine("#include <vector>");
+  // gROOT->ProcessLine(".x /home/chris/GoAT/TestVector.C++");
+  //gROOT->LoadMacro("$HSANA/THSParticle.C+");
+  // Create Tree,
   treeselected =  new TTree("Selected","Event selection tree"); // selected tree   
   
   //Define branches of TTree selected
- 
+
   //Splots branches
   treeselected->Branch("Inv_Mass_Pion.",&inv_M_value);
   treeselected->Branch("MissingMass.",&MissingM);
   treeselected->Branch("TaggedTime.",&time_beam);
-  treeselected->Branch("Coplanarity.",&Coplanarity); 
-  treeselected->Branch("CoplanarityBoosted.",&CoplanarityBoosted); 
- // treeselected->Branch("OpeningAngle.",&OpeningAngle); 
-  treeselected->Branch("EventNo.",&EventNo); 
- // treeselected->Branch("CoplanarityMeasured.",&coplanarityMeasure); 
+  treeselected->Branch("Coplanarity.",&Coplanarity);
+ // treeselected->Branch("OpeningAngle.",&OpeningAngle);
+  treeselected->Branch("EventNo.",&EventNo);
 
-
-  //Non Splots branches
+  //Non-Splots branches
   treeselected->Branch("Pion.",&PionCan);
-  treeselected->Branch("Chamber1.",&Chamber1_Vec);
-  treeselected->Branch("Chamber2.",&Chamber2_Vec);
-  treeselected->Branch("Phidiff.",&Phidiff);       //Wire chamber phi minus PID phi
   treeselected->Branch("Ebeam.",&energy_beam);
   treeselected->Branch("ESum.",&energySum); // To get use 	energySum =GetTrigger()->GetEnergySum();
   treeselected->Branch("Multiplicity.",&multiplicity); // To get use 	multiplicity = GetTrigger()->GetMultiplicity();
-  treeselected->Branch("PidIndex.",&PidHitIndex);
- // removed 17/10/16 treeselected->Branch("Eventno.",&EventNumber);
-  treeselected->Branch("PIDPhi.",&PIDPhi);
-  treeselected->Branch("Chamber1Phi.",&Chamber1_VecPhi);
-  treeselected->Branch("ProtonCandidate.",&ProtonCan);
+  treeselected->Branch("NeutronCandidate.",&NeutronCan);
+  treeselected->Branch("NeutronMass.",&NeutronMass);
   treeselected->Branch("BeamHelicity.",&BeamHelicity);
-  treeselected->Branch("TaggedTime.",&time_beam);
-// removed 17/10/16  treeselected->Branch("TestChamber.",&TestChamber); //Not needed 
   treeselected->Branch("Cluster1Pi.",&cluster1_pi);
   treeselected->Branch("Cluster2Pi.",&cluster2_pi);
   treeselected->Branch("ClusterPiAngDiff.",&cluster_pi_ang_diff);
-  treeselected->Branch("PVector1.",&PVector1);
-  treeselected->Branch("PVector2.",&PVector2);
-
+  treeselected->Branch("fparticlelist","vector<THSParticle*>",&fparticleList);
+  treeselected->Branch("particle1",&particle1);
+  DummyProton=0;
+  DummyProton=new THSParticle();
+  DummyProton2=0;
+  DummyProton2=new THSParticle();
 }
 
-chrisPPi0Example::~chrisPPi0Example()
+chrisNPi0::~chrisNPi0()
 {
+  delete DummyProton;
+  delete DummyProton2;  
 }
 
-Bool_t	chrisPPi0Example::Init()
+Bool_t	chrisNPi0::Init()
 {
 	cout << "Initialising physics analysis..." << endl;
 	cout << "--------------------------------------------------" << endl << endl;
@@ -68,7 +65,7 @@ Bool_t	chrisPPi0Example::Init()
 	return kTRUE;
 }
 
-Bool_t	chrisPPi0Example::Start()
+Bool_t	chrisNPi0::Start()
 {
     if(!IsGoATFile())
     {
@@ -82,35 +79,27 @@ Bool_t	chrisPPi0Example::Start()
     return kTRUE;
 }
 
-void	chrisPPi0Example::ProcessEvent()
+void	chrisNPi0::ProcessEvent()
 {
 
- std::string outFile = outputFile->GetName();
- //cout << "Output File "<< outFile  << endl;
- std::size_t pos = outFile.find("_1");
- std::string filert = outFile.substr(pos);
-// cout << "File .root  "<< filert  << endl;
- std::string fileNo =  filert.substr(2,4);
-// cout << "File Number "<< fileNo  << endl;
-// cout << "Event Number " << GetEventNumber() << endl;
-
- Int_t tempEventno = GetEventNumber();
- std::string tevent = std::to_string(tempEventno);
-// cout << "String " << tevent << endl;
- 
-  std::string eventName = fileNo + tevent;
- // cout << "Apppened " << eventName << endl;
-
-  EventNo = std::stod(eventName);
-  //cout <<std::setprecision(14) << "Hopefully " << EventNo << endl;
-
-
-
-  if(usePeriodMacro == 1)
+   if(usePeriodMacro == 1)
     {
       if(GetEventNumber() % period == 0)
 	cout << "Events: " << GetEventNumber() << "  Events Accepted: " << nEventsWritten << endl;
     }
+
+
+  std::string outFile = outputFile->GetName();
+
+  std::size_t pos = outFile.find("_1");
+  std::string filert = outFile.substr(pos);
+  std::string fileNo =  filert.substr(2,4);
+  Int_t tempEventno = GetEventNumber();
+  std::string tevent = std::to_string(tempEventno);
+  std::string eventName = fileNo + tevent;
+  EventNo = std::stod(eventName);
+  
+ 
 
   //Event Selection Parameters! Compare the reconstruction of pions to these to determine if a pion0
   IMPi0Criteria = 134.977; //pion mass
@@ -125,9 +114,6 @@ void	chrisPPi0Example::ProcessEvent()
   targetPosition.SetXYZ(target.X(),target.Y(),target.Z());   
 
 
-
-  Int_t iii = 0; // for the wire chamber info
-
   //Fill Beam Helicity
   Bool_t Helicity = GetTrigger()->GetHelicity();
 
@@ -138,69 +124,56 @@ void	chrisPPi0Example::ProcessEvent()
     BeamHelicity = 0;
   }
 
-  if (GetMWPCHitsChris()->GetNMWPCHitsChrisChamber1() != 0){
-    Chamber1_Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber1X(iii),GetMWPCHitsChris()->GetMWPCChamber1Y(iii),GetMWPCHitsChris()->GetMWPCChamber1Z(iii));
-  }
-  else{
-    Chamber1_Vec.SetXYZ(-1000,-1000,-1000);
-  }
+//Attempts to use THSParticle class to store information:
+  // Single THSParticle storage works
+  // Moving on to storing them in vectors using pointers
 
-  if (GetMWPCHitsChris()->GetNMWPCHitsChrisChamber2() != 0){
-    Chamber2_Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber2X(iii),GetMWPCHitsChris()->GetMWPCChamber2Y(iii),GetMWPCHitsChris()->GetMWPCChamber2Z(iii));
-  }
-  else{
-    Chamber2_Vec.SetXYZ(-1000,-1000,-1000);
-  }
+  TVector3 Vertex;
+  Vertex.SetXYZ(1,2,3);
+  TLorentzVector Party1;
+  Party1.SetXYZM(4,5,6,7);
+  particle1.SetP4(Party1);
+  particle1.SetVertex(Vertex);
+  particle1.SetTime(8);
+  particle1.SetMeasMass(9);
+  particle1.SetPDGcode(11);
+      
+  //std::vector<THSParticle> particleList;
+  fparticleList.clear();
+  //  TVector3 Vertex;
+  //  Vertex.SetXYZ(1,2,3);
+  //  TLorentzVector Party1;
+  //  Party1.SetXYZM(4,5,6,7);
+  //THSParticle DummyProton; // if doing pointer then these should be members of class too surely?
+    DummyProton->SetP4(Party1);
+    DummyProton->SetVertex(Vertex);
+    DummyProton->SetTime(8);
+    DummyProton->SetMeasMass(9);
+    DummyProton->SetPDGcode(11);
+    DummyProton2->SetP4(Party1);
+    DummyProton2->SetVertex(Vertex);
+    DummyProton2->SetTime(8);
+    DummyProton2->SetMeasMass(9);
+    DummyProton2->SetPDGcode(11);
+    fparticleList.push_back(DummyProton);
+    fparticleList.push_back(DummyProton2);
 
-
-  if  (Chamber1_Vec.X()==-1000){ //Can I get rid of all events if theres no hit in wc1 cos I wont be able to form the vectors properly.
-    PVector1.SetXYZ(-1000,-1000,-1000);
-    PVector2.SetXYZ(-1000,-1000,-1000);
-  }
-  else{
-    PVector1 = Chamber1_Vec - targetPosition;
-    PVector2 = Chamber2_Vec - PVector1;
-  }
-
+    
+    
+//When savin to branch this breaks it ^
+    //  fparticleList.push_back(DummyProton); 
+//    fparticleList.push_back(particle1); 
+    
   //PID info(This section needs a serious revision over christmas)
   NPidhits = GetDetectorHits()->GetNPIDHits();
+  if (NPidhits==0){
 
-  if (NPidhits>0){
-    PidHitIndex = GetDetectorHits()->GetPIDHits(0);    //The parameter in the Npidhits is the number of pid hits in the event while getPIDHits is the element number of a hit
-    PIDPhi = PIDElemPhi[PidHitIndex]; //here
+  if (GetMWPCHitsChris()->GetNMWPCHitsChrisChamber1() == 0){
 
-    if (Chamber1_Vec.X()==-1000){
-      Chamber1_VecPhi =-10000 ;
-    }
-
-    else{
-      Chamber1_VecPhi =Chamber1_Vec.Phi()*TMath::RadToDeg() ;
-    }
-//Need to justify this (why not simple difference!!)
-    PIDPhi = PIDPhi + 180;
-    Chamber1_VecPhi =Chamber1_VecPhi +180;
-    Phidiff = TMath::Abs( PIDPhi - Chamber1_VecPhi) ;   
-
-    if (Phidiff >180){
-      Phidiff = 360 -Phidiff;
-    } //closing phidiff
-
-  } //closingpihits
-
-  else{  //Changing from -10 to -1000
-    Phidiff = -10;
-    PIDPhi = -10;
-    Chamber1_VecPhi = -10;
-  }
-
-
-  if (Phidiff< -100){
-     Phidiff = -100;
-  }
 
 
   // Loop over tagged events     Needs change from Roddy, Not = to
-  for(Int_t i=0; i<=GetTagger()->GetNTagged() ;i++){
+  for(Int_t i=0; i<GetTagger()->GetNTagged() ;i++){
     
     if ( (GetPhotons()->GetNParticles()==3)){
 
@@ -209,6 +182,7 @@ void	chrisPPi0Example::ProcessEvent()
       energy_beam = GetTagger()->GetTaggedEnergy(i);
       beam.SetXYZM(0.,0.,energy_beam,0.);  
       time_beam = GetTagger()->GetTaggedTime(i);
+      
       // Change the selection into a function
       // Loop over the different combination of photons and set the different vectors for each
       for(Int_t l=0;l<3;l++){
@@ -259,7 +233,7 @@ void	chrisPPi0Example::ProcessEvent()
       
       if( SumDiff1 < SumDiff2 && SumDiff1 < SumDiff3){
 	PionCan.SetXYZM(C1.X(),C1.Y(),C1.Z(),C1.M());
-	ProtonCan = P1;
+	NeutronCan = P1;
 	cluster1_pi=GetPhotons()->Particle(1);
 	cluster2_pi=GetPhotons()->Particle(2); 
 	cluster_pi_ang_diff = cluster1_pi.TLorentzVector::Angle(cluster2_pi.Vect())*TMath::RadToDeg()/180 ;
@@ -267,7 +241,7 @@ void	chrisPPi0Example::ProcessEvent()
       	
       else if(SumDiff2 < SumDiff1 && SumDiff2 < SumDiff3){
 	PionCan.SetXYZM(C2.X(),C2.Y(),C2.Z(),C2.M());
-	ProtonCan = P2;
+	NeutronCan = P2;
 	cluster1_pi=GetPhotons()->Particle(2);
         cluster2_pi=GetPhotons()->Particle(0);   
 	cluster_pi_ang_diff = cluster1_pi.TLorentzVector::Angle(cluster2_pi.Vect())*TMath::RadToDeg()/180 ;
@@ -275,7 +249,7 @@ void	chrisPPi0Example::ProcessEvent()
 	  
       else if(SumDiff3 < SumDiff1 && SumDiff3 < SumDiff2){
 	PionCan.SetXYZM(C3.X(),C3.Y(),C3.Z(),C3.M());
-	ProtonCan = P3;
+	NeutronCan = P3;
         cluster1_pi=GetPhotons()->Particle(0);
         cluster2_pi=GetPhotons()->Particle(1);   
 	cluster_pi_ang_diff = cluster1_pi.TLorentzVector::Angle(cluster2_pi.Vect())*TMath::RadToDeg()/180 ;
@@ -284,6 +258,7 @@ void	chrisPPi0Example::ProcessEvent()
      
       // Invariant Mass
       inv_M_value = PionCan.M();
+      NeutronMass = NeutronCan.M();
   
       //Invariant mass cut here! that can be commented out to get both plots.
  //CAM 16/03/17     if (inv_M_value > invlowercut && inv_M_value <invuppercut){   
@@ -291,56 +266,16 @@ void	chrisPPi0Example::ProcessEvent()
 	missingp4     = beam + target - PionCan;
 	MissingM = missingp4.M();
 
-	ReconProton = missingp4;
-
 //CAM 16/03/17	if (MissingM > MMlowercut && MissingM <MMuppercut){    
 
 	  //Angular Distribution of particles		    
-		
- 	 Coplanarity = (PionCan).TLorentzVector::DeltaPhi(ProtonCan)*TMath::RadToDeg();
-	 if (Coplanarity <0){
-		Coplanarity =Coplanarity +360;
 	
-	}
+         Coplanarity = (PionCan).TLorentzVector::DeltaPhi(NeutronCan)*TMath::RadToDeg();
+         if (Coplanarity <0){
+                Coplanarity =Coplanarity +360;
 
-	  phiPi= (PionCan.Phi()* TMath::RadToDeg()); 
-	  phiProton = (ProtonCan.Phi()* TMath::RadToDeg());
-	  phiReconProton = (ReconProton.Phi()* TMath::RadToDeg());
-	  coplanarityMeasure  = TMath::Abs((ProtonCan.TLorentzVector::DeltaPhi(PionCan))*TMath::RadToDeg()); //Changed to use abs, CHange to pid v pion
-	  coplanarityRecon  = TMath::Abs((ReconProton.TLorentzVector::DeltaPhi(PionCan))*TMath::RadToDeg()); //Changed to use abs
-		  	
-	  //Method1
-	  thetaPi = (PionCan.Theta()* TMath::RadToDeg()); 
-	  thetaProton = (ProtonCan.Theta()* TMath::RadToDeg());
-	  thetaReconProton = (ReconProton.Theta()* TMath::RadToDeg());
-	  thetadiff  = ProtonCan.TLorentzVector::Angle(ReconProton.Vect())*TMath::RadToDeg();
- 
-	  ProtonEnergy = ProtonCan.E();
+        }
 
-	  //Boost Frame
-	  ProtonBoost = CMVector(ProtonCan,target,beam);
-	  PionBoost = CMVector(PionCan,target,beam);
-	  ReconProtonBoost = CMVector(ReconProton,target,beam);
-
-
- 	 CoplanarityBoosted = (PionBoost).TLorentzVector::DeltaPhi(ProtonBoost)*TMath::RadToDeg();
-	 if (CoplanarityBoosted <0){
-		CoplanarityBoosted =CoplanarityBoosted +360;
-	
-	}
-	   
-
-
-
-	  if (ProtonCan.X() ==0 && ProtonCan.Y() ==0 && ProtonCan.Z() ==0){
-	    NewEnergy = ProtonCan;
-	    detectornum = GetTracks()->GetDetectors(0);
-	    //	std::cout << detectornum <<std::endl;
-	  }	
-
-	  else {
-	    NewEnergy.SetPxPyPzE(-10,-10,-10,-10);
-	  }
 	  treeselected->Fill();
 	  //}
 	  //}
@@ -353,19 +288,23 @@ void	chrisPPi0Example::ProcessEvent()
 
   } //closing for loop
 
+} //closing NMWPCHits if
+
+} //closing NPIDHits if
+
   nEventsWritten++;
 
 
 } //closing function
 
 
-void	chrisPPi0Example::ProcessScalerRead()
+void	chrisNPi0::ProcessScalerRead()
 {
 	// Fill Tagger Scalers
 	//FillScalers(GetTC_scaler_min(),GetTC_scaler_max(),TaggerAccScal);
 }
 
-Bool_t	chrisPPi0Example::Write()
+Bool_t	chrisNPi0::Write()
 {
 
 //    tree1r->Write();

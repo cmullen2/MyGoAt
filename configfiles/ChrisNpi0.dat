@@ -1,0 +1,53 @@
+#
+
+#Set directories
+
+
+#Input-Directory: /w/work14/chris/Run101016/GoatOutput/Perp/20Runs/
+#Input-Directory: /w/work14/chris/Run101016/GoatOutput/Para/20Runs/3Runs/
+#Input-Directory: /scratch/chris/RealData/GoatOut/Para/
+#Input-Directory: /home/chrism/TestFiles/GoatOut/RealData
+#Input-Directory: /w/work14/chris/Run101016/GoatOutput/Perp/
+#Input-Directory: /w/work14/chris/Run101016/GoatOutput/Para/
+#Input-Directory: /w/work14/chris/Run101016/GoatOutput/Para/SingleRun/
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/BeamAsym/PosPolarisation/
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/BeamAsym/NegPolarisation/
+
+
+#Input-Directory: /w/work14/chris/Run101016/GoatOutput/Para/20Runs/1Run/
+Input-Directory: /w/work14/chris/Run101016/GoatOutput/Perp/SingleRun/
+
+
+#Output-Directory: /w/work14/chris/NPi0Analysis/RealData/ChrisOutput/Perp
+#Output-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/ChrisGoatOut/Deuterium/NPi0Channel/BeamAsym/PosPolarisation/
+#Output-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/ChrisGoatOut/Deuterium/NPi0Channel/BeamAsym/NegPolarisation/
+#Output-Directory: /w/work14/chris/NPi0Analysis/RealData/ChrisOutput/Para
+#Output-Directory: /scratch/chris/RealData/ChrisGoatOut/Para/
+#Output-Directory: /home/chrism/TestFiles/GoatOut/RealData/chrisPhysicsRun
+#Output-Directory: /w/work14/chris/Run101016/ChrisOutput/Perp/
+#Output-Directory: /w/work14/chris/Run101016/ChrisOutput/Para/
+#Output-Directory: /w/work14/chris/Run101016/ChrisOutput/Para/SingleRun/
+
+#Output-Directory: /w/work14/chris/ForBonn/Neutron/ChrisGoatOut/Para/
+Output-Directory: /w/work14/chris/ForBonn/Neutron/ChrisGoatOut/Perp/Test/
+
+
+# Set prompt and random windows (standard library and GH1 library)
+Set-Prompt-Cut: -25 25
+Add-Random-Cut: -90 -40
+Add-Random-Cut: 40 90
+
+#SetPeriodMacro
+Period-Macro:	100000
+
+# Set target mass (for standard physics library)
+Target-Mass:1875.612
+#Target-Mass: 938.272
+
+# cut on the tagger channel (for standard physics library)
+Tagger-Channel-Cut:  0 352
+
+
+# where are the tagger scalers?
+Tagger-Scalers: 268 619
+

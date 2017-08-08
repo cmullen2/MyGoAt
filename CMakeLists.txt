@@ -22,13 +22,20 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 find_package(ROOT "5.30" REQUIRED)
 
 # since all subprojects need ROOT, set that up here
-include_directories(${ROOT_INCLUDES} ${CMAKE_SOURCE_DIR}/inc)
+include_directories(${ROOT_INCLUDES} ${CMAKE_SOURCE_DIR}/inc /home/chris/HASPECT6/HaSpect/)
+#ROOT_GENERATE_DICTIONARY(/home/chris/NewHaspect/HaSpect/THSParticle.h /home/chris/GoAT/THSParticleLinkDef.h /home/chris/GoAT/G__THSParticle /home/chris/NewHaspect/HaSpect)
+#add_library(THSParticle SHARED /home/chris/NewHaspect/HaSpect/THSParticle.C)
+
+
 link_directories(${ROOT_LIBRARY_DIR})
 
 include_directories(inc)
 set(ROOT_LIBRARIES "${ROOT_LIBRARIES} -lEG")
+set(HS_LIBRARIES "-L/home/chris/HASPECT6/HaSpect/ -lTHSParticle")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -g")
+
+
 
 set(GOAT_BASE
    inc/GTree.h
@@ -110,6 +117,8 @@ else()
 endif()
 
 
+
+
 add_executable(goat
    ${GOAT_BASE}
    inc/GDataChecks.h
@@ -147,7 +156,42 @@ add_executable(chrispi0
    src/chrisPPi0Example.cc
    src/chrispi0_example_main.cc
    )
-target_link_libraries(chrispi0 ${LIBS} ${ROOT_LIBRARIES})
+target_link_libraries(chrispi0 ${LIBS} ${ROOT_LIBRARIES} ${HS_LIBRARIES} )
+
+add_executable(chrisNpi0
+   ${GOAT_BASE}
+   ${GOAT_GHIST}
+   inc/chrisPPhysics.h
+   src/chrisPPhysics.cc
+   inc/chrisNPi0.h
+   src/chrisNPi0.cc
+   src/chrisN_example_main.cc
+   )
+target_link_libraries(chrisNpi0 ${LIBS} ${ROOT_LIBRARIES} ${HS_LIBRARIES})
+
+add_executable(chrisHaspect
+   ${GOAT_BASE}
+   ${GOAT_GHIST}
+   inc/chrisPPhysics.h
+   src/chrisPPhysics.cc
+   inc/chrisForTHSProject.h
+   src/chrisForTHSProject.cc
+   src/chrisTHSPro_example_main.cc
+   )
+target_link_libraries(chrisHaspect ${LIBS} ${ROOT_LIBRARIES} ${HS_LIBRARIES} )
+
+
+add_executable(chrisCharged
+   ${GOAT_BASE}
+   ${GOAT_GHIST}
+   inc/chrisPPhysics.h
+   src/chrisPPhysics.cc
+   inc/chrisChargedPions.h
+   src/chrisChargedPions.cc
+   src/chrisCharged_example_main.cc
+   )
+target_link_libraries(chrisCharged ${LIBS} ${ROOT_LIBRARIES} ${HS_LIBRARIES} )
+
 
 
 

@@ -73,7 +73,7 @@ Bool_t	GMesonReconstruction::Init()
         widthEtaPrime = DEFAULT_WIDTH_ETA_PRIME;
         cout << "Eta-Prime IM width cut set to default (" << widthEtaPrime << " MeV)" << endl;
     }
-    cout << endl;
+    cout<< "HIya" << endl;
 
     return kTRUE;
 }

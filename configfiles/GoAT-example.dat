@@ -7,6 +7,36 @@
 #-----------------------------------------------------------------------
 
 #GOAT REQUIRES FULL PATH DON'T USE $HOME (either that or I messed with $HOME)
+
+###SPLOTS INPUT
+
+#Input-Directory: /w/work14/chris/ForSPlots/EmptyTarget/August2016/AcquOutput/Para/
+#Input-Directory: /w/work14/chris/ForSPlots/EmptyTarget/August2016/AcquOutput/Perp/
+#Input-Directory: /w/work14/chris/ForSPlots/EmptyTarget/August2016/AcquOutput/Moeller/
+
+#Input-Directory: /w/work14/chris/ForSPlots/EmptyTarget/Sept2016/AcquOutput/Para/
+#Input-Directory: /w/work14/chris/ForSPlots/EmptyTarget/Sept2016/AcquOutput/Perp/
+#Input-Directory: /w/work14/chris/ForSPlots/EmptyTarget/Sept2016/AcquOutput/Moeller/
+
+
+#Input-Directory: /w/work14/chris/ForSPlots/PPi0Analysis/AcquOutput/Para/
+#Input-Directory: /w/work14/chris/ForSPlots/PPi0Analysis/AcquOutput/Perp/
+#Input-Directory: /w/work14/chris/ForSPlots/PPi0Analysis/AcquOutput/Moeller/Single/
+
+
+#Input-Directory: /w/work14/chris/Run101016/AcquOutput/Para/LinPolTests/
+#Input-Directory: /w/work14/chris/Run101016/AcquOutput/Perp/LinPolTests/
+
+#SIMS
+#Input-Directory: /w/work14/chris/LatestAnalysisRuns/Sims/SimsJan17/AcquOutput/Deuterium/BeamAsym/NegPolarisation/
+
+#Empty Target
+#Input-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataJul17/AcquOutput/EmptyTarget/Perp/
+
+#Production Data
+Input-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataJul17/AcquOutput/Perp/
+
+
 #Input-Directory: $HOME/TestFiles/AcquOut/ProtonBad
 #Input-Directory: /home/chrism/TestFiles/AcquOut/ProtonBad
 #Input-Directory: /home/chrism/TestFiles/AcquOut/RealData
@@ -14,24 +44,91 @@
 #Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/BeamAsym/NegPolarisation
 #Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/ScatAsym/NegPolQF
 #Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/ScatAsym/NegPolNoQF
-#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/ScatAsym/PosPolQF
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/ScatAsym/PosPolQF/
 #This was prev.
 #Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/ScatAsym/PosPolNoQF
-Input-Directory: /w/work14/chris/Comparison/None/
-#Input-Directory: /w/work14/chris/Comparison/Quad/AcquRootOut/
+#Input-Directory: /w/work14/chris/Comparison/None/
+#Input-Directory: /w/work14/chris/Comparison/CBEandCBTandTagT/AcquRootOut/
 #Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/ScatAsym/PolQF/1MilAy1/Pos/
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Proton/TestingScattering/1MilAy1/Neg/
+#
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/Test/AcquRootOut/
+#
+#
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/ScatAsym/PolQF/Neg/
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/ScatAsym/PolQF/Pos/
+#
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/ScatAsym/PolQF/1Mil/Neg/
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/ScatAsym/PolQF/1Mil/Pos/
+#
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/ScatAsym/PolQF/1MilAy1/Neg/
+#Input-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/AcquRootOut/Deuterium/ScatAsym/PolQF/1MilAy1/Pos/
+#
+#
+#
+#
+#
+#
+#
+######Splots OUTPUT
+#Output-Directory: /w/work14/chris/ForSPlots/EmptyTarget/August2016/GoatOutput/Para/
+#Output-Directory: /w/work14/chris/ForSPlots/EmptyTarget/August2016/GoatOutput/Perp/
+#Output-Directory: /w/work14/chris/ForSPlots/EmptyTarget/August2016/GoatOutput/Moeller/
+#
+#Output-Directory: /w/work14/chris/ForSPlots/EmptyTarget/Sept2016/GoatOutput/Para/
+#Output-Directory: /w/work14/chris/ForSPlots/EmptyTarget/Sept2016/GoatOutput/Perp/
+#Output-Directory: /w/work14/chris/ForSPlots/EmptyTarget/Sept2016/GoatOutput/Moeller/
+#
+#Output-Directory: /w/work14/chris/ForSPlots/PPi0Analysis/GoatOutput/Para/
+#Output-Directory: /w/work14/chris/ForSPlots/PPi0Analysis/GoatOutput/Perp/
+#Output-Directory: /w/work14/chris/ForSPlots/PPi0Analysis/GoatOutput/Moeller/Test/
 
 
+
+
+#Output-Directory: /w/work14/chris/Run101016/GoatOutput/Para/LinPolTests/
+#Output-Directory: /w/work14/chris/Run101016/GoatOutput/Perp/LinPolTests/
+
+
+
+#SIMS
+#Output-Directory: /w/work14/chris/LatestAnalysisRuns/Sims/SimsJan17/GoatOutput/Deuterium/BeamAsym/NegPolarisation/
+#
+#
+#EmptyTarget
+#Output-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataJul17/GoatOutput/EmptyTarget/Perp/
+
+#ProduictionData
+Output-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataJul17/GoatOutput/Perp/TestRootino/
+
+
+#
 #Output-Directory: $HOME/TestFiles/GoatOut/ProtonBad
 #Output-Directory: /home/chrism/TestFiles/GoatOut
 #Output-Directory: /home/chrism/TestFiles/GoatOut/RealData
 #Output-Directory:  /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/BeamAsym/PosPolarisation
 #Output-Directory:  /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/BeamAsym/NegPolarisation
 #This was prev.
-#Output-Directory:  /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/ScatAsym/
-Output-Directory: /w/work14/chris/Comparison/None/GoatOut
-#Output-Directory: /w/work14/chris/Comparison/Quad/GoatOut
+#Output-Directory:  /scratch/chris/Simulations/16d11m16y/AcquMC/Test/GoatOut/
+#Output-Directory: /w/work14/chris/Comparison/None/GoatOut
+#Output-Directory: /w/work14/chris/Comparison/CBEandCBTandTagT/GoatOut
 #Output-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/
+#Output-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Proton/TestingScattering/1MilAy1/Neg/
+#
+#
+#Output-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/ScatAsym/PolQF/Neg/
+#Output-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/ScatAsym/PolQF/Pos/
+#
+#Output-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/ScatAsym/PolQF/1Mil/Neg/
+#Output-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/ScatAsym/PolQF/1Mil/Pos/
+#
+#Output-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/ScatAsym/PolQF/1MilAy1/Neg/
+#Output-Directory: /scratch/chris/Simulations/16d11m16y/AcquMC/GoatOut/Deuterium/ScatAsym/PolQF/1MilAy1/Pos/
+#
+#
+#
+
 Period-Macro:	100000
 
 #-----------------------------------------------------------------------
@@ -41,8 +138,8 @@ Do-Particle-Reconstruction: 1
 
 
 #Added Chris Mullen to only reconstruct photons in TAPs and CB rather than rootinos.
-CB-all-photons: 1
-TAPS-all-photons: 1
+#CB-all-photons: 1
+#TAPS-all-photons: 1
 
 #Do-Charged-Particle-Reconstruction: 0
 #Cut-dE-E-CB-Proton: 	configfiles/cuts/CB_DeltaE-E_Proton.root Proton

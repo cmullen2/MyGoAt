@@ -46,6 +46,7 @@ void    GTreeTagger::SetCalibration(const Int_t nChan, const Double_t *energy)
     for(Int_t i=0; i<nChan; i++) calibration[i] = energy[i];
 }
 
+
 TLorentzVector  GTreeTagger::GetVectorProtonTarget(const Int_t index)    const
 {
     return TLorentzVector(0, 0, taggedEnergy[index], taggedEnergy[index] + (manager->pdgDB->GetParticle("proton")->Mass()*1000));

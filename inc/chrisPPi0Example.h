@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <string>
 #include <sstream>
+#include <iomanip>
 
 #include "GTreeManager.h"
 #include "chrisPPhysics.h"
@@ -38,15 +39,27 @@ private:
 
 
 //PID plan create an array of length 24 to store the elements of the PID phi. DATA version
-//  Double_t PIDElemPhi[24] = {8.574,22.974,37.379,51.784,66.188,80.593,94.997,109.402,123.806,138.211,152.615,167.02,-178.93,-163.16,-147.39,-131.62,-115.85,-100.08,-84.31,-68.54,-52.77,-37.01,-21.24,-5.47};
+  Double_t PIDElemPhi[24] = {8.574,22.974,37.379,51.784,66.188,80.593,94.997,109.402,123.806,138.211,152.615,167.02,-178.93,-163.16,-147.39,-131.62,-115.85,-100.08,-84.31,-68.54,-52.77,-37.01,-21.24,-5.47};
+
 //Simulation Version
-Double_t PIDElemPhi[24] = { 172.5, 157.5, 142.5, 127.5, 112.5, 97.5, 82.5, 67.5, 52.5, 37.5, 22.5, 7.5,  -7.5, -22.5, -37.5, -52.5, -67.5, -82.5, -97.5, -112.5, -127.5, -142.5, -157.5, -172.5};
+//Double_t PIDElemPhi[24] = { 172.5, 157.5, 142.5, 127.5, 112.5, 97.5, 82.5, 67.5, 52.5, 37.5, 22.5, 7.5,  -7.5, -22.5, -37.5, -52.5, -67.5, -82.5, -97.5, -112.5, -127.5, -142.5, -157.5, -172.5};
 
 
 
 //Selection Criteria 
 Double_t MMPi0Criteria;
 Double_t IMPi0Criteria;
+Double_t MMuppercut;
+Double_t MMlowercut;
+Double_t invlowercut;
+Double_t invuppercut;
+
+
+//Splots branch parameters
+Double_t Coplanarity;
+Double_t CoplanarityBoosted;
+Double_t EventNo;
+Double_t OpeningAngle;
 
 
 //First Branch Parameters 1 rootino branch
