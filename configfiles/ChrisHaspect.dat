@@ -1,0 +1,28 @@
+#
+
+#Set directories
+
+#Input-Directory: /w/work14/chris/Run101016/GoatOutput/Perp/SingleRun/
+Input-Directory: /w/work14/chris/ForSPlots/PPi0Analysis/GoatOutput/Moeller/Test/
+
+Output-Directory: /w/work14/chris/ForBonn/Neutron/ChrisGoatOut/Perp/TestHaspect/NewMethod/
+
+# Set prompt and random windows (standard library and GH1 library)
+Set-Prompt-Cut: -25 25
+Add-Random-Cut: -90 -40
+Add-Random-Cut: 40 90
+
+#SetPeriodMacro
+Period-Macro:	100000
+
+# Set target mass (for standard physics library)
+Target-Mass:1875.612
+#Target-Mass: 938.272
+
+# cut on the tagger channel (for standard physics library)
+Tagger-Channel-Cut:  0 352
+
+
+# where are the tagger scalers?
+Tagger-Scalers: 268 619
+

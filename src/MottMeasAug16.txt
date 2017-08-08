@@ -1,0 +1,88 @@
+Mott parameters 14579 
+-28.84 +- 0.071;   Pol = -74.77
+ 29.13 +- 0.067    Pol =  75.53
+ave=75.15
+
+
+14673
+-29.24 +- 0.07 Pol -75.8117
+29.616 +- 0.066 Pol 76.7866
+ave=76.29915
+
+
+
+14777
+With Lambda half plate:
+spin rot. angle: 81 deg.
+Asym.: -29.255+- 0.072%
+Pol.: -75.8506%
+Without Lambda half plate:
+spin rot. angle: 81 deg.
+Asym.: +29.558+- 0.068%
+Pol.: +76.6362%
+ave=76.2434 
+
+
+
+
+14893
+With Lambda half plate:
+spin rot. angle: +81 deg
+Asym.: -29.388 +- 0.071%
+Pol.: -76.1955%
+Without Lambda half plate:
+spin rot. angle: +81 deg
+Asym.: +29.722% +- 0.068%
+Pol.: +77.0614%
+ave=76.62845
+
+
+15029
+With Lambda half plate:
+Asym.: -29.539 +- 0.071%
+Pol.: -76.587%
+Without Lambda half plate:
+Asym.: +29.814% +- 0.068%
+Pol.: +77.3%
+ave=76.9435
+
+
+
+15122
+With Lambda half plate:
+Asym.: -29.704 +- 0.072%
+Pol.: -77.0148%
+Without Lambda half plate:
+Asym.: +29.976% +- 0.07%
+Pol.: +77.72%
+ave=77.3674
+
+15426
+With Lambda half plate:
+Asym.: -29.891 +- 0.073%
+Pol.: -77.4996%
+Without Lambda half plate:
+Asym.: +29.962% +- 0.076%
+Pol.: +77.6837%
+ave=77.59165
+
+15584
+with lambda half plate:
+-29.901 +- 0.09%
+Pol : -77.5255%
+without:
+29.777 +- 0.1%
+Pol: 77.204%
+ave=77.36475
+
+15949
+angle: -32.85266
+with lambda/2:
+asymmetry: 15.538 pm +- 0.091%
+polarisation: -73.3485%
+without lambda/2:
+asymmetry: -15.317 +- 0.084%
+polarisation: 72.3052%
+ave=72.82685
+
+
