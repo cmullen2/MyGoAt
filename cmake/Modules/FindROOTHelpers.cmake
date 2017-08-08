@@ -11,6 +11,8 @@ function (ROOT_GENERATE_DICTIONARY HEADERS LINKDEF_FILE DICTFILE INCLUDE_DIRS)
   get_filename_component(DICTFILENAME ${DICTFILE} NAME)
   set(DICTFILES ${DICTFILE} "${DICTFILEDIR}/${DICTFILENAME_WE}.h")
 
+  message(STATUS "DictFile  "  ${DICTFILEDIR}  )
+
   # and ensure the output directory exists
   file(MAKE_DIRECTORY ${DICTFILEDIR})
   

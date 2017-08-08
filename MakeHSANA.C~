@@ -1,0 +1,8 @@
+{
+  TString PWD = gSystem->Getenv("$PWD");
+  gSystem->Exe("cd $HSANA");
+  gROOT->LoadMacro("THSParticle.C++");
+  //  gSystem->Exe("ln -s THSParticle_C.so libTHSParticle.so");
+  gSystem->Exe(TString("cd ")+PWD);
+  //Done forget to include $HSANA in LD_LIBRARY_PATH : setenv LD_LIBRARY_PATH "$LD_LIBRARY_PATH":"$HSANA"
+}
