@@ -5,6 +5,8 @@
 #include "Rtypes.h"
 #include "GTree.h"
 
+#define GTreeDetectors_MAX 4096
+
 
 class  GTreeDetectorHits    : public GTree
 {
@@ -12,15 +14,23 @@ private:
     Int_t		nNaIHits;
     Int_t		NaIHits[720];
     Int_t		NaICluster[720];
+    Double_t		NaIEnergy[GTreeDetectors_MAX];
+    Double_t		NaITime[GTreeDetectors_MAX];
     Int_t		nPIDHits;
     Int_t		PIDHits[24];
+    Double_t		PIDEnergy[GTreeDetectors_MAX];
+    Double_t		PIDTime[GTreeDetectors_MAX];
     Int_t		nMWPCHits;
     Int_t		MWPCHits[860];
     Int_t		nBaF2Hits;
     Int_t		BaF2Hits[438];
     Int_t		BaF2Cluster[438];
+    Double_t		BaF2Energy[GTreeDetectors_MAX];
+    Double_t		BaF2Time[GTreeDetectors_MAX];
     Int_t		nVetoHits;
     Int_t		VetoHits[438];
+    Double_t		VetoEnergy[GTreeDetectors_MAX];
+    Double_t		VetoTime[GTreeDetectors_MAX];
 
 protected:
     virtual void    SetBranchAdresses();
