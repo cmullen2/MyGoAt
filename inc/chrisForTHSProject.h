@@ -71,6 +71,7 @@ Double_t MCMottPos = -1;
   TVector3 fchamber2Vec;
   Double_t fpidRootinoPhi;
   Int_t fedgePlane;
+  Int_t ftaggChannel;
   Double_t frootinoPhi;
 
   //Other parameters used in .cc
@@ -107,6 +108,8 @@ Double_t MCMottPos = -1;
   Double_t flinPol;
   Double_t ePol; 
   Double_t Pcirc; 
+  Double_t taggUpRange;
+  Double_t taggLowRange;
   std::string fileNo;
 
 

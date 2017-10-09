@@ -1,7 +1,7 @@
 {
   TString PWD = gSystem->Getenv("$PWD");
   gSystem->Exec("cd $HSANA");
-  gROOT->LoadMacro("THSParticle.0.C++");
+  gROOT->LoadMacro("THSParticle.C++");
 //  gROOT->LoadMacro("THSDataReader.C++");
    // gSystem->Exe("ln -s THSParticle_C.so libTHSParticle.so");
   gSystem->Exec(TString("cd ")+PWD);

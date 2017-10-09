@@ -22,14 +22,14 @@
 
 
 #SIMS
-#Input-Directory: /w/work14/chris/LatestAnalysisRuns/Sims/SimsJan17/GoatOutput/Deuterium/BeamAsym/NegPolarisation/
+Input-Directory: /w/work14/chris/LatestAnalysisRuns/Sims/SimsJan17/GoatOutput/Deuterium/BeamAsym/NegPolarisation/
 
 
 #EmptyTarget
 #Input-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataJul17/GoatOutput/EmptyTarget/Perp/
 
 #Production
-Input-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataJul17/GoatOutput/Perp/
+#Input-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataJul17/GoatOutput/Perp/
 
 
 
@@ -97,7 +97,7 @@ Input-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataJul17/GoatOutput/Pe
 #Output-Directory: /w/work14/chris/Run101016/ChrisOutput/Para/LinPolTests/
 
 #SIMS
-#Output-Directory: /w/work14/chris/LatestAnalysisRuns/Sims/SimsJan17/ChrisOutput/Deuterium/BeamAsym/NegPolarisation/
+Output-Directory: /w/work14/chris/LatestAnalysisRuns/Sims/SimsJan17/ChrisOutput/Deuterium/BeamAsym/NegPolarisation/
 
 
 
@@ -105,7 +105,7 @@ Input-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataJul17/GoatOutput/Pe
 #Output-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataJul17/ChrisOutput/EmptyTarget/Perp/
 
 #Production
-Output-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataJul17/ChrisOutput/Perp/TestRootino/
+#Output-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataJul17/ChrisOutput/Perp/TestRootinoPhi/
 
 
 
