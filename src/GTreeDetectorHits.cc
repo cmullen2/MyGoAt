@@ -63,23 +63,23 @@ void    GTreeDetectorHits::SetBranches()
     outputTree->Branch("nNaIHits", &nNaIHits, "nNaIHits/I");
     outputTree->Branch("NaIHits", NaIHits, "NaIHits[nNaIHits]/I");
     outputTree->Branch("NaICluster", NaICluster, "NaICluster[nNaIHits]/I");
-//    outputTree->Branch("NaIEnergy", &NaIEnergy, "NaIEnergy[nNaIHits]/D");
-//    outputTree->Branch("NaITime", &NaITime, "NaITime[nNaIHits]/D");
+    outputTree->Branch("NaIEnergy", NaIEnergy, "NaIEnergy[nNaIHits]/D");
+    outputTree->Branch("NaITime", NaITime, "NaITime[nNaIHits]/D");
     outputTree->Branch("nPIDHits", &nPIDHits, "nPIDHits/I");
     outputTree->Branch("PIDHits", PIDHits, "PIDHits[nPIDHits]/I");
-//    outputTree->Branch("PIDEnergy", &PIDEnergy, "PIDEnergy[nPIDHits]/D");
-//    outputTree->Branch("PIDTime", &PIDTime, "PIDTime[nPIDHits]/D");
+    outputTree->Branch("PIDEnergy", PIDEnergy, "PIDEnergy[nPIDHits]/D");
+    outputTree->Branch("PIDTime", PIDTime, "PIDTime[nPIDHits]/D");
     outputTree->Branch("nMWPCHits", &nMWPCHits, "nMWPCHits/I");
     outputTree->Branch("MWPCHits", MWPCHits, "MWPCHits[nMWPCHits]/I");
     outputTree->Branch("nBaF2Hits", &nBaF2Hits, "nBaF2Hits/I");
     outputTree->Branch("BaF2Hits", BaF2Hits, "BaF2Hits[nBaF2Hits]/I");
     outputTree->Branch("BaF2Cluster", BaF2Cluster, "BaF2Cluster[nBaF2Hits]/I");
-//    outputTree->Branch("BaF2Energy", &BaF2Energy, "BaF2Energy[nBaF2Hits]/D");
-//    outputTree->Branch("BaF2Time", &BaF2Time, "BaF2Time[nBaF2Hits]/D");
+    outputTree->Branch("BaF2Energy", BaF2Energy, "BaF2Energy[nBaF2Hits]/D");
+    outputTree->Branch("BaF2Time", BaF2Time, "BaF2Time[nBaF2Hits]/D");
     outputTree->Branch("nVetoHits", &nVetoHits, "nVetoHits/I");
     outputTree->Branch("VetoHits", VetoHits, "VetoHits[nVetoHits]/I");
-//    outputTree->Branch("VetoEnergy", &VetoEnergy, "VetoEnergy[nVetoHits]/D");
-//    outputTree->Branch("VetoTime", &VetoTime, "VetoTime[nVetoHits]/D");
+    outputTree->Branch("VetoEnergy", VetoEnergy, "VetoEnergy[nVetoHits]/D");
+    outputTree->Branch("VetoTime", VetoTime, "VetoTime[nVetoHits]/D");
 
 }
 
