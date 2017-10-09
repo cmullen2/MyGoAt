@@ -99,10 +99,11 @@ void	chrisForTHSProject::ProcessEvent()
   if(usePeriodMacro == 1)
     {
       if(GetEventNumber() % period == 0)
-	cout << "Events: " << GetEventNumber() << "  Events Accepted: " << nEventsWritten <<" testcounter= " <<testcounter <<  endl;
+	cout << "Events: " << GetEventNumber() << "  Events Accepted: " << nEventsWritten << endl;
+//" testcounter= " <<testcounter <<  endl;
     }
 
-Int_t mc =0;
+Int_t mc =1;
 
 
 if(!mc){
@@ -118,10 +119,22 @@ if(!mc){
   Double_t eventName = std::stod(tevent2) + std::stod(tevent);
   feventNo = eventName;
 //  feventNo = std::stod(eventName);
+
+//Tagger Timing cuts
+  taggUpRange= 80;
+  taggLowRange= 40;
+
+//Linear polarisation plane setting
+  if(GetLinpol()->GetPolarizationPlane()==0) fedgePlane = -1; // Para
+  if(GetLinpol()->GetPolarizationPlane()==1) fedgePlane = 1; // Perp
+  if(GetLinpol()->GetPolarizationPlane()==2) fedgePlane = 0; //Moeller or other
+
+
+
 }
 else{
 //MC needs to deal with event no, ePol and linpol and where para or perp
-cout << " Using MC data " << endl;
+//cout << " Using MC data " << endl;
 
 std::string outFile = outputFile->GetName();
 std::string filert = outFile.substr( outFile.length() - 11  );
@@ -136,6 +149,24 @@ if(planesetting=="Pos" ) fileNo = "22220000";
 Int_t tempEventno = GetEventNumber();
 feventNo = std::stod(fileNo) + tempEventno;
 
+//Tagger Timing cuts
+taggUpRange=10;
+taggLowRange=-10;
+
+
+//Linear Polarsation plane setting
+if(planesetting=="Neg" ) fedgePlane = -1; //Equating Neg file with Para polarisation state
+if(planesetting=="Pos" ) fedgePlane = 1;
+
+
+//Linear Polarisation value
+//Use if !mc for the linPol parameter and assign the mc value here based on name 
+
+if(planesetting=="Neg" ) flinPol = -1; //Equating Neg file with Para polarisation with max value
+if(planesetting=="Pos" ) flinPol = 1;
+
+
+//cout << "mafde it " << endl;
 }
 
 
@@ -203,15 +234,7 @@ feventNo = std::stod(fileNo) + tempEventno;
   if(Helicity == 0){
     fbeamHelicity = -1;
   }
-
-  //Linear Polarisation Information
-  if(GetLinpol()->GetPolarizationPlane()==0) fedgePlane = -1; // Para
-  if(GetLinpol()->GetPolarizationPlane()==1){ fedgePlane = 1;} // Perp
-  else{
-    fedgePlane=0; //Moeller or other
-  }
-
-
+  
 
   fNin= 3+ (GetTagger()->GetNTagged());
   Int_t countb4 = 0;
@@ -247,7 +270,7 @@ feventNo = std::stod(fileNo) + tempEventno;
 	ftaggedTime = GetTagger()->GetTaggedTime(i);
 	countb4 = countb4+1;
 	
-	if ( ftaggedTime > 40 && ftaggedTime <80 ) {
+	if ( ftaggedTime > taggLowRange && ftaggedTime < taggUpRange ) {  //Remember SIMS have zero time!!!!
 
 	  countaft=countaft+1;
 	  counter = countb4 - countaft;
@@ -258,18 +281,26 @@ feventNo = std::stod(fileNo) + tempEventno;
 	  fenergyBeam = GetTagger()->GetTaggedEnergy(i);
 	  beam.SetXYZM(0.,0.,fenergyBeam,0.);  
 
-	  //Linear polarisation
-          flinPol = GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(i) );
+	  //Linear Polarisation
+	  if(!mc)flinPol =fedgePlane*( GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(i) ) );
 	  //Circular polarisation
 	  Pcirc = CircPol(fenergyBeam, ePol );	
-	  
+
+	//Tagger Channel
+	  ftaggChannel = GetTagger()->GetTaggedChannel(i);
+	
+	//Set Edge Plane is describing setting Para Perp Moeller (+-45deg etc.) Set Detector is the tagger channel  
+  	  Particles[i+3-counter]->SetEdgePlane(fedgePlane);
+  	  Particles[i+3-counter]->SetDetector(ftaggChannel);
 	  fglasgowTaggerPhoton.SetPxPyPzE(0,0,fenergyBeam, fenergyBeam);  //TLorentzVector
 	  Particles[i+3-counter]->SetP4(fglasgowTaggerPhoton);
 	  Particles[i+3-counter]->SetPDGcode(-22);
 	  Particles[i+3-counter]->SetTime(ftaggedTime);
 	  if (flinPol>0)  Particles[i+3-counter]->SetVertex(flinPol,0,Pcirc*fbeamHelicity);
 	  if (flinPol<0)  Particles[i+3-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity);
+	  if (flinPol==0)  Particles[i+3-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity);
 	  
+
 	} //closing if TaggedTime
 	
       } //Closing for NTagged.
@@ -306,22 +337,22 @@ feventNo = std::stod(fileNo) + tempEventno;
       Particles.push_back(fReadParticles->at(0));
       frootino = GetRootinos()->Particle(0);
      // std::cout << "X= " <<frootino.X() << "   Y= " <<frootino.Y() <<"    Z= " <<frootino.Z() << std::endl;
-      if (frootino.X()==0 && frootino.Y()==0)testcounter= testcounter +1 ;
+ //     if (frootino.X()==0 && frootino.Y()==0)testcounter= testcounter +1 ;
       Particles[0]->SetP4(frootino);
       Particles[0]->SetPDGcode(2212);
       frootinoPhi= frootino.Phi();
 
-	rootinoClustE =frootino.E();// GetTracks()->GetClusterEnergy(0);
-	rootinoTheta =frootino.Theta();//GetTracks()->GetTheta(0);
-	rootinoPhi =frootino.Phi();//GetTracks()->GetPhi(0);
-	rootinoTime =0;//GetTracks()->GetTime(0);
-	rootinoClustS =0;//GetTracks()->GetClusterSize(0);
-	rootinoClustC =0;//GetTracks()->GetCentralCrystal(0);
-	rootinoVetoC =0;//GetTracks()->GetCentralVeto(0);
-	rootinoDet =0;//GetTracks()->GetDetectors(0);
-	rootinoVetoE =0;//GetTracks()->GetVetoEnergy(0);
-	rootinoCham1E =0;//GetTracks()->GetMWPC0Energy(0);
-	rootinoCham2E =0;//GetTracks()->GetMWPC1Energy(0);
+	rootinoClustE =GetTracks()->GetClusterEnergy(0);
+	rootinoTheta =GetTracks()->GetTheta(0);
+	rootinoPhi =GetTracks()->GetPhi(0);
+	rootinoTime =GetTracks()->GetTime(0);
+	rootinoClustS =GetTracks()->GetClusterSize(0);
+	rootinoClustC =GetTracks()->GetCentralCrystal(0);
+	rootinoVetoC =GetTracks()->GetCentralVeto(0);
+	rootinoDet =GetTracks()->GetDetectors(0);
+	rootinoVetoE =GetTracks()->GetVetoEnergy(0);
+	rootinoCham1E =GetTracks()->GetMWPC0Energy(0);
+	rootinoCham2E =GetTracks()->GetMWPC1Energy(0);
 
 
 
@@ -341,7 +372,7 @@ feventNo = std::stod(fileNo) + tempEventno;
 	countb4 = countb4 +1;
 
 
-       	if ( ftaggedTime > 40 && ftaggedTime <80 ) { 
+       	if ( ftaggedTime > taggLowRange && ftaggedTime <taggUpRange ) { 
 
 	  countaft = countaft +1;
 	  counter = countb4 - countaft;
@@ -355,16 +386,21 @@ feventNo = std::stod(fileNo) + tempEventno;
       	  fglasgowTaggerPhoton.SetPxPyPzE(0,0,fenergyBeam, fenergyBeam);  //TLorentzVector
 
 	//Linear Polarisation
-          flinPol = GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(l) );
+         if(!mc) flinPol =fedgePlane* ( GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(l) ) );
 	//Circular Polarisation
 	  Pcirc = CircPol(fenergyBeam, ePol );	
 
-	  
+	//Tagger Channel
+	  ftaggChannel  = GetTagger()->GetTaggedChannel(l) ;
+
+	  Particles[l+3-counter]->SetDetector(fedgePlane);
+  	  Particles[l+3-counter]->SetDetector(ftaggChannel);
 	  Particles[l+3-counter]->SetP4(fglasgowTaggerPhoton);
 	  Particles[l+3-counter]->SetPDGcode(-22);
 	  Particles[l+3-counter]->SetTime(ftaggedTime);
-	  if (flinPol>0)  Particles[l+3-counter]->SetVertex(flinPol,0,Pcirc*fbeamHelicity);
-	  if (flinPol<0)  Particles[l+3-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity);
+	  if (flinPol>0)  Particles[l+3-counter]->SetVertex(flinPol,0,Pcirc*fbeamHelicity); //Perp
+	  if (flinPol<0)  Particles[l+3-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity); //Para
+	  if (flinPol==0)  Particles[l+3-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity); //Moeller
 	  
 	  
 	} //closing if TaggedTime
@@ -379,7 +415,7 @@ feventNo = std::stod(fileNo) + tempEventno;
 
   //*************************************************************************************************************************************
 else{
-
+	frootinoPhi=-200;
 	rootinoClustE =-111;  
         rootinoTheta =-111;
         rootinoPhi =-111;
