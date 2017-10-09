@@ -9,8 +9,7 @@ chrisForTHSProject::chrisForTHSProject()
 { 
   gROOT->ProcessLine("#include <vector>");
 
-  treePi0 =  new TTree("HSParticles","Event selection tree"); // Neutron pi0 final state tree   
-  //treeProtonPi0 =  new TTree("ProtonPi0","Event selection tree"); // Proton pi0 final state tree   
+  treePi0 =  new TTree("HSParticles","Event selection tree"); //Proton/Neutron pi0 final state tree   
 
 
   //Neutron Tree branches
@@ -63,8 +62,6 @@ Bool_t	chrisForTHSProject::Init()
 
   target.SetXYZM(0.0,0.0,-65.0,1875.613);	//NEEDS CHANGING currently deuteron
   //	target.SetXYZM(0.0,0.0,-65.0,938.272);	//NEEDS CHANGING only TEMP for a SIM
-
-  //Following line may break due to GetNTagged not being defined yet, if so simply replace with a number and the while statement in main will correct it.
   fNin = (3+ (GetTagger()->GetNTagged()) ) ; //Estimate of Number of input particles(tagged+ball+rootinos etc.) Can and will calc this!(3+NTagged)
   fReadParticles=new vector<THSParticle*>;
   for(Int_t m=0; m<fNin; m++ ){
@@ -103,7 +100,7 @@ void	chrisForTHSProject::ProcessEvent()
 //" testcounter= " <<testcounter <<  endl;
     }
 
-Int_t mc =1;
+  Int_t mc =1; //0 for production data, non-zero for simulation
 
 
 if(!mc){
@@ -244,7 +241,7 @@ if(planesetting=="Pos" ) flinPol = 1;
   
   
   //************************************************************************************************************************
-  //Methodology: Now using a rootino for proton so how  does this effect neutron will it be rootino or photon? photon right?
+
   if ( (GetPhotons()->GetNParticles()==3)){
 
     //PID info
@@ -270,7 +267,7 @@ if(planesetting=="Pos" ) flinPol = 1;
 	ftaggedTime = GetTagger()->GetTaggedTime(i);
 	countb4 = countb4+1;
 	
-	if ( ftaggedTime > taggLowRange && ftaggedTime < taggUpRange ) {  //Remember SIMS have zero time!!!!
+	if ( ftaggedTime > taggLowRange && ftaggedTime < taggUpRange ) { 
 
 	  countaft=countaft+1;
 	  counter = countb4 - countaft;
@@ -455,10 +452,9 @@ Bool_t	chrisForTHSProject::Write()
   treePi0->Write(); 
   treePi0->Reset();
 
-  return 0; //Added CAM 28/09/16
+  return 0; 
 
-  // Write all GH1's and TObjects defined in this class
-  //    return GTreeManager::Write(); //Removed CAM 28/09/16
+ 
 }
 
 
