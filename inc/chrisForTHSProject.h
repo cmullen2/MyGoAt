@@ -101,6 +101,7 @@ Double_t MCMottPos = -1;
   Int_t EventNumber;
   Int_t NPidhits;
   Int_t fNin;
+  Int_t particleindex=-1;
   Double_t energySum;
   Double_t fchamber1VecPhi;
   Double_t fphidiff;
@@ -128,7 +129,8 @@ Double_t  rootinoVetoE;
 Double_t  rootinoCham1E;
 Double_t  rootinoCham2E;
 Int_t testcounter=0;
-
+ Int_t HasTappyTaps;
+ Int_t HasCrisyBall;
 
 
 

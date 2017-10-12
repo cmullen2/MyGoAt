@@ -40,6 +40,8 @@ treePi0->Branch("rootinoDet",&rootinoDet);
 treePi0->Branch("rootinoVetoE",&rootinoVetoE);
 treePi0->Branch("rootinoCham1E",&rootinoCham1E);
 treePi0->Branch("rootinoCham2E",&rootinoCham2E);
+treePi0->Branch("HasTappyTaps",&HasTappyTaps);
+treePi0->Branch("HasCrisyBall",&HasCrisyBall);
  
 
 
@@ -100,7 +102,7 @@ void	chrisForTHSProject::ProcessEvent()
 //" testcounter= " <<testcounter <<  endl;
     }
 
-  Int_t mc =1; //0 for production data, non-zero for simulation
+  Int_t mc =0; //0 for production data, non-zero for simulation
 
 
 if(!mc){
@@ -259,7 +261,9 @@ if(planesetting=="Pos" ) flinPol = 1;
 	fcbPhoton = GetPhotons()->Particle(j); //TLorentzVector
 	Particles[j]->SetP4(fcbPhoton);
 	Particles[j]->SetPDGcode(22);
-
+	Particles[j]->SetTime(GetTracks()->GetTime(j));//Should this be using gettrack index then get time on the index?Yes but since the particles are all photons trackNum=photonNum,see below for alternative
+	//Particles[j]
+	
       } //Closing For NParticles 
 
       for(Int_t i=0; i<GetTagger()->GetNTagged() ;i++){
@@ -335,8 +339,11 @@ if(planesetting=="Pos" ) flinPol = 1;
       frootino = GetRootinos()->Particle(0);
      // std::cout << "X= " <<frootino.X() << "   Y= " <<frootino.Y() <<"    Z= " <<frootino.Z() << std::endl;
  //     if (frootino.X()==0 && frootino.Y()==0)testcounter= testcounter +1 ;
+      particleindex=GetRootinos()->GetTrackIndex(0) ;//Set as -1 in header so will break if has any unexpected behaviour
       Particles[0]->SetP4(frootino);
       Particles[0]->SetPDGcode(2212);
+      Particles[0]->SetTime(GetTracks()->GetTime(particleindex));
+      //	cout << "Rootinos " << GetRootinos()->GetTrackIndex(0) << "   " << GetPhotons()->GetTrackIndex(0)<<"    " <<GetTracks()->GetTime(0)<<"   " <<GetTracks()->GetTime(particleindex) << "   " << GetTracks()->GetTime(GetPhotons()->GetTrackIndex(0)) << endl;
       frootinoPhi= frootino.Phi();
 
 	rootinoClustE =GetTracks()->GetClusterEnergy(0);
@@ -350,15 +357,17 @@ if(planesetting=="Pos" ) flinPol = 1;
 	rootinoVetoE =GetTracks()->GetVetoEnergy(0);
 	rootinoCham1E =GetTracks()->GetMWPC0Energy(0);
 	rootinoCham2E =GetTracks()->GetMWPC1Energy(0);
-
+	HasTappyTaps =GetTracks()->HasTAPS(0);
+	HasCrisyBall= GetTracks()->HasCB(0);
 
 
       for(Int_t k=0; k<GetPhotons()->GetNParticles(); k++){
-
+	particleindex=GetPhotons()->GetTrackIndex(k);
 	Particles.push_back(fReadParticles->at(k+1));
       	fcbPhoton = GetPhotons()->Particle(k); //TLorentzVector
 	Particles[k+1]->SetP4(fcbPhoton);
 	Particles[k+1]->SetPDGcode(22);
+	Particles[k+1]->SetTime(GetTracks()->GetTime(particleindex));
 	      
       } //Closing For NParticles 
         
@@ -390,7 +399,7 @@ if(planesetting=="Pos" ) flinPol = 1;
 	//Tagger Channel
 	  ftaggChannel  = GetTagger()->GetTaggedChannel(l) ;
 
-	  Particles[l+3-counter]->SetDetector(fedgePlane);
+	  Particles[l+3-counter]->SetEdgePlane(fedgePlane);
   	  Particles[l+3-counter]->SetDetector(ftaggChannel);
 	  Particles[l+3-counter]->SetP4(fglasgowTaggerPhoton);
 	  Particles[l+3-counter]->SetPDGcode(-22);
@@ -424,7 +433,8 @@ else{
         rootinoVetoE =-111;
         rootinoCham1E =-111;
         rootinoCham2E =-111;
-
+	HasTappyTaps =-11;
+	HasCrisyBall =-11;
 
 }
   
