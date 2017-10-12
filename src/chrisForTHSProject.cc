@@ -29,19 +29,19 @@ chrisForTHSProject::chrisForTHSProject()
   treePi0->Branch("fedgeplane",&fedgePlane);
   treePi0->Branch("flinPol",&flinPol);
   treePi0->Branch("frootinoPhi",&frootinoPhi);
-treePi0->Branch("rootinoClustE",&rootinoClustE);
-treePi0->Branch("rootinoTheta",&rootinoTheta);
-treePi0->Branch("rootinoPhi",&rootinoPhi);
-treePi0->Branch("rootinoTime",&rootinoTime);
-treePi0->Branch("rootinoClustS",&rootinoClustS);
-treePi0->Branch("rootinoClustC",&rootinoClustC);
-treePi0->Branch("rootinoVetoC",&rootinoVetoC);
-treePi0->Branch("rootinoDet",&rootinoDet);
-treePi0->Branch("rootinoVetoE",&rootinoVetoE);
-treePi0->Branch("rootinoCham1E",&rootinoCham1E);
-treePi0->Branch("rootinoCham2E",&rootinoCham2E);
-treePi0->Branch("HasTappyTaps",&HasTappyTaps);
-treePi0->Branch("HasCrisyBall",&HasCrisyBall);
+  treePi0->Branch("rootinoClustE",&rootinoClustE);
+  treePi0->Branch("rootinoTheta",&rootinoTheta);
+  treePi0->Branch("rootinoPhi",&rootinoPhi);
+  treePi0->Branch("rootinoTime",&rootinoTime);
+  treePi0->Branch("rootinoClustS",&rootinoClustS);
+  treePi0->Branch("rootinoClustC",&rootinoClustC);
+  treePi0->Branch("rootinoVetoC",&rootinoVetoC);
+  treePi0->Branch("rootinoDet",&rootinoDet);
+  treePi0->Branch("rootinoVetoE",&rootinoVetoE);
+  treePi0->Branch("rootinoCham1E",&rootinoCham1E);
+  treePi0->Branch("rootinoCham2E",&rootinoCham2E);
+  treePi0->Branch("HasTappyTaps",&HasTappyTaps);
+  treePi0->Branch("HasCrisyBall",&HasCrisyBall);
  
 
 
@@ -99,74 +99,74 @@ void	chrisForTHSProject::ProcessEvent()
     {
       if(GetEventNumber() % period == 0)
 	cout << "Events: " << GetEventNumber() << "  Events Accepted: " << nEventsWritten << endl;
-//" testcounter= " <<testcounter <<  endl;
+      //" testcounter= " <<testcounter <<  endl;
     }
 
   Int_t mc =0; //0 for production data, non-zero for simulation
 
 
-if(!mc){
+  if(!mc){
 
-  // Unique Event ID
-  std::string outFile = outputFile->GetName();
-  std::size_t pos = outFile.find("_1");
-  std::string filert = outFile.substr(pos);
-  fileNo =  filert.substr(2,4);
-  Int_t tempEventno = GetEventNumber();
-  std::string tevent = std::to_string(tempEventno);
-  std::string tevent2 = fileNo + "0000";
-  Double_t eventName = std::stod(tevent2) + std::stod(tevent);
-  feventNo = eventName;
-//  feventNo = std::stod(eventName);
+    // Unique Event ID
+    std::string outFile = outputFile->GetName();
+    std::size_t pos = outFile.find("_1");
+    std::string filert = outFile.substr(pos);
+    fileNo =  filert.substr(2,4);
+    Int_t tempEventno = GetEventNumber();
+    std::string tevent = std::to_string(tempEventno);
+    std::string tevent2 = fileNo + "0000";
+    Double_t eventName = std::stod(tevent2) + std::stod(tevent);
+    feventNo = eventName;
+    //  feventNo = std::stod(eventName);
 
-//Tagger Timing cuts
-  taggUpRange= 80;
-  taggLowRange= 40;
+    //Tagger Timing cuts
+    taggUpRange= 80;
+    taggLowRange= 40;
 
-//Linear polarisation plane setting
-  if(GetLinpol()->GetPolarizationPlane()==0) fedgePlane = -1; // Para
-  if(GetLinpol()->GetPolarizationPlane()==1) fedgePlane = 1; // Perp
-  if(GetLinpol()->GetPolarizationPlane()==2) fedgePlane = 0; //Moeller or other
-
-
-
-}
-else{
-//MC needs to deal with event no, ePol and linpol and where para or perp
-//cout << " Using MC data " << endl;
-
-std::string outFile = outputFile->GetName();
-std::string filert = outFile.substr( outFile.length() - 11  );
-//cout <<" Substring is filert " << filert << endl;
-
-std::string planesetting = filert.substr(0,3);
-//cout << " plane setting " << planesetting <<endl;
-
-if(planesetting=="Neg" ) fileNo = "11110000";
-if(planesetting=="Pos" ) fileNo = "22220000";
-
-Int_t tempEventno = GetEventNumber();
-feventNo = std::stod(fileNo) + tempEventno;
-
-//Tagger Timing cuts
-taggUpRange=10;
-taggLowRange=-10;
+    //Linear polarisation plane setting
+    if(GetLinpol()->GetPolarizationPlane()==0) fedgePlane = -1; // Para
+    if(GetLinpol()->GetPolarizationPlane()==1) fedgePlane = 1; // Perp
+    if(GetLinpol()->GetPolarizationPlane()==2) fedgePlane = 0; //Moeller or other
 
 
-//Linear Polarsation plane setting
-if(planesetting=="Neg" ) fedgePlane = -1; //Equating Neg file with Para polarisation state
-if(planesetting=="Pos" ) fedgePlane = 1;
+
+  }
+  else{
+    //MC needs to deal with event no, ePol and linpol and where para or perp
+    //cout << " Using MC data " << endl;
+
+    std::string outFile = outputFile->GetName();
+    std::string filert = outFile.substr( outFile.length() - 11  );
+    //cout <<" Substring is filert " << filert << endl;
+
+    std::string planesetting = filert.substr(0,3);
+    //cout << " plane setting " << planesetting <<endl;
+
+    if(planesetting=="Neg" ) fileNo = "11110000";
+    if(planesetting=="Pos" ) fileNo = "22220000";
+
+    Int_t tempEventno = GetEventNumber();
+    feventNo = std::stod(fileNo) + tempEventno;
+
+    //Tagger Timing cuts
+    taggUpRange=10;
+    taggLowRange=-10;
 
 
-//Linear Polarisation value
-//Use if !mc for the linPol parameter and assign the mc value here based on name 
-
-if(planesetting=="Neg" ) flinPol = -1; //Equating Neg file with Para polarisation with max value
-if(planesetting=="Pos" ) flinPol = 1;
+    //Linear Polarsation plane setting
+    if(planesetting=="Neg" ) fedgePlane = -1; //Equating Neg file with Para polarisation state
+    if(planesetting=="Pos" ) fedgePlane = 1;
 
 
-//cout << "mafde it " << endl;
-}
+    //Linear Polarisation value
+    //Use if !mc for the linPol parameter and assign the mc value here based on name 
+
+    if(planesetting=="Neg" ) flinPol = -1; //Equating Neg file with Para polarisation with max value
+    if(planesetting=="Pos" ) flinPol = 1;
+
+
+    //cout << "mafde it " << endl;
+  }
 
 
 
@@ -174,7 +174,7 @@ if(planesetting=="Pos" ) flinPol = 1;
   //Clearing the vectors.
   Particles.clear();
 
- //Mott measurements for electron beam polarisation
+  //Mott measurements for electron beam polarisation
   Double_t runNo = std::stod(fileNo);
   if (runNo<=4626) ePol = MottMeas[0]; 
   if (runNo>4626 && runNo<=4725 ) ePol = MottMeas[1]; 
@@ -262,7 +262,7 @@ if(planesetting=="Pos" ) flinPol = 1;
 	Particles[j]->SetP4(fcbPhoton);
 	Particles[j]->SetPDGcode(22);
 	Particles[j]->SetTime(GetTracks()->GetTime(j));//Should this be using gettrack index then get time on the index?Yes but since the particles are all photons trackNum=photonNum,see below for alternative
-	//Particles[j]
+	Particles[j]->SetDetector(GetTracks()->GetDetectors(j)); //DETECTOR_NONE = 0,DETECTOR_NaI = 1, DETECTOR_PID = 2, DETECTOR_MWPC = 4, DETECTOR_BaF2 = 8, DETECTOR_PbWO4 = 16, DETECTOR_Veto = 32,(Additive)
 	
       } //Closing For NParticles 
 
@@ -287,10 +287,10 @@ if(planesetting=="Pos" ) flinPol = 1;
 	  //Circular polarisation
 	  Pcirc = CircPol(fenergyBeam, ePol );	
 
-	//Tagger Channel
+	  //Tagger Channel
 	  ftaggChannel = GetTagger()->GetTaggedChannel(i);
 	
-	//Set Edge Plane is describing setting Para Perp Moeller (+-45deg etc.) Set Detector is the tagger channel  
+	  //Set Edge Plane is describing setting Para Perp Moeller (+-45deg etc.) Set Detector is the tagger channel  
   	  Particles[i+3-counter]->SetEdgePlane(fedgePlane);
   	  Particles[i+3-counter]->SetDetector(ftaggChannel);
 	  fglasgowTaggerPhoton.SetPxPyPzE(0,0,fenergyBeam, fenergyBeam);  //TLorentzVector
@@ -337,28 +337,29 @@ if(planesetting=="Pos" ) flinPol = 1;
          
       Particles.push_back(fReadParticles->at(0));
       frootino = GetRootinos()->Particle(0);
-     // std::cout << "X= " <<frootino.X() << "   Y= " <<frootino.Y() <<"    Z= " <<frootino.Z() << std::endl;
- //     if (frootino.X()==0 && frootino.Y()==0)testcounter= testcounter +1 ;
+      // std::cout << "X= " <<frootino.X() << "   Y= " <<frootino.Y() <<"    Z= " <<frootino.Z() << std::endl;
+      //     if (frootino.X()==0 && frootino.Y()==0)testcounter= testcounter +1 ;
       particleindex=GetRootinos()->GetTrackIndex(0) ;//Set as -1 in header so will break if has any unexpected behaviour
       Particles[0]->SetP4(frootino);
       Particles[0]->SetPDGcode(2212);
       Particles[0]->SetTime(GetTracks()->GetTime(particleindex));
+      Particles[0]->SetDetector(GetTracks()->GetDetectors(particleindex));
       //	cout << "Rootinos " << GetRootinos()->GetTrackIndex(0) << "   " << GetPhotons()->GetTrackIndex(0)<<"    " <<GetTracks()->GetTime(0)<<"   " <<GetTracks()->GetTime(particleindex) << "   " << GetTracks()->GetTime(GetPhotons()->GetTrackIndex(0)) << endl;
       frootinoPhi= frootino.Phi();
 
-	rootinoClustE =GetTracks()->GetClusterEnergy(0);
-	rootinoTheta =GetTracks()->GetTheta(0);
-	rootinoPhi =GetTracks()->GetPhi(0);
-	rootinoTime =GetTracks()->GetTime(0);
-	rootinoClustS =GetTracks()->GetClusterSize(0);
-	rootinoClustC =GetTracks()->GetCentralCrystal(0);
-	rootinoVetoC =GetTracks()->GetCentralVeto(0);
-	rootinoDet =GetTracks()->GetDetectors(0);
-	rootinoVetoE =GetTracks()->GetVetoEnergy(0);
-	rootinoCham1E =GetTracks()->GetMWPC0Energy(0);
-	rootinoCham2E =GetTracks()->GetMWPC1Energy(0);
-	HasTappyTaps =GetTracks()->HasTAPS(0);
-	HasCrisyBall= GetTracks()->HasCB(0);
+      rootinoClustE =GetTracks()->GetClusterEnergy(0);
+      rootinoTheta =GetTracks()->GetTheta(0);
+      rootinoPhi =GetTracks()->GetPhi(0);
+      rootinoTime =GetTracks()->GetTime(0);
+      rootinoClustS =GetTracks()->GetClusterSize(0);
+      rootinoClustC =GetTracks()->GetCentralCrystal(0);
+      rootinoVetoC =GetTracks()->GetCentralVeto(0);
+      rootinoDet =GetTracks()->GetDetectors(0);
+      rootinoVetoE =GetTracks()->GetVetoEnergy(0);
+      rootinoCham1E =GetTracks()->GetMWPC0Energy(0);
+      rootinoCham2E =GetTracks()->GetMWPC1Energy(0);
+      HasTappyTaps =GetTracks()->HasTAPS(0);
+      HasCrisyBall= GetTracks()->HasCB(0);
 
 
       for(Int_t k=0; k<GetPhotons()->GetNParticles(); k++){
@@ -368,6 +369,7 @@ if(planesetting=="Pos" ) flinPol = 1;
 	Particles[k+1]->SetP4(fcbPhoton);
 	Particles[k+1]->SetPDGcode(22);
 	Particles[k+1]->SetTime(GetTracks()->GetTime(particleindex));
+	Particles[k+1]->SetDetector(GetTracks()->GetDetectors(particleindex));
 	      
       } //Closing For NParticles 
         
@@ -391,12 +393,12 @@ if(planesetting=="Pos" ) flinPol = 1;
 
       	  fglasgowTaggerPhoton.SetPxPyPzE(0,0,fenergyBeam, fenergyBeam);  //TLorentzVector
 
-	//Linear Polarisation
-         if(!mc) flinPol =fedgePlane* ( GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(l) ) );
-	//Circular Polarisation
+	  //Linear Polarisation
+	  if(!mc) flinPol =fedgePlane* ( GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(l) ) );
+	  //Circular Polarisation
 	  Pcirc = CircPol(fenergyBeam, ePol );	
 
-	//Tagger Channel
+	  //Tagger Channel
 	  ftaggChannel  = GetTagger()->GetTaggedChannel(l) ;
 
 	  Particles[l+3-counter]->SetEdgePlane(fedgePlane);
@@ -420,23 +422,23 @@ if(planesetting=="Pos" ) flinPol = 1;
 
 
   //*************************************************************************************************************************************
-else{
-	frootinoPhi=-200;
-	rootinoClustE =-111;  
-        rootinoTheta =-111;
-        rootinoPhi =-111;
-        rootinoTime =-111;
-        rootinoClustS =-111;
-        rootinoClustC =-111;
-        rootinoVetoC =-111;
-        rootinoDet =-111;
-        rootinoVetoE =-111;
-        rootinoCham1E =-111;
-        rootinoCham2E =-111;
-	HasTappyTaps =-11;
-	HasCrisyBall =-11;
+  else{
+    frootinoPhi=-200;
+    rootinoClustE =-111;  
+    rootinoTheta =-111;
+    rootinoPhi =-111;
+    rootinoTime =-111;
+    rootinoClustS =-111;
+    rootinoClustC =-111;
+    rootinoVetoC =-111;
+    rootinoDet =-111;
+    rootinoVetoE =-111;
+    rootinoCham1E =-111;
+    rootinoCham2E =-111;
+    HasTappyTaps =-11;
+    HasCrisyBall =-11;
 
-}
+  }
   
 
   //} //closing if 3 particles
@@ -470,14 +472,14 @@ Bool_t	chrisForTHSProject::Write()
 
 
 Double_t CircPol( Double_t Eg , Double_t ePol   ){
-//function to calculate the circ photon polarisation produced from elec beam given elec beam pol, photon energy and elec beam energy 1557Mev
+  //function to calculate the circ photon polarisation produced from elec beam given elec beam pol, photon energy and elec beam energy 1557Mev
 
-Double_t E0 = 1557;
+  Double_t E0 = 1557;
 
-Double_t Pg = ( (ePol*Eg)/E0 )* (  ( 1+ ((1/3)*(1-(Eg/E0))) )/(1 - ((2/3)*(1- (Eg/E0))) +  pow( (1 - (Eg/E0)), 2 )  ) );
+  Double_t Pg = ( (ePol*Eg)/E0 )* (  ( 1+ ((1/3)*(1-(Eg/E0))) )/(1 - ((2/3)*(1- (Eg/E0))) +  pow( (1 - (Eg/E0)), 2 )  ) );
 
 
-return Pg;
+  return Pg;
 }
 
 
