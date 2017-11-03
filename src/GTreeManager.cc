@@ -21,6 +21,7 @@ GTreeManager::GTreeManager()    :
     MWPCHitsChris(0),   //CAM 16/05/16
     nChamberHitsin1(0), //CAM 16/05/16
     nChamberHitsin2(0),
+    Truth(0), //CAM 23/10/17
     tracks(0),
     tagger(0),
     linpol(0),
@@ -64,6 +65,7 @@ GTreeManager::GTreeManager()    :
     MWPCHitsChris = new GTreeMWPCHit(this,"MWPCHitsChris"); //CAM 16/05/16
     nChamberHitsin1 = new GTreeMWPCHit(this,"nChamberHitsin1"); //CAM 16/05/16
     nChamberHitsin2 = new GTreeMWPCHit(this,"nChamberHitsin2"); //CAM 16/05/16
+    Truth = new GTreeTruth(this, "Truth"); //CAM 23/10/17
     tracks = new GTreeTrack(this, "tracks");
     tagger = new GTreeTagger(this);
     trigger = new GTreeTrigger(this);
@@ -382,7 +384,7 @@ Bool_t  GTreeManager::TraverseValidEvents_GoATTreeFile()
             if(event>=maxEvent)
                 break;
             GetAndUnpack(event);
-	   // cout << "here1" << endl;
+	    //cout << "here1" << endl;
             ProcessEvent();
         }
         if(i!=0)

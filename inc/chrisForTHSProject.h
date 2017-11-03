@@ -57,6 +57,7 @@ Double_t MCMottPos = -1;
 
   //Branches in the trees
   vector<THSParticle*> Particles;
+  vector<THSParticle*> Generated;
 
   
   Double_t fbeamHelicity;
@@ -77,6 +78,7 @@ Double_t MCMottPos = -1;
   //Other parameters used in .cc
 
   vector<THSParticle*> * fReadParticles=nullptr;
+  vector<THSParticle*> * fGenParticles=nullptr;
 
   THSParticle particle1;
   //THSParticle *DummyProton;
@@ -102,6 +104,7 @@ Double_t MCMottPos = -1;
   Int_t NPidhits;
   Int_t fNin;
   Int_t particleindex=-1;
+  Double_t generatedPDGs[5]={2122, 2212, 22 ,22 ,-22};
   Double_t energySum;
   Double_t fchamber1VecPhi;
   Double_t fphidiff;

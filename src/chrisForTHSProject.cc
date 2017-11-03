@@ -15,6 +15,7 @@ chrisForTHSProject::chrisForTHSProject()
   //Neutron Tree branches
   // treePi0->Branch("Particles.","vector<THSParticle>",&Particles);
   treePi0->Branch("Particles",&Particles);
+  treePi0->Branch("Generated",&Generated);
   treePi0->Branch("fbeamHelicity",&fbeamHelicity);
   treePi0->Branch("ftaggedTime",&ftaggedTime);
   treePi0->Branch("feventNo",&feventNo);
@@ -56,8 +57,14 @@ Bool_t	chrisForTHSProject::Init()
 {
   cout << "Initialising physics analysis..." << endl;
   cout << "--------------------------------------------------" << endl << endl;
+Int_t mcc=1; // 1 for simulation, 0 for  production data
+if(mcc){
 
+cout <<"MC File detected. Processing as MC file with Neutron spectator and Proton Participant" <<endl;
+cout << "Please check the histograms for Truth branch for Elab,Plab and dircos for each particle" <<endl;
+cout << "Truth->Draw('dircos[0][1]') Truth->Draw('truthElab[0]')  etc ..." <<endl;
 
+}
 
   std::string config = ReadConfig("Period-Macro");
   if( sscanf(config.c_str(),"%d\n", &period) == 1 ) usePeriodMacro = 1;
@@ -66,8 +73,10 @@ Bool_t	chrisForTHSProject::Init()
   //	target.SetXYZM(0.0,0.0,-65.0,938.272);	//NEEDS CHANGING only TEMP for a SIM
   fNin = (3+ (GetTagger()->GetNTagged()) ) ; //Estimate of Number of input particles(tagged+ball+rootinos etc.) Can and will calc this!(3+NTagged)
   fReadParticles=new vector<THSParticle*>;
+  fGenParticles=new vector<THSParticle*>;  //The number of these should be fNMC +1 for beam
   for(Int_t m=0; m<fNin; m++ ){
     fReadParticles->push_back(new THSParticle());
+    fGenParticles->push_back(new THSParticle());
   }
 
   if(!InitBackgroundCuts()) return kFALSE;
@@ -102,7 +111,7 @@ void	chrisForTHSProject::ProcessEvent()
       //" testcounter= " <<testcounter <<  endl;
     }
 
-  Int_t mc =0; //0 for production data, non-zero for simulation
+  Int_t mc =1; //0 for production data, non-zero for simulation
 
 
   if(!mc){
@@ -120,8 +129,8 @@ void	chrisForTHSProject::ProcessEvent()
     //  feventNo = std::stod(eventName);
 
     //Tagger Timing cuts
-    taggUpRange= 80;
-    taggLowRange= 40;
+    taggUpRange= 200;
+    taggLowRange= -200;
 
     //Linear polarisation plane setting
     if(GetLinpol()->GetPolarizationPlane()==0) fedgePlane = -1; // Para
@@ -132,8 +141,10 @@ void	chrisForTHSProject::ProcessEvent()
 
   }
   else{
-    //MC needs to deal with event no, ePol and linpol and where para or perp
+    //MC needs to deal with event no, ePol and linpol and where para or perp. Also needs to deal with truth values by adding to Generated
     //cout << " Using MC data " << endl;
+
+    Generated.clear();
 
     std::string outFile = outputFile->GetName();
     std::string filert = outFile.substr( outFile.length() - 11  );
@@ -165,7 +176,50 @@ void	chrisForTHSProject::ProcessEvent()
     if(planesetting=="Pos" ) flinPol = 1;
 
 
+
+    //fGenerated truth information added as THSParticles here.
+ while((GetTruth()->GetfNMC()+1)>fGenParticles->size()){
+	fGenParticles->push_back(new THSParticle());
+      }
+
+//generatedPDGs={2122, 2212, 22 ,22 ,-22}; //2122 is neutron, 2212 is proton, 22 is photon and -22 is beam.
+
+
+for(Int_t j=0; j<(GetTruth()->GetfNMC()+1); j++){ //push back the 4 particles but not beam here?
+
+	Generated.push_back(fGenParticles->at(j));
+if(j<GetTruth()->GetfNMC()){
+	Generated[j]->SetXYZT(1000 * (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(0+(j*3)) ), 1000 *  (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(1+(j*3))), 1000 * (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(2+(j*3))), 1000*GetTruth()->GettruthElab(j));
+}
+
+else{
+Generated[j]->SetXYZT(1000 * (GetTruth()->GettruthBeam(3)) * (GetTruth()->GettruthBeam(0)), 1000 *  (GetTruth()->GettruthBeam(3)) * (GetTruth()->Getdircos(1)), 1000 * (GetTruth()->GettruthBeam(3)) * (GetTruth()->Getdircos(2)), 1000*GetTruth()->GettruthBeam(4));
+}
+
+	Generated[j]->SetPDGcode(generatedPDGs[j]);
+	Generated[j]->SetVertex(GetTruth()->GettruthVertex(0),GetTruth()->GettruthVertex(1),GetTruth()->GettruthVertex(2));
+
+
+}
+
+
+
+//testing dircos
+//cout << GetTruth()->Getdircos(0,0) << "    "  <<  GetTruth()->Getdircos(0,1) <<  "    "  <<  GetTruth()->Getdircos(0,2) << "    "  <<  GetTruth()->Getdircos(0,3) << "    "  <<  GetTruth()->Getdircos(0,4)  <<  "    "  <<  GetTruth()->Getdircos(0,5) << "    "  <<  GetTruth()->Getdircos(0,6) <<  "    "  <<  GetTruth()->Getdircos(0,7) << "    "  <<  GetTruth()->Getdircos(0,8) << "    "  <<  GetTruth()->Getdircos(0,9)<<    "    "  <<  GetTruth()->Getdircos(0,10)<<  "    "  <<  GetTruth()->Getdircos(0,11)<<   endl;
+//validate dircos 0,1^2+ 0,2^2 + 0,3^2
+//for(Int_t i=0; i<4;i++){
+
+//Float_t Validation =( GetTruth()->Getdircos(0,0+(i*3)) * GetTruth()->Getdircos(0,0+(i*3)) ) + ( GetTruth()->Getdircos(0,1+(i*3)) * GetTruth()->Getdircos(0,1+(i*3))) +   ( GetTruth()->Getdircos(0,2+(i*3)) * GetTruth()->Getdircos(0,2+(i*3)));
+
+
+//Float_t Validation =( GetTruth()->Getdircos(0+(i*3)) * GetTruth()->Getdircos(0+(i*3)) ) + ( GetTruth()->Getdircos(1+(i*3)) * GetTruth()->Getdircos(1+(i*3))) +   ( GetTruth()->Getdircos(2+(i*3)) * GetTruth()->Getdircos(2+(i*3)));
+
+//cout << Validation << endl;
+//cout << GetTruth()->GettruthVertex(0) << "   "<< GetTruth()->GettruthVertex(1) <<"    " << GetTruth()->GettruthVertex(2) <<"   " << GetTruth()->GettruthVertex(3) <<"     " << GetTruth()->GettruthVertex(4) << "     " << GetTruth()->GettruthVertex(5) <<endl;
+//cout << GetTruth()->GettruthPlab(3) << "    " << GetTruth()->GetfNMC()<< endl;
+//}
     //cout << "mafde it " << endl;
+
   }
 
 
@@ -263,7 +317,7 @@ void	chrisForTHSProject::ProcessEvent()
 	Particles[j]->SetPDGcode(22);
 	Particles[j]->SetTime(GetTracks()->GetTime(j));//Should this be using gettrack index then get time on the index?Yes but since the particles are all photons trackNum=photonNum,see below for alternative
 	Particles[j]->SetDetector(GetTracks()->GetDetectors(j)); //DETECTOR_NONE = 0,DETECTOR_NaI = 1, DETECTOR_PID = 2, DETECTOR_MWPC = 4, DETECTOR_BaF2 = 8, DETECTOR_PbWO4 = 16, DETECTOR_Veto = 32,(Additive)
-	
+
       } //Closing For NParticles 
 
       for(Int_t i=0; i<GetTagger()->GetNTagged() ;i++){

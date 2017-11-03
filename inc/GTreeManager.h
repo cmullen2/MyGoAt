@@ -9,6 +9,7 @@
 #include "GConfigFile.h"
 #include "GTreeTrack.h"
 #include "GTreeMWPCHit.h" //CAM 16/05/16
+#include "GTreeTruth.h"   //CAM 23/10/17
 #include "GTreeTagger.h"
 #include "GTreeLinPol.h"
 #include "GTreeScaler.h"
@@ -51,6 +52,7 @@ private:
 
     //private tree variables
     GTreeTrack*         tracks;
+    GTreeTruth*		Truth;
     GTreeMWPCHit*	MWPCHitsChris; //CAM 16/05/16
     GTreeMWPCHit*	nChamberHitsin1; //CAM 16/05/16
     GTreeMWPCHit*	nChamberHitsin2; //CAM 16/05/16
@@ -82,6 +84,7 @@ protected:
 
     //protected tree variables Getters
     GTreeTrack*         GetTracks()                 {return tracks;}
+    GTreeTruth*         GetTruth()		    {return Truth;} //CAM 23/10/17
     GTreeMWPCHit*       GetMWPCHitsChris()		    {return MWPCHitsChris;} //CAM 16/05/16
     GTreeMWPCHit*	GetNMWPCHitsChris1()		    {return nChamberHitsin1;}//CAM 16/05/16
     GTreeMWPCHit*	GetNMWPCHitsChris2()		    {return nChamberHitsin2;}//CAM 16/05/16
@@ -110,6 +113,7 @@ protected:
 
     //protected tree variables const Getters
     const   GTreeTrack*         GetTracks()             const       {return tracks;}
+    const   GTreeTruth*		GetTruth()		const	    {return Truth;}	//CAM 23/10/17
     const   GTreeMWPCHit*	GetMWPCHitsChris()		const	    {return MWPCHitsChris;}	//CAM 16/05/16
     const   GTreeMWPCHit*	GetNMWPCHitsChris1()		const	    {return nChamberHitsin1;}//CAM 16/05/16
     const   GTreeMWPCHit*	GetNMWPCHitsChris2()		const	    {return nChamberHitsin2;}//CAM 16/05/16

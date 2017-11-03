@@ -41,6 +41,7 @@ set(GOAT_BASE
    inc/GTree.h
    inc/GTreeTrack.h
    inc/GTreeMWPCHit.h #CAM 16/05/16
+   inc/GTreeTruth.h #CAM 23/10/17
    inc/GTreeDetectorHits.h
    inc/GTreeTagger.h
    inc/GTreeLinPol.h
@@ -57,6 +58,7 @@ set(GOAT_BASE
    src/GTree.cc
    src/GTreeTrack.cc
    src/GTreeMWPCHit.cc #CAM 16/05/16
+   src/GTreeTruth.cc #CAM 23/10/17
    src/GTreeDetectorHits.cc
    src/GTreeTagger.cc
    src/GTreeLinPol.cc
