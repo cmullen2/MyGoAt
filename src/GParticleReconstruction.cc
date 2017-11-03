@@ -67,7 +67,7 @@ Bool_t	GParticleReconstruction::Init()
 
     config = ReadConfig("Cut-dE-E-CB-Proton");
     if (strcmp(config.c_str(), "nokey") != 0)
-    {
+      {
         if(sscanf( config.c_str(), "%s %s\n", cutFile,cutName) == 2)
         {
             typeCB = ReconstructType(ReconstructCutProton | typeCB);
@@ -355,7 +355,7 @@ Bool_t	GParticleReconstruction::ProcessEventWithoutFilling()
             charge[i] = 0;
             hadron[i] = 0;
 
-            if(typeCB & ReconstructAllPhotons)
+            if(typeCB & ReconstructAllPhotons)  //bitwise AND??? Why ?!!! Both Booleans? so same as && since  1 AND 0 =0, 1&1=1 
             {
                 identified[i] = pdgDB->GetParticle("gamma")->PdgCode();
                 continue;

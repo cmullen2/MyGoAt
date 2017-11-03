@@ -48,7 +48,7 @@ Bool_t	GoAT::Init()
     }
 
     if(useParticleReconstruction)
-	{
+	{ 
         if(!GParticleReconstruction::Init())
 		{
 			cout << "GParticleReconstruction Init failed!" << endl; 

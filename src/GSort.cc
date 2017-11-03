@@ -241,7 +241,7 @@ Bool_t GSort::SortAnalyseEvent()
             case Condion_NONE:
                 return kFALSE;
 		}
-		
+
         switch (SR_nTracks_TAPS_condition) 	// Number of tracks in TAPS
 		{
             case Condion_EqualOrMore:
@@ -281,7 +281,7 @@ Bool_t GSort::SortAnalyseEvent()
 
 
 Bool_t GSort::SortFillEvent()
-{
+{ 
     if(SortNParticles == 1)
 	{
 		switch (S_nParticles_condition) // Number of reconstructed part

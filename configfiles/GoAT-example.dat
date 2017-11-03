@@ -29,12 +29,15 @@
 
 #SIMS
 #Input-Directory: /w/work14/chris/LatestAnalysisRuns/Sims/SimsJan17/AcquOutput/Deuterium/BeamAsym/NegPolarisation/
+Input-Directory: /w/work14/chris/
+
+
 
 #Empty Target
 #Input-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataJul17/AcquOutput/EmptyTarget/Perp/
 
 #Production Data
-Input-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataJul17/AcquOutput/Perp/
+#Input-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataJul17/AcquOutput/Perp/
 
 
 #Input-Directory: $HOME/TestFiles/AcquOut/ProtonBad
@@ -94,13 +97,13 @@ Input-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataJul17/AcquOutput/Pe
 
 #SIMS
 #Output-Directory: /w/work14/chris/LatestAnalysisRuns/Sims/SimsJan17/GoatOutput/Deuterium/BeamAsym/NegPolarisation/
-#
+Output-Directory: /scratch/chris/
 #
 #EmptyTarget
 #Output-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataJul17/GoatOutput/EmptyTarget/Perp/
 
 #ProduictionData
-Output-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataJul17/GoatOutput/Perp/TestRootino/
+#Output-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataJul17/GoatOutput/Perp/TestRootino/
 
 
 #
