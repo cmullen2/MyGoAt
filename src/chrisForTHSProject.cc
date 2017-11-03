@@ -57,14 +57,14 @@ Bool_t	chrisForTHSProject::Init()
 {
   cout << "Initialising physics analysis..." << endl;
   cout << "--------------------------------------------------" << endl << endl;
-Int_t mcc=1; // 1 for simulation, 0 for  production data
-if(mcc){
+  Int_t mcc=1; // 1 for simulation, 0 for  production data
+  if(mcc){
 
-cout <<"MC File detected. Processing as MC file with Neutron spectator and Proton Participant" <<endl;
-cout << "Please check the histograms for Truth branch for Elab,Plab and dircos for each particle" <<endl;
-cout << "Truth->Draw('dircos[0][1]') Truth->Draw('truthElab[0]')  etc ..." <<endl;
+    cout <<"MC File detected. Processing as MC file with Neutron spectator and Proton Participant" <<endl;
+    cout << "Please check the histograms for Truth branch for Elab,Plab and dircos for each particle" <<endl;
+    cout << "Truth->Draw('dircos[0][1]') Truth->Draw('truthElab[0]')  etc ..." <<endl;
 
-}
+  }
 
   std::string config = ReadConfig("Period-Macro");
   if( sscanf(config.c_str(),"%d\n", &period) == 1 ) usePeriodMacro = 1;
@@ -178,47 +178,29 @@ void	chrisForTHSProject::ProcessEvent()
 
 
     //fGenerated truth information added as THSParticles here.
- while((GetTruth()->GetfNMC()+1)>fGenParticles->size()){
-	fGenParticles->push_back(new THSParticle());
+    while((GetTruth()->GetfNMC()+1)>fGenParticles->size()){
+      fGenParticles->push_back(new THSParticle());
+    }
+
+    //generatedPDGs={2122, 2212, 22 ,22 ,-22}; //2122 is neutron, 2212 is proton, 22 is photon and -22 is beam.
+
+
+    for(Int_t j=0; j<(GetTruth()->GetfNMC()+1); j++){ //push back the 4 particles but not beam here?
+
+      Generated.push_back(fGenParticles->at(j));
+      if(j<GetTruth()->GetfNMC()){
+	Generated[j]->SetXYZT(1000 * (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(0+(j*3)) ), 1000 *  (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(1+(j*3))), 1000 * (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(2+(j*3))), 1000*GetTruth()->GettruthElab(j));
       }
 
-//generatedPDGs={2122, 2212, 22 ,22 ,-22}; //2122 is neutron, 2212 is proton, 22 is photon and -22 is beam.
+      else{
+	Generated[j]->SetXYZT(1000 * (GetTruth()->GettruthBeam(3)) * (GetTruth()->GettruthBeam(0)), 1000 *  (GetTruth()->GettruthBeam(3)) * (GetTruth()->Getdircos(1)), 1000 * (GetTruth()->GettruthBeam(3)) * (GetTruth()->Getdircos(2)), 1000*GetTruth()->GettruthBeam(4));
+      }
+
+      Generated[j]->SetPDGcode(generatedPDGs[j]);
+      Generated[j]->SetVertex(GetTruth()->GettruthVertex(0),GetTruth()->GettruthVertex(1),GetTruth()->GettruthVertex(2));
 
 
-for(Int_t j=0; j<(GetTruth()->GetfNMC()+1); j++){ //push back the 4 particles but not beam here?
-
-	Generated.push_back(fGenParticles->at(j));
-if(j<GetTruth()->GetfNMC()){
-	Generated[j]->SetXYZT(1000 * (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(0+(j*3)) ), 1000 *  (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(1+(j*3))), 1000 * (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(2+(j*3))), 1000*GetTruth()->GettruthElab(j));
-}
-
-else{
-Generated[j]->SetXYZT(1000 * (GetTruth()->GettruthBeam(3)) * (GetTruth()->GettruthBeam(0)), 1000 *  (GetTruth()->GettruthBeam(3)) * (GetTruth()->Getdircos(1)), 1000 * (GetTruth()->GettruthBeam(3)) * (GetTruth()->Getdircos(2)), 1000*GetTruth()->GettruthBeam(4));
-}
-
-	Generated[j]->SetPDGcode(generatedPDGs[j]);
-	Generated[j]->SetVertex(GetTruth()->GettruthVertex(0),GetTruth()->GettruthVertex(1),GetTruth()->GettruthVertex(2));
-
-
-}
-
-
-
-//testing dircos
-//cout << GetTruth()->Getdircos(0,0) << "    "  <<  GetTruth()->Getdircos(0,1) <<  "    "  <<  GetTruth()->Getdircos(0,2) << "    "  <<  GetTruth()->Getdircos(0,3) << "    "  <<  GetTruth()->Getdircos(0,4)  <<  "    "  <<  GetTruth()->Getdircos(0,5) << "    "  <<  GetTruth()->Getdircos(0,6) <<  "    "  <<  GetTruth()->Getdircos(0,7) << "    "  <<  GetTruth()->Getdircos(0,8) << "    "  <<  GetTruth()->Getdircos(0,9)<<    "    "  <<  GetTruth()->Getdircos(0,10)<<  "    "  <<  GetTruth()->Getdircos(0,11)<<   endl;
-//validate dircos 0,1^2+ 0,2^2 + 0,3^2
-//for(Int_t i=0; i<4;i++){
-
-//Float_t Validation =( GetTruth()->Getdircos(0,0+(i*3)) * GetTruth()->Getdircos(0,0+(i*3)) ) + ( GetTruth()->Getdircos(0,1+(i*3)) * GetTruth()->Getdircos(0,1+(i*3))) +   ( GetTruth()->Getdircos(0,2+(i*3)) * GetTruth()->Getdircos(0,2+(i*3)));
-
-
-//Float_t Validation =( GetTruth()->Getdircos(0+(i*3)) * GetTruth()->Getdircos(0+(i*3)) ) + ( GetTruth()->Getdircos(1+(i*3)) * GetTruth()->Getdircos(1+(i*3))) +   ( GetTruth()->Getdircos(2+(i*3)) * GetTruth()->Getdircos(2+(i*3)));
-
-//cout << Validation << endl;
-//cout << GetTruth()->GettruthVertex(0) << "   "<< GetTruth()->GettruthVertex(1) <<"    " << GetTruth()->GettruthVertex(2) <<"   " << GetTruth()->GettruthVertex(3) <<"     " << GetTruth()->GettruthVertex(4) << "     " << GetTruth()->GettruthVertex(5) <<endl;
-//cout << GetTruth()->GettruthPlab(3) << "    " << GetTruth()->GetfNMC()<< endl;
-//}
-    //cout << "mafde it " << endl;
+    }
 
   }
 
