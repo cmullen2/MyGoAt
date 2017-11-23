@@ -22,7 +22,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 find_package(ROOT "5.30" REQUIRED)
 
 # since all subprojects need ROOT, set that up here
-include_directories(${ROOT_INCLUDES} ${CMAKE_SOURCE_DIR}/inc /home/chris/HASPECT6/HaSpect/)
+include_directories(${ROOT_INCLUDES} ${CMAKE_SOURCE_DIR}/inc /home/chris/Docs/haspy/HASPECT6/HaSpect/)
+#include_directories(${ROOT_INCLUDES} ${CMAKE_SOURCE_DIR}/inc /home/chris/HASPECT6/HaSpect/)
+
 #ROOT_GENERATE_DICTIONARY(/home/chris/NewHaspect/HaSpect/THSParticle.h /home/chris/GoAT/THSParticleLinkDef.h /home/chris/GoAT/G__THSParticle /home/chris/NewHaspect/HaSpect)
 #add_library(THSParticle SHARED /home/chris/NewHaspect/HaSpect/THSParticle.C)
 
@@ -31,7 +33,10 @@ link_directories(${ROOT_LIBRARY_DIR})
 
 include_directories(inc)
 set(ROOT_LIBRARIES "${ROOT_LIBRARIES} -lEG")
-set(HS_LIBRARIES "-L/home/chris/HASPECT6/HaSpect/ -lTHSParticle")
+set(HS_LIBRARIES "-L/home/chris/Docs/haspy/HASPECT6/HaSpect/ -lTHSParticle")
+#set(HS_LIBRARIES "-L/home/chris/HASPECT6/HaSpect/ -lTHSParticle")
+
+
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -g")
 

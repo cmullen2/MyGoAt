@@ -16,33 +16,33 @@ chrisForTHSProject::chrisForTHSProject()
   // treePi0->Branch("Particles.","vector<THSParticle>",&Particles);
   treePi0->Branch("Particles",&Particles);
   treePi0->Branch("Generated",&Generated);
-  treePi0->Branch("fbeamHelicity",&fbeamHelicity);
-  treePi0->Branch("ftaggedTime",&ftaggedTime);
-  treePi0->Branch("feventNo",&feventNo);
-  treePi0->Branch("fenergyBeam",&fenergyBeam);
-  treePi0->Branch("fenergySum",&fenergySum);
-  treePi0->Branch("fmultiplicity",&fmultiplicity);
-  treePi0->Branch("fpidPhi",&fpidPhi);
-  treePi0->Branch("fpidIndex",&fpidIndex);
-  //  treePi0->Branch("fpidRootinoPhi",&fpidRootinoPhi);
-  treePi0->Branch("fchamber1Vec",&fchamber1Vec);
-  treePi0->Branch("fchamber2Vec",&fchamber2Vec);
-  treePi0->Branch("fedgeplane",&fedgePlane);
-  treePi0->Branch("flinPol",&flinPol);
-  treePi0->Branch("frootinoPhi",&frootinoPhi);
-  treePi0->Branch("rootinoClustE",&rootinoClustE);
-  treePi0->Branch("rootinoTheta",&rootinoTheta);
-  treePi0->Branch("rootinoPhi",&rootinoPhi);
-  treePi0->Branch("rootinoTime",&rootinoTime);
-  treePi0->Branch("rootinoClustS",&rootinoClustS);
-  treePi0->Branch("rootinoClustC",&rootinoClustC);
-  treePi0->Branch("rootinoVetoC",&rootinoVetoC);
-  treePi0->Branch("rootinoDet",&rootinoDet);
-  treePi0->Branch("rootinoVetoE",&rootinoVetoE);
-  treePi0->Branch("rootinoCham1E",&rootinoCham1E);
-  treePi0->Branch("rootinoCham2E",&rootinoCham2E);
-  treePi0->Branch("HasTappyTaps",&HasTappyTaps);
-  treePi0->Branch("HasCrisyBall",&HasCrisyBall);
+  // treePi0->Branch("fbeamHelicity",&fbeamHelicity);
+  // treePi0->Branch("ftaggedTime",&ftaggedTime);
+  // treePi0->Branch("feventNo",&feventNo);
+  // treePi0->Branch("fenergyBeam",&fenergyBeam);
+  // treePi0->Branch("fenergySum",&fenergySum);
+  // treePi0->Branch("fmultiplicity",&fmultiplicity);
+  // treePi0->Branch("fpidPhi",&fpidPhi);
+  // treePi0->Branch("fpidIndex",&fpidIndex);
+  // //  treePi0->Branch("fpidRootinoPhi",&fpidRootinoPhi);
+  // treePi0->Branch("fchamber1Vec.",&fchamber1Vec);
+  // treePi0->Branch("fchamber2Vec.",&fchamber2Vec);
+  // treePi0->Branch("fedgeplane",&fedgePlane);
+  // treePi0->Branch("flinPol",&flinPol);
+  // treePi0->Branch("frootinoPhi",&frootinoPhi);
+  // treePi0->Branch("rootinoClustE",&rootinoClustE);
+  // treePi0->Branch("rootinoTheta",&rootinoTheta);
+  // treePi0->Branch("rootinoPhi",&rootinoPhi);
+  // treePi0->Branch("rootinoTime",&rootinoTime);
+  // treePi0->Branch("rootinoClustS",&rootinoClustS);
+  // treePi0->Branch("rootinoClustC",&rootinoClustC);
+  // treePi0->Branch("rootinoVetoC",&rootinoVetoC);
+  // treePi0->Branch("rootinoDet",&rootinoDet);
+  // treePi0->Branch("rootinoVetoE",&rootinoVetoE);
+  // treePi0->Branch("rootinoCham1E",&rootinoCham1E);
+  // treePi0->Branch("rootinoCham2E",&rootinoCham2E);
+  // treePi0->Branch("HasTappyTaps",&HasTappyTaps);
+  // treePi0->Branch("HasCrisyBall",&HasCrisyBall);
  
 
 
@@ -113,7 +113,6 @@ void	chrisForTHSProject::ProcessEvent()
 
   Int_t mc =1; //0 for production data, non-zero for simulation
 
-
   if(!mc){
 
     // Unique Event ID
@@ -143,18 +142,26 @@ void	chrisForTHSProject::ProcessEvent()
   else{
     //MC needs to deal with event no, ePol and linpol and where para or perp. Also needs to deal with truth values by adding to Generated
     //cout << " Using MC data " << endl;
+    //IMPORTANT! A strict naming convention is applied to the files that requires Neg and Pos or Fla to be in the name for the polarisation plane. blah_Fla.root _Pos.root etc
 
     Generated.clear();
-
     std::string outFile = outputFile->GetName();
-    std::string filert = outFile.substr( outFile.length() - 11  );
-    //cout <<" Substring is filert " << filert << endl;
+//    std::string filert = outFile.substr( outFile.length() - 11  );
+    std::string filert = outFile.substr(outFile.size() -8  );
+  //  cout <<" Substring is filert " << filert << endl;
 
     std::string planesetting = filert.substr(0,3);
-    //cout << " plane setting " << planesetting <<endl;
+  //  cout << " plane setting " << planesetting <<endl;
 
     if(planesetting=="Neg" ) fileNo = "11110000";
     if(planesetting=="Pos" ) fileNo = "22220000";
+    if(planesetting=="Fla" ) fileNo = "33330000";
+
+if(planesetting!="Fla" && planesetting!="Neg" && planesetting!="Pos" ){
+	throw std::invalid_argument("Received incorrected FileName Ending!  You have ignored the strict filename requirements which describe the polarisation state. Please make sure the filenames end in Fla, Neg, or Pos. ");
+
+
+}
 
     Int_t tempEventno = GetEventNumber();
     feventNo = std::stod(fileNo) + tempEventno;
@@ -163,10 +170,10 @@ void	chrisForTHSProject::ProcessEvent()
     taggUpRange=10;
     taggLowRange=-10;
 
-
     //Linear Polarsation plane setting
     if(planesetting=="Neg" ) fedgePlane = -1; //Equating Neg file with Para polarisation state
     if(planesetting=="Pos" ) fedgePlane = 1;
+    if(planesetting=="Fla" ) fedgePlane = 0;  //Flat simulation is equated with Amo runs
 
 
     //Linear Polarisation value
@@ -174,7 +181,7 @@ void	chrisForTHSProject::ProcessEvent()
 
     if(planesetting=="Neg" ) flinPol = -1; //Equating Neg file with Para polarisation with max value
     if(planesetting=="Pos" ) flinPol = 1;
-
+    if(planesetting=="Fla" ) flinPol = 0; 
 
 
     //fGenerated truth information added as THSParticles here.
@@ -184,7 +191,7 @@ void	chrisForTHSProject::ProcessEvent()
 
     //generatedPDGs={2122, 2212, 22 ,22 ,-22}; //2122 is neutron, 2212 is proton, 22 is photon and -22 is beam.
 
-
+//ARE THESE GOING into the wrong places in fgenerated. Should I be putting these in the truth parts of fgen. IF so what does this mean for Particles, should I not use it for sims and only fill fgen but with both norm +true?
     for(Int_t j=0; j<(GetTruth()->GetfNMC()+1); j++){ //push back the 4 particles but not beam here?
 
       Generated.push_back(fGenParticles->at(j));
