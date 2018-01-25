@@ -2,36 +2,68 @@
 #include "TROOT.h"
 
 
- Double_t CircPol(Double_t , Double_t );
+Double_t CircPol(Double_t , Double_t );
 
 
 chrisChargedPions::chrisChargedPions()
 { 
   gROOT->ProcessLine("#include <vector>");
 
-  treePi0 =  new TTree("HSParticles","Event selection tree"); // Neutron pi0 final state tree   
-  //treeProtonPi0 =  new TTree("ProtonPi0","Event selection tree"); // Proton pi0 final state tree   
+  treePi =  new TTree("HSParticles","Event selection tree"); //Proton/Neutron pi-+ final state tree   
 
 
   //Neutron Tree branches
   // treePi0->Branch("Particles.","vector<THSParticle>",&Particles);
-  treePi0->Branch("Particles",&Particles);
-  treePi0->Branch("fbeamHelicity",&fbeamHelicity);
-  treePi0->Branch("ftaggedTime",&ftaggedTime);
-  treePi0->Branch("feventNo",&feventNo);
-  treePi0->Branch("fenergyBeam",&fenergyBeam);
-  treePi0->Branch("fenergySum",&fenergySum);
-  treePi0->Branch("fmultiplicity",&fmultiplicity);
-  treePi0->Branch("fpidPhi",&fpidPhi);
-  treePi0->Branch("fpidIndex",&fpidIndex);
-  //  treePi0->Branch("fpidRootinoPhi",&fpidRootinoPhi);
-  treePi0->Branch("fchamber1Vec",&fchamber1Vec);
-  treePi0->Branch("fchamber2Vec",&fchamber2Vec);
-  treePi0->Branch("fedgeplane",&fedgePlane);
-  treePi0->Branch("flinPol",&flinPol);
-  treePi0->Branch("frootinoPhi",&frootinoPhi);
+  treePi->Branch("Particles",&Particles);
+  treePi->Branch("Generated",&Generated);
+  treePi->Branch("Topo",&ftopology);
 
-  
+  treePi->Branch("crystalPhoton",&fcrystalphot);
+  treePi->Branch("crystalPhotonmass",&fcrystalphotmass);
+  treePi->Branch("crystalPhotonphi",&fcrystalphotphi);
+  treePi->Branch("crystalPhotontheta",&fcrystalphottheta);
+  treePi->Branch("crystalPhotonpidE",&fcrystalphotpidE);
+  treePi->Branch("crystalPhotonMWPC0E",&fcrystalphotmwpc0E);
+  treePi->Branch("crystalPhotonMWPC1E",&fcrystalphotmwpc1E);
+
+  treePi->Branch("crystalRootino",&fcrystalroot);
+  treePi->Branch("crystalRootinomass",&fcrystalrootmass);
+  treePi->Branch("crystalRootinophi",&fcrystalrootphi);
+  treePi->Branch("crystalRootinotheta",&fcrystalroottheta);
+  treePi->Branch("crystalRootinopidE",&fcrystalrootpidE);
+  treePi->Branch("crystalRootinoMWPC0E",&fcrystalrootmwpc0E);
+  treePi->Branch("crystalRootinoMWPC1E",&fcrystalrootmwpc1E);
+
+  treePi->Branch("crystalCoplan",&fcrystalcoplan);
+
+
+  treePi->Branch("crystalRootino1",&fcrystalroot1);
+  treePi->Branch("crystalRootinomass1",&fcrystalrootmass1);
+  treePi->Branch("crystalRootinophi1",&fcrystalrootphi1);
+  treePi->Branch("crystalRootinotheta1",&fcrystalroottheta1);
+  treePi->Branch("crystalRootinopidE1",&fcrystalrootpidE1);
+  treePi->Branch("crystalRootinoMWPC0E1",&fcrystalrootmwpc0E1);
+  treePi->Branch("crystalRootinoMWPC1E1",&fcrystalrootmwpc1E1);
+
+  treePi->Branch("crystalRootino2",&fcrystalroot2);
+  treePi->Branch("crystalRootinomass2",&fcrystalrootmass2);
+  treePi->Branch("crystalRootinophi2",&fcrystalrootphi2);
+  treePi->Branch("crystalRootinotheta2",&fcrystalroottheta2);
+  treePi->Branch("crystalRootinopidE2",&fcrystalrootpidE2);
+  treePi->Branch("crystalRootinoMWPC0E2",&fcrystalrootmwpc0E2);
+  treePi->Branch("crystalRootinoMWPC1E2",&fcrystalrootmwpc1E2);
+
+  treePi->Branch("crystalCoplan2",&fcrystalcoplan2);
+
+
+  // treePi0->Branch("fbeamHelicity",&fbeamHelicity);
+  // treePi0->Branch("ftaggedTime",&ftaggedTime);
+  // treePi0->Branch("feventNo",&feventNo);
+  // treePi0->Branch("fenergyBeam",&fenergyBeam);
+ 
+
+
+
 }
 
 chrisChargedPions::~chrisChargedPions()
@@ -43,22 +75,29 @@ Bool_t	chrisChargedPions::Init()
 {
   cout << "Initialising physics analysis..." << endl;
   cout << "--------------------------------------------------" << endl << endl;
+  Int_t mcc=0; // 1 for simulation, 0 for  production data
+  if(mcc){
 
+    cout <<"MC File detected. Processing as MC file with Neutron spectator and Proton Participant" <<endl;
+    cout << "Please check the histograms for Truth branch for Elab,Plab and dircos for each particle" <<endl;
+    cout << "Truth->Draw('dircos[0][1]') Truth->Draw('truthElab[0]')  etc ..." <<endl;
+    cout << "Is the correct PID element array being used for the simulation????? Check the header " << endl;
 
+  }
 
   std::string config = ReadConfig("Period-Macro");
   if( sscanf(config.c_str(),"%d\n", &period) == 1 ) usePeriodMacro = 1;
 
   target.SetXYZM(0.0,0.0,-65.0,1875.613);	//NEEDS CHANGING currently deuteron
   //	target.SetXYZM(0.0,0.0,-65.0,938.272);	//NEEDS CHANGING only TEMP for a SIM
-
-  //Following line may break due to GetNTagged not being defined yet, if so simply replace with a number and the while statement in main will correct it.
-  fNin = (3+ (GetTagger()->GetNTagged()) ) ; //Estimate of Number of input particles(tagged+ball+rootinos etc.) Can and will calc this!(3+NTagged)
+  fNin = (3 + (GetTagger()->GetNTagged()) ) ; //Estimate of Number of input particles(tagged+ball+rootinos etc.) Can and will calc this!(3+NTagged)
   fReadParticles=new vector<THSParticle*>;
+  fGenParticles=new vector<THSParticle*>;  //The number of these should be fNMC +1 for beam
   for(Int_t m=0; m<fNin; m++ ){
     fReadParticles->push_back(new THSParticle());
+    fGenParticles->push_back(new THSParticle());
   }
-
+  cout << "Target 4-Vector is (" << target.X() <<"," << target.Y() << ","<< target.Z() <<","<<target.M()<<")"  << endl;
   if(!InitBackgroundCuts()) return kFALSE;
   if(!InitTargetMass()) return kFALSE;
   if(!InitTaggerChannelCuts()) return kFALSE;
@@ -90,43 +129,129 @@ void	chrisChargedPions::ProcessEvent()
 	cout << "Events: " << GetEventNumber() << "  Events Accepted: " << nEventsWritten << endl;
     }
 
+  Int_t mc =0; //0 for production data, non-zero for simulation
+
+  if(!mc){
 
 
-Int_t mc =0;
+    // Unique Event ID
+    std::string outFile = outputFile->GetName();
+    std::size_t pos = outFile.find("_1");
+    std::string filert = outFile.substr(pos);
+    fileNo =  filert.substr(2,4);
+    Int_t tempEventno = GetEventNumber();
+    std::string tevent = std::to_string(tempEventno);
+    std::string tevent2 = fileNo + "0000";
+    Double_t eventName = std::stod(tevent2) + std::stod(tevent);
+    feventNo = eventName;
+    //  feventNo = std::stod(eventName);
+
+    //Tagger Timing cuts
+    taggUpRange= 200;
+    taggLowRange= -200;
+
+    //Linear polarisation plane setting
+    if(GetLinpol()->GetPolarizationPlane()==0) fedgePlane = -1; // Para
+    if(GetLinpol()->GetPolarizationPlane()==1) fedgePlane = 1; // Perp
+    if(GetLinpol()->GetPolarizationPlane()==2) fedgePlane = 0; //Moeller or other
 
 
-if(!mc){
+    if(usePeriodMacro == 1)
+      {
+	if(GetEventNumber() % period == 0){
+	  cout << "Using Production Data var mc = " << mc << endl;
+	  cout << "Tagger cuts " << taggUpRange << " " << taggLowRange << endl;
+	  cout << "Edge plane setting " << fedgePlane << endl;
+	}
+      }
 
-  // Unique Event ID
-  std::string outFile = outputFile->GetName();
-  std::size_t pos = outFile.find("_1");
-  std::string filert = outFile.substr(pos);
-  fileNo =  filert.substr(2,4);
-  Int_t tempEventno = GetEventNumber();
-  std::string tevent = std::to_string(tempEventno);
-  std::string tevent2 = fileNo + "0000";
-  Double_t eventName = std::stod(tevent2) + std::stod(tevent);
-  feventNo = eventName;
-//  feventNo = std::stod(eventName);
-}
-else{
-//MC needs to deal with event no, ePol and linpol and where para or perp
-cout << " Using MC data " << endl;
 
-std::string outFile = outputFile->GetName();
-std::string filert = outFile.substr( outFile.length() - 11  );
-//cout <<" Substring is filert " << filert << endl;
+  }
+  else{
+    //MC needs to deal with event no, ePol and linpol and where para or perp. Also needs to deal with truth values by adding to Generated
+    //cout << " Using MC data " << endl;
+    //IMPORTANT! A strict naming convention is applied to the files that requires Neg and Pos or Fla to be in the name for the polarisation plane. blah_Fla.root _Pos.root etc
 
-std::string planesetting = filert.substr(0,3);
-//cout << " plane setting " << planesetting <<endl;
 
-if(planesetting=="Neg" ) fileNo = "11110000";
-if(planesetting=="Pos" ) fileNo = "22220000";
 
-Int_t tempEventno = GetEventNumber();
-feventNo = std::stod(fileNo) + tempEventno;
+    Generated.clear();
+    std::string outFile = outputFile->GetName();
+    //    std::string filert = outFile.substr( outFile.length() - 11  );
+    std::string filert = outFile.substr(outFile.size() -8  ); //Pos.root etc is last 8 chars
+    //  cout <<" Substring is filert " << filert << endl;
 
-}
+    std::string planesetting = filert.substr(0,3);  // Isolate pos,fla etc
+    //  cout << " plane setting " << planesetting <<endl;
+
+    if(planesetting=="Neg" ) fileNo = "11110000";
+    if(planesetting=="Pos" ) fileNo = "22220000";
+    if(planesetting=="Fla" ) fileNo = "33330000";
+
+    if(planesetting!="Fla" && planesetting!="Neg" && planesetting!="Pos" ){
+      throw std::invalid_argument("Received incorrect FileName Ending!  You have ignored the strict filename requirements which describe the polarisation state. Please make sure the filenames end in Fla, Neg, or Pos. ");
+
+    }
+
+    Int_t tempEventno = GetEventNumber();
+    feventNo = std::stod(fileNo) + tempEventno;
+
+    //Tagger Timing cuts
+    taggUpRange=10;
+    taggLowRange=-10;
+
+    //Linear Polarsation plane setting
+    if(planesetting=="Neg" ) fedgePlane = -1; //Equating Neg file with Para polarisation state
+    if(planesetting=="Pos" ) fedgePlane = 1;
+    if(planesetting=="Fla" ) fedgePlane = 0;  //Flat simulation is equated with Amo runs
+
+
+    //Linear Polarisation value
+    //Use if !mc for the linPol parameter and assign the mc value here based on name 
+
+    if(planesetting=="Neg" ) flinPol = -1; //Equating Neg file with Para polarisation with max value
+    if(planesetting=="Pos" ) flinPol = 1;
+    if(planesetting=="Fla" ) flinPol = 0; 
+
+
+    //fGenerated truth information added as THSParticles here.
+    while((GetTruth()->GetfNMC()+1)>fGenParticles->size()){
+      fGenParticles->push_back(new THSParticle());
+    }
+
+    //generatedPDGs={2112, 2212, 22 ,22 ,-22}; // gamma + D -> nspec p pi0. 2112 is neutron(spec), 2212 is proton(final), 22 is photon(from pi0) and -22 is beam.
+    //generatedPDGs={2212, 2112, 22 ,22 ,-22}; // gamma + D -> n pspec pi0. 2112 is neutron, 2212 is proton, 22 is photon and -22 is beam.
+    //generatedPDGs={2212,2212,-211,-22}; // gamma + D -> p pspec pi-. 2212 is proton(final state part. and spec.), -211 is pi- and -22 is beam.
+    //generatedPDGs={2112,2112,211,-22}; // gamma + D -> n nspec pi+. 2112 is neutron(final state part. and spec.), 211 is pi+ and -22 is beam.
+
+    for(Int_t j=0; j<(GetTruth()->GetfNMC()+1); j++){ //push back the 4 particles but not beam here? For the charged channels will be 3 particles + beam
+
+      Generated.push_back(fGenParticles->at(j));
+      if(j<GetTruth()->GetfNMC()){
+	Generated[j]->SetXYZT(1000 * (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(0+(j*3)) ), 1000 *  (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(1+(j*3))), 1000 * (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(2+(j*3))), 1000*GetTruth()->GettruthElab(j));
+      }
+
+      else{ //push back the beam here
+	Generated[j]->SetXYZT(1000*(GetTruth()->GettruthBeam(3))*(GetTruth()->GettruthBeam(0)), 1000*(GetTruth()->GettruthBeam(3))*(GetTruth()->GettruthBeam(1)), 1000*(GetTruth()->GettruthBeam(3))*(GetTruth()->GettruthBeam(2)), 1000*GetTruth()->GettruthBeam(4));
+      }
+
+      Generated[j]->SetPDGcode(generatedPDGs[j]);
+      Generated[j]->SetVertex(GetTruth()->GettruthVertex(0),GetTruth()->GettruthVertex(1),GetTruth()->GettruthVertex(2));
+
+
+    }
+
+
+    if(usePeriodMacro == 1)
+      {
+	if(GetEventNumber() % period == 0){
+	  cout <<"Using MC Data variable mc = " << mc << endl;
+	  cout << "Tagger cuts " << taggUpRange << " " << taggLowRange << endl;
+	  cout << "Edge plane setting " << fedgePlane << " Lin pol setting " << flinPol << endl;
+	}
+      }
+
+
+  }
 
 
 
@@ -134,7 +259,7 @@ feventNo = std::stod(fileNo) + tempEventno;
   //Clearing the vectors.
   Particles.clear();
 
- //Mott measurements for electron beam polarisation
+  //Mott measurements for electron beam polarisation
   Double_t runNo = std::stod(fileNo);
   if (runNo<=4626) ePol = MottMeas[0]; 
   if (runNo>4626 && runNo<=4725 ) ePol = MottMeas[1]; 
@@ -147,12 +272,14 @@ feventNo = std::stod(fileNo) + tempEventno;
   if (runNo>5767 ) ePol = MottMeas[8]; 
   if (runNo==11110000 ) ePol = MCMottNeg; 
   if (runNo==22220000 ) ePol = MCMottPos; 
+  if (runNo==33330000 ) ePol = MCMottFla;
+
 
   //MWPC information
   targetPosition.SetXYZ(target.X(),target.Y(),target.Z());
 
   Int_t iii = 0;
-
+ // Can change this to use pointers and store like it is in acqu.
   if (GetMWPCHitsChris()->GetNMWPCHitsChrisChamber1() != 0){
     fchamber1Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber1X(iii),GetMWPCHitsChris()->GetMWPCChamber1Y(iii),GetMWPCHitsChris()->GetMWPCChamber1Z(iii));
   }
@@ -193,15 +320,7 @@ feventNo = std::stod(fileNo) + tempEventno;
   if(Helicity == 0){
     fbeamHelicity = -1;
   }
-
-  //Linear Polarisation Information
-  if(GetLinpol()->GetPolarizationPlane()==0) fedgePlane = -1; // Para
-  if(GetLinpol()->GetPolarizationPlane()==1){ fedgePlane = 1;} // Perp
-  else{
-    fedgePlane=0; //Moeller or other
-  }
-
-
+  
 
   fNin= 3+ (GetTagger()->GetNTagged());
   Int_t countb4 = 0;
@@ -211,95 +330,152 @@ feventNo = std::stod(fileNo) + tempEventno;
   
   
   //************************************************************************************************************************
-  //Methodology: Now using a rootino for proton so how  does this effect neutron will it be rootino or photon? photon right?
-  if ( (GetRootinos()->GetNParticles()==2)){
 
+  if ( (GetPhotons()->GetNParticles()==1 && GetRootinos()->GetNParticles()==1 )){
+    ftopology=2;
     //PID info
-    if (NPidhits>1){
+    if (NPidhits>0){
 
-//Need to separate the pions from nucleons before that point
+
       while(fNin>fReadParticles->size()){
 	fReadParticles->push_back(new THSParticle());
       }
+	//Photons
+      fcrystalphot = GetPhotons()->Particle(0);
+      fcrystalphotindex =GetPhotons()->GetTrackIndex(0);
+      fcrystalphotmass= fcrystalphot.M();
+      fcrystalphotphi= fcrystalphot.Phi();
+      fcrystalphottheta= fcrystalphot.Theta();
+      fcrystalphotpidE = GetTracks()->GetVetoEnergy(fcrystalphotindex);
+      fcrystalphotmwpc0E = GetTracks()->GetMWPC0Energy(fcrystalphotindex);
+      fcrystalphotmwpc1E = GetTracks()->GetMWPC1Energy(fcrystalphotindex);
+	//Rootinos
+      fcrystalroot = GetRootinos()->Particle(0);
+      fcrystalrootindex =GetRootinos()->GetTrackIndex(0);
+      fcrystalrootmass= fcrystalroot.M();
+      fcrystalrootphi= fcrystalroot.Phi();
+      fcrystalroottheta= fcrystalroot.Theta();
+      fcrystalrootpidE = GetTracks()->GetVetoEnergy(fcrystalrootindex);
+      fcrystalrootmwpc0E = GetTracks()->GetMWPC0Energy(fcrystalrootindex);
+      fcrystalrootmwpc1E = GetTracks()->GetMWPC1Energy(fcrystalrootindex);
+
+      fcrystalcoplan=fcrystalroot.TLorentzVector::DeltaPhi(-fcrystalphot);
 
       
-      for(Int_t j=0; j<GetRootinos()->GetNParticles(); j++){ 
+      for(Int_t j=0; j<GetPhotons()->GetNParticles(); j++){ 
 
 	Particles.push_back(fReadParticles->at(j));
-	frootino = GetPhotons()->Particle(j); //TLorentzVector
-	Particles[j]->SetP4(frootino);
-	Particles[j]->SetPDGcode(22);
-	
-	//	fballPhotons.SetP4(fcbPhoton); //THSParticle
-	//	fballPhotons.SetPDGcode(22);
-	//	Particles.push_back(&fballPhotons);
+	fcbPhoton = GetPhotons()->Particle(j); //TLorentzVector
+	fphotindex =GetPhotons()->GetTrackIndex(j);
+	Particles[j]->SetP4(fcbPhoton);
+	Particles[j]->SetPDGcode(2112);
+	Particles[j]->SetTime(GetTracks()->GetTime(fphotindex));//Should this be using gettrack index then get time on the index?Yes but since the particles are all photons trackNum=photonNum,see below for alternative
+	Particles[j]->SetDetector(GetTracks()->GetDetectors(fphotindex)); //DETECTOR_NONE = 0,DETECTOR_NaI = 1, DETECTOR_PID = 2, DETECTOR_MWPC = 4, DETECTOR_BaF2 = 8, DETECTOR_PbWO4 = 16, DETECTOR_Veto = 32,(Additive)
+	Particles[j]->SetEPid(GetTracks()->GetVetoEnergy(fphotindex));
+	Particles[j]->SetEMWPC0(GetTracks()->GetMWPC0Energy(fphotindex));
+	Particles[j]->SetEMWPC1(GetTracks()->GetMWPC1Energy(fphotindex));
+      } //Closing For NParticles 
 
+
+
+ for(Int_t k=0; k<GetRootinos()->GetNParticles(); k++){
+	
+	Particles.push_back(fReadParticles->at(k+1));
+      	frootino = GetRootinos()->Particle(k); //TLorentzVector
+	particleindex=GetRootinos()->GetTrackIndex(k);
+	Particles[k+1]->SetP4(fcbPhoton);
+	Particles[k+1]->SetPDGcode(211);
+	Particles[k+1]->SetTime(GetTracks()->GetTime(particleindex));
+	Particles[k+1]->SetDetector(GetTracks()->GetDetectors(particleindex));
+	Particles[k+1]->SetEPid(GetTracks()->GetVetoEnergy(particleindex));
+	Particles[k+1]->SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
+	Particles[k+1]->SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
 
       } //Closing For NParticles 
+
 
 
       for(Int_t i=0; i<GetTagger()->GetNTagged() ;i++){
  	
 	ftaggedTime = GetTagger()->GetTaggedTime(i);
 	countb4 = countb4+1;
-
 	
-	if ( ftaggedTime > 40 && ftaggedTime <80 ) {
+	if ( ftaggedTime > taggLowRange && ftaggedTime < taggUpRange ) { 
 
 	  countaft=countaft+1;
 	  counter = countb4 - countaft;
 	  
-	  Particles.push_back(fReadParticles->at(i+3-counter));
+	  Particles.push_back(fReadParticles->at(i+2-counter));
 	  fmultiplicity = GetTrigger()->GetMultiplicity();
 	  fenergySum =GetTrigger()->GetEnergySum();
 	  fenergyBeam = GetTagger()->GetTaggedEnergy(i);
 	  beam.SetXYZM(0.,0.,fenergyBeam,0.);  
 
-	  //Linear polarisation
-          flinPol = GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(i) );
+	  //Linear Polarisation
+	  if(!mc)flinPol =fedgePlane*( GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(i) ) );
 	  //Circular polarisation
 	  Pcirc = CircPol(fenergyBeam, ePol );	
-	  
+
+	  //Tagger Channel
+	  ftaggChannel = GetTagger()->GetTaggedChannel(i);
+	
+	  //Set Edge Plane is describing setting Para Perp Moeller (+-45deg etc.) Set Detector is the tagger channel  
+  	  Particles[i+2-counter]->SetEdgePlane(fedgePlane);
+  	  Particles[i+2-counter]->SetDetector(ftaggChannel);
 	  fglasgowTaggerPhoton.SetPxPyPzE(0,0,fenergyBeam, fenergyBeam);  //TLorentzVector
-	  Particles[i+3-counter]->SetP4(fglasgowTaggerPhoton);
-	  Particles[i+3-counter]->SetPDGcode(-22);
-	  Particles[i+3-counter]->SetTime(ftaggedTime);
-	  if (flinPol>0)  Particles[i+3-counter]->SetVertex(flinPol,0,Pcirc*fbeamHelicity);
-	  if (flinPol<0)  Particles[i+3-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity);
-	  // Also what about Pcirc that Derek mentioned for Z component of setvertex(add to header flinpol)
-	  // Need to figure out how to get para/perp to correspond to event in THSParticle.Add to THSParicle?
-
-
-	  // ftaggPhotons.SetP4(fglasgowTaggerPhoton); //THSParticle
-	  // ftaggPhotons.SetPDGcode(-22);
-	  // ftaggPhotons.SetTime(ftaggedTime);
-	  // Particles.push_back(&ftaggPhotons);
+	  Particles[i+2-counter]->SetP4(fglasgowTaggerPhoton);
+	  Particles[i+2-counter]->SetPDGcode(-22);
+	  Particles[i+2-counter]->SetTime(ftaggedTime);
+	  if (flinPol>0)  Particles[i+2-counter]->SetVertex(flinPol,0,Pcirc*fbeamHelicity);
+	  if (flinPol<0)  Particles[i+2-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity);
+	  if (flinPol==0)  Particles[i+2-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity);
 	  
-	  
+
 	} //closing if TaggedTime
 	
       } //Closing for NTagged.
-
       
     } //closing NPIDHits if
     
   } //closing Number Protons ==3 
-    
+  
+else{
+	//Photons
+      fcrystalphot.SetXYZM(-10000,-10000,-10000,-10000);
+      fcrystalphotindex=-1; 
+      fcrystalphotmass=-10000; 
+      fcrystalphotphi=-10000;
+      fcrystalphottheta=-10000;
+      fcrystalphotpidE =-10000;
+      fcrystalphotmwpc0E =-10000; 
+      fcrystalphotmwpc1E =-10000; 
+	//Rootinos
+      fcrystalroot.SetXYZM(-10000,-10000,-10000,-10000);
+      fcrystalrootindex =-1;
+      fcrystalrootmass=-10000;
+      fcrystalrootphi= -10000;
+      fcrystalroottheta= -10000;
+      fcrystalrootpidE = -10000;
+      fcrystalrootmwpc0E = -10000;
+      fcrystalrootmwpc1E = -10000;
+
+      fcrystalcoplan=-10000;
+
+}  
     //Do Proton channel here 
 
     //********************************************************************************************************************************
-    
+    //NEED TO ADD PARTICLES VECTORS TO THSFINALSTATE FOR NEUTRONS 2122 and for charged but dunno +or- currently using vec0.
+    // How do I identify which pid hit and mwpc hit came from which particle, should be a track associated with each right so use position of phi hit in pid and phi in mwpc to check. What about scattered? Also Coplanarity should also be a good discriminator since back to back in pid and mwpc and crystal.
  
-  if (GetPhotons()->GetNParticles()==1&& GetRootinos()->GetNParticles()==1){
-
+  if (GetPhotons()->GetNParticles()==0 && GetRootinos()->GetNParticles()==2){
+    ftopology=-2;
     //PID info
     if (NPidhits>0){
-
 
       if (NPidhits>0){
         fpidIndex = GetDetectorHits()->GetPIDHits(0);    //The parameter in the Npidhits is the number of pid hits in the event while getPIDHits is the element number of a hit
         fpidPhi = PIDElemPhi[fpidIndex]; //here
-
       } //closingpihits
 
       else{  
@@ -311,32 +487,43 @@ feventNo = std::stod(fileNo) + tempEventno;
       while(fNin>fReadParticles->size()){
 	fReadParticles->push_back(new THSParticle());
       }
-         
-      Particles.push_back(fReadParticles->at(0));
-      frootino = GetRootinos()->Particle(0);
-      Particles[0]->SetP4(frootino);
-      Particles[0]->SetPDGcode(2212);
-      // fcbRootino.SetP4(frootino);
-      // fcbRootino.SetPDGcode(2212);
-      // Particles.push_back(fcbRootino);
-      frootinoPhi= frootino.Phi();
+
+	//Rootinos, channel first look
+      fcrystalroot1 = GetRootinos()->Particle(0);
+      fcrystalrootindex1 =GetRootinos()->GetTrackIndex(0);
+      fcrystalrootmass1= fcrystalroot1.M();
+      fcrystalrootphi1= fcrystalroot1.Phi();
+      fcrystalroottheta1= fcrystalroot1.Theta();
+      fcrystalrootpidE1 = GetTracks()->GetVetoEnergy(fcrystalrootindex1);
+      fcrystalrootmwpc0E1 = GetTracks()->GetMWPC0Energy(fcrystalrootindex1);
+      fcrystalrootmwpc1E1 = GetTracks()->GetMWPC1Energy(fcrystalrootindex1);
+
+      fcrystalroot2 = GetRootinos()->Particle(1);
+      fcrystalrootindex2 =GetRootinos()->GetTrackIndex(1);
+      fcrystalrootmass2= fcrystalroot2.M();
+      fcrystalrootphi2= fcrystalroot2.Phi();
+      fcrystalroottheta2= fcrystalroot2.Theta();
+      fcrystalrootpidE2 = GetTracks()->GetVetoEnergy(fcrystalrootindex2);
+      fcrystalrootmwpc0E2 = GetTracks()->GetMWPC0Energy(fcrystalrootindex2);
+      fcrystalrootmwpc1E2 = GetTracks()->GetMWPC1Energy(fcrystalrootindex2);
+
+      fcrystalcoplan2=fcrystalroot2.TLorentzVector::DeltaPhi(-fcrystalroot1);
 
 
+     for(Int_t k=0; k<GetRootinos()->GetNParticles(); k++){
+      Particles.push_back(fReadParticles->at(k));
+      frootino = GetRootinos()->Particle(k);
+      Double_t  frootino2= GetRootinos()->GetVetoEnergy(k);   //**************************************NEW PIeCE OF CODE HERE TO BE REMOVED
+      particleindex=GetRootinos()->GetTrackIndex(k) ;//Set as -1 in header so will break if has any unexpected behaviour
+      Particles[k]->SetP4(frootino);
+      Particles[k]->SetPDGcode(1E6);
+      Particles[k]->SetTime(GetTracks()->GetTime(particleindex));
+      Particles[k]->SetDetector(GetTracks()->GetDetectors(particleindex));
+      Particles[k]->SetEPid(GetTracks()->GetVetoEnergy(particleindex));
+      Particles[k]->SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
+      Particles[k]->SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
 
-      for(Int_t k=0; k<GetPhotons()->GetNParticles(); k++){
-
-	Particles.push_back(fReadParticles->at(k+1));
-      	fcbPhoton = GetPhotons()->Particle(k); //TLorentzVector
-	Particles[k+1]->SetP4(fcbPhoton);
-	Particles[k+1]->SetPDGcode(22);
-	
-	// fballPhotons.SetP4(fcbPhoton); //THSParticle
-	// fballPhotons.SetPDGcode(22);
-	// Particles.push_back(&fballPhotons);
-	
-      
       } //Closing For NParticles 
-        
 
 
       for(Int_t l=0; l<GetTagger()->GetNTagged() ;l++){
@@ -346,11 +533,11 @@ feventNo = std::stod(fileNo) + tempEventno;
 	countb4 = countb4 +1;
 
 
-       	if ( ftaggedTime > 40 && ftaggedTime <80 ) {   //Atttempt to fix this by moving Particles.push_back(fReadParticles) b4 this;
+       	if ( ftaggedTime > taggLowRange && ftaggedTime <taggUpRange ) { 
 
 	  countaft = countaft +1;
 	  counter = countb4 - countaft;
-	  Particles.push_back(fReadParticles->at(l+3-counter));
+	  Particles.push_back(fReadParticles->at(l+2-counter));
        	  fmultiplicity = GetTrigger()->GetMultiplicity();
     	  fenergySum =GetTrigger()->GetEnergySum();
     	  fenergyBeam = GetTagger()->GetTaggedEnergy(l);
@@ -359,45 +546,64 @@ feventNo = std::stod(fileNo) + tempEventno;
 
       	  fglasgowTaggerPhoton.SetPxPyPzE(0,0,fenergyBeam, fenergyBeam);  //TLorentzVector
 
-	//Linear Polarisation
-          flinPol = GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(l) );
-	//Circular Polarisation
+	  //Linear Polarisation
+	  if(!mc) flinPol =fedgePlane* ( GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(l) ) );
+	  //Circular Polarisation
 	  Pcirc = CircPol(fenergyBeam, ePol );	
 
-	  
-	  Particles[l+3-counter]->SetP4(fglasgowTaggerPhoton);
-	  Particles[l+3-counter]->SetPDGcode(-22);
-	  Particles[l+3-counter]->SetTime(ftaggedTime);
-	  if (flinPol>0)  Particles[l+3-counter]->SetVertex(flinPol,0,Pcirc*fbeamHelicity);
-	  if (flinPol<0)  Particles[l+3-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity);
-	  
-	  // ftaggPhotons.SetP4(fglasgowTaggerPhoton); //THSParticle
-    	  // ftaggPhotons.SetPDGcode(-22);
-    	  // ftaggPhotons.SetTime(ftaggedTime);
-    	  // Particles.push_back(&ftaggPhotons);
-	  
-	  
+	  //Tagger Channel
+	  ftaggChannel  = GetTagger()->GetTaggedChannel(l) ;
+
+	  Particles[l+2-counter]->SetEdgePlane(fedgePlane);
+  	  Particles[l+2-counter]->SetDetector(ftaggChannel);
+	  Particles[l+2-counter]->SetP4(fglasgowTaggerPhoton);
+	  Particles[l+2-counter]->SetPDGcode(-22);
+	  Particles[l+2-counter]->SetTime(ftaggedTime);
+	  if (flinPol>0)  Particles[l+2-counter]->SetVertex(flinPol,0,Pcirc*fbeamHelicity); //Perp
+	  if (flinPol<0)  Particles[l+2-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity); //Para
+	  if (flinPol==0)  Particles[l+2-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity); //Moeller
 	  
 	  
 	} //closing if TaggedTime
 	
       } //Closing for NTagged.
-    
-    
+        
     } //closing NPIDHits if
   
   } //closing 2 photons and 1 rootino.  
 
+else{
 
+	//Rootinos
+      fcrystalroot1.SetXYZM(-10000,-10000,-10000,-10000);
+      fcrystalrootindex1 =-1;
+      fcrystalrootmass1=-10000;
+      fcrystalrootphi1= -10000;
+      fcrystalroottheta1= -10000;
+      fcrystalrootpidE1 = -10000;
+      fcrystalrootmwpc0E1 = -10000;
+      fcrystalrootmwpc1E1 = -10000;
+
+      fcrystalroot2.SetXYZM(-10000,-10000,-10000,-10000);
+      fcrystalrootindex2 =-1;
+      fcrystalrootmass2=-10000;
+      fcrystalrootphi2= -10000;
+      fcrystalroottheta2= -10000;
+      fcrystalrootpidE2 = -10000;
+      fcrystalrootmwpc0E2 = -10000;
+      fcrystalrootmwpc1E2 = -10000;
+
+      fcrystalcoplan2=-10000;
+
+}  
 
   //*************************************************************************************************************************************
-
   
 
   //} //closing if 3 particles
 
 
-  treePi0->Fill();
+  treePi->Fill();
   
   nEventsWritten++;
 
@@ -414,26 +620,25 @@ void	chrisChargedPions::ProcessScalerRead()
 Bool_t	chrisChargedPions::Write()
 {
 
-  treePi0->Write(); 
-  treePi0->Reset();
+  treePi->Write(); 
+  treePi->Reset();
 
-  return 0; //Added CAM 28/09/16
+  return 0; 
 
-  // Write all GH1's and TObjects defined in this class
-  //    return GTreeManager::Write(); //Removed CAM 28/09/16
+ 
 }
 
 
 
 Double_t CircPol( Double_t Eg , Double_t ePol   ){
-//function to calculate the circ photon polarisation produced from elec beam given elec beam pol, photon energy and elec beam energy 1557Mev
+  //function to calculate the circ photon polarisation produced from elec beam given elec beam pol, photon energy and elec beam energy 1557Mev
 
-Double_t E0 = 1557;
+  Double_t E0 = 1557;
 
-Double_t Pg = ( (ePol*Eg)/E0 )* (  ( 1+ ((1/3)*(1-(Eg/E0))) )/(1 - ((2/3)*(1- (Eg/E0))) +  pow( (1 - (Eg/E0)), 2 )  ) );
+  Double_t Pg = ( (ePol*Eg)/E0 )* (  ( 1+ ((1/3)*(1-(Eg/E0))) )/(1 - ((2/3)*(1- (Eg/E0))) +  pow( (1 - (Eg/E0)), 2 )  ) );
 
 
-return Pg;
+  return Pg;
 }
 
 

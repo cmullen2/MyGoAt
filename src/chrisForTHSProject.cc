@@ -108,7 +108,6 @@ void	chrisForTHSProject::ProcessEvent()
     {
       if(GetEventNumber() % period == 0)
 	cout << "Events: " << GetEventNumber() << "  Events Accepted: " << nEventsWritten << endl;
-      //" testcounter= " <<testcounter <<  endl;
     }
 
   Int_t mc =1; //0 for production data, non-zero for simulation
@@ -191,7 +190,7 @@ if(planesetting!="Fla" && planesetting!="Neg" && planesetting!="Pos" ){
 
     //generatedPDGs={2122, 2212, 22 ,22 ,-22}; //2122 is neutron, 2212 is proton, 22 is photon and -22 is beam.
 
-//ARE THESE GOING into the wrong places in fgenerated. Should I be putting these in the truth parts of fgen. IF so what does this mean for Particles, should I not use it for sims and only fill fgen but with both norm +true?
+
     for(Int_t j=0; j<(GetTruth()->GetfNMC()+1); j++){ //push back the 4 particles but not beam here?
 
       Generated.push_back(fGenParticles->at(j));
@@ -200,7 +199,9 @@ if(planesetting!="Fla" && planesetting!="Neg" && planesetting!="Pos" ){
       }
 
       else{
-	Generated[j]->SetXYZT(1000 * (GetTruth()->GettruthBeam(3)) * (GetTruth()->GettruthBeam(0)), 1000 *  (GetTruth()->GettruthBeam(3)) * (GetTruth()->Getdircos(1)), 1000 * (GetTruth()->GettruthBeam(3)) * (GetTruth()->Getdircos(2)), 1000*GetTruth()->GettruthBeam(4));
+	Generated[j]->P4p()->SetPxPyPzE(1000 * (GetTruth()->GettruthBeam(3)) * (GetTruth()->GettruthBeam(0)), 1000 *  (GetTruth()->GettruthBeam(3)) * (GetTruth()->GettruthBeam(1)), 1000 * (GetTruth()->GettruthBeam(3)) * (GetTruth()->GettruthBeam(2)), 1000*GetTruth()->GettruthBeam(4));
+	//	cout << Generated[j]->P4().E() <<" Mass next " << Generated[j]->P4().M()  << endl;
+	//cout << GetTruth()->GettruthBeam(0) << " zero " << GetTruth()->GettruthBeam(1) << " one "<< GetTruth()->GettruthBeam(2) << " two "<< GetTruth()->GettruthBeam(3) <<" three " << GetTruth()->GettruthBeam(4) << " Four " <<   endl; 
       }
 
       Generated[j]->SetPDGcode(generatedPDGs[j]);
@@ -230,6 +231,8 @@ if(planesetting!="Fla" && planesetting!="Neg" && planesetting!="Pos" ){
   if (runNo>5767 ) ePol = MottMeas[8]; 
   if (runNo==11110000 ) ePol = MCMottNeg; 
   if (runNo==22220000 ) ePol = MCMottPos; 
+  if (runNo==33330000 ) ePol = MCMottFla;
+
 
   //MWPC information
   targetPosition.SetXYZ(target.X(),target.Y(),target.Z());
@@ -380,29 +383,11 @@ if(planesetting!="Fla" && planesetting!="Neg" && planesetting!="Pos" ){
          
       Particles.push_back(fReadParticles->at(0));
       frootino = GetRootinos()->Particle(0);
-      // std::cout << "X= " <<frootino.X() << "   Y= " <<frootino.Y() <<"    Z= " <<frootino.Z() << std::endl;
-      //     if (frootino.X()==0 && frootino.Y()==0)testcounter= testcounter +1 ;
       particleindex=GetRootinos()->GetTrackIndex(0) ;//Set as -1 in header so will break if has any unexpected behaviour
       Particles[0]->SetP4(frootino);
       Particles[0]->SetPDGcode(2212);
       Particles[0]->SetTime(GetTracks()->GetTime(particleindex));
       Particles[0]->SetDetector(GetTracks()->GetDetectors(particleindex));
-      //	cout << "Rootinos " << GetRootinos()->GetTrackIndex(0) << "   " << GetPhotons()->GetTrackIndex(0)<<"    " <<GetTracks()->GetTime(0)<<"   " <<GetTracks()->GetTime(particleindex) << "   " << GetTracks()->GetTime(GetPhotons()->GetTrackIndex(0)) << endl;
-      frootinoPhi= frootino.Phi();
-
-      rootinoClustE =GetTracks()->GetClusterEnergy(0);
-      rootinoTheta =GetTracks()->GetTheta(0);
-      rootinoPhi =GetTracks()->GetPhi(0);
-      rootinoTime =GetTracks()->GetTime(0);
-      rootinoClustS =GetTracks()->GetClusterSize(0);
-      rootinoClustC =GetTracks()->GetCentralCrystal(0);
-      rootinoVetoC =GetTracks()->GetCentralVeto(0);
-      rootinoDet =GetTracks()->GetDetectors(0);
-      rootinoVetoE =GetTracks()->GetVetoEnergy(0);
-      rootinoCham1E =GetTracks()->GetMWPC0Energy(0);
-      rootinoCham2E =GetTracks()->GetMWPC1Energy(0);
-      HasTappyTaps =GetTracks()->HasTAPS(0);
-      HasCrisyBall= GetTracks()->HasCB(0);
 
 
       for(Int_t k=0; k<GetPhotons()->GetNParticles(); k++){
@@ -465,23 +450,6 @@ if(planesetting!="Fla" && planesetting!="Neg" && planesetting!="Pos" ){
 
 
   //*************************************************************************************************************************************
-  else{
-    frootinoPhi=-200;
-    rootinoClustE =-111;  
-    rootinoTheta =-111;
-    rootinoPhi =-111;
-    rootinoTime =-111;
-    rootinoClustS =-111;
-    rootinoClustC =-111;
-    rootinoVetoC =-111;
-    rootinoDet =-111;
-    rootinoVetoE =-111;
-    rootinoCham1E =-111;
-    rootinoCham2E =-111;
-    HasTappyTaps =-11;
-    HasCrisyBall =-11;
-
-  }
   
 
   //} //closing if 3 particles

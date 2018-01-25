@@ -53,6 +53,7 @@ Double_t MottMeas[9]={0.7515, 0.7629915, 0.762434, 0.7662845, 0.769435, 0.773674
 
 Double_t MCMottNeg = 1;
 Double_t MCMottPos = -1;
+Double_t MCMottFla = 0;
 
 
   //Branches in the trees
@@ -115,28 +116,6 @@ Double_t MCMottPos = -1;
   Double_t taggUpRange;
   Double_t taggLowRange;
   std::string fileNo;
-
-
-
-
-//Dwelete me
-Double_t  rootinoClustE;
-Double_t  rootinoTheta;
-Double_t  rootinoPhi;
-Double_t  rootinoTime;
-Double_t  rootinoClustS;
-Double_t  rootinoClustC;
-Double_t  rootinoVetoC;
-Double_t  rootinoDet;
-Double_t  rootinoVetoE; 
-Double_t  rootinoCham1E;
-Double_t  rootinoCham2E;
-Int_t testcounter=0;
- Int_t HasTappyTaps;
- Int_t HasCrisyBall;
-
-
-
 
   
  protected:
