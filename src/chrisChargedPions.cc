@@ -279,7 +279,7 @@ void	chrisChargedPions::ProcessEvent()
   targetPosition.SetXYZ(target.X(),target.Y(),target.Z());
 
   Int_t iii = 0;
- // Can change this to use pointers and store like it is in acqu.
+  // Can change this to use pointers and store like it is in acqu.
   if (GetMWPCHitsChris()->GetNMWPCHitsChrisChamber1() != 0){
     fchamber1Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber1X(iii),GetMWPCHitsChris()->GetMWPCChamber1Y(iii),GetMWPCHitsChris()->GetMWPCChamber1Z(iii));
   }
@@ -327,280 +327,283 @@ void	chrisChargedPions::ProcessEvent()
   Int_t countaft = 0;
   Int_t counter = 0;
 
-  
-  
-  //************************************************************************************************************************
+  if(GetTagger()->GetNTagged()<200){  
+    if(GetTagger()->GetNTagged()>0){  
+      //************************************************************************************************************************
 
-  if ( (GetPhotons()->GetNParticles()==1 && GetRootinos()->GetNParticles()==1 )){
-    ftopology=2;
-    //PID info
-    if (NPidhits>0){
+      if ( (GetPhotons()->GetNParticles()==1 && GetRootinos()->GetNParticles()==1 )){
+	ftopology=2;
+	//PID info
+	if (NPidhits>0){
 
 
-      while(fNin>fReadParticles->size()){
-	fReadParticles->push_back(new THSParticle());
-      }
-	//Photons
-      fcrystalphot = GetPhotons()->Particle(0);
-      fcrystalphotindex =GetPhotons()->GetTrackIndex(0);
-      fcrystalphotmass= fcrystalphot.M();
-      fcrystalphotphi= fcrystalphot.Phi();
-      fcrystalphottheta= fcrystalphot.Theta();
-      fcrystalphotpidE = GetTracks()->GetVetoEnergy(fcrystalphotindex);
-      fcrystalphotmwpc0E = GetTracks()->GetMWPC0Energy(fcrystalphotindex);
-      fcrystalphotmwpc1E = GetTracks()->GetMWPC1Energy(fcrystalphotindex);
-	//Rootinos
-      fcrystalroot = GetRootinos()->Particle(0);
-      fcrystalrootindex =GetRootinos()->GetTrackIndex(0);
-      fcrystalrootmass= fcrystalroot.M();
-      fcrystalrootphi= fcrystalroot.Phi();
-      fcrystalroottheta= fcrystalroot.Theta();
-      fcrystalrootpidE = GetTracks()->GetVetoEnergy(fcrystalrootindex);
-      fcrystalrootmwpc0E = GetTracks()->GetMWPC0Energy(fcrystalrootindex);
-      fcrystalrootmwpc1E = GetTracks()->GetMWPC1Energy(fcrystalrootindex);
+	  while(fNin>fReadParticles->size()){
+	    fReadParticles->push_back(new THSParticle());
+	  }
+	  //Photons
+	  fcrystalphot = GetPhotons()->Particle(0);
+	  fcrystalphotindex =GetPhotons()->GetTrackIndex(0);
+	  fcrystalphotmass= fcrystalphot.M();
+	  fcrystalphotphi= fcrystalphot.Phi();
+	  fcrystalphottheta= fcrystalphot.Theta();
+	  fcrystalphotpidE = GetTracks()->GetVetoEnergy(fcrystalphotindex);
+	  fcrystalphotmwpc0E = GetTracks()->GetMWPC0Energy(fcrystalphotindex);
+	  fcrystalphotmwpc1E = GetTracks()->GetMWPC1Energy(fcrystalphotindex);
+	  //Rootinos
+	  fcrystalroot = GetRootinos()->Particle(0);
+	  fcrystalrootindex =GetRootinos()->GetTrackIndex(0);
+	  fcrystalrootmass= fcrystalroot.M();
+	  fcrystalrootphi= fcrystalroot.Phi();
+	  fcrystalroottheta= fcrystalroot.Theta();
+	  fcrystalrootpidE = GetTracks()->GetVetoEnergy(fcrystalrootindex);
+	  fcrystalrootmwpc0E = GetTracks()->GetMWPC0Energy(fcrystalrootindex);
+	  fcrystalrootmwpc1E = GetTracks()->GetMWPC1Energy(fcrystalrootindex);
 
-      fcrystalcoplan=fcrystalroot.TLorentzVector::DeltaPhi(-fcrystalphot);
+	  fcrystalcoplan=fcrystalroot.TLorentzVector::DeltaPhi(-fcrystalphot);
 
       
-      for(Int_t j=0; j<GetPhotons()->GetNParticles(); j++){ 
+	  for(Int_t j=0; j<GetPhotons()->GetNParticles(); j++){ 
 
-	Particles.push_back(fReadParticles->at(j));
-	fcbPhoton = GetPhotons()->Particle(j); //TLorentzVector
-	fphotindex =GetPhotons()->GetTrackIndex(j);
-	Particles[j]->SetP4(fcbPhoton);
-	Particles[j]->SetPDGcode(2112);
-	Particles[j]->SetTime(GetTracks()->GetTime(fphotindex));//Should this be using gettrack index then get time on the index?Yes but since the particles are all photons trackNum=photonNum,see below for alternative
-	Particles[j]->SetDetector(GetTracks()->GetDetectors(fphotindex)); //DETECTOR_NONE = 0,DETECTOR_NaI = 1, DETECTOR_PID = 2, DETECTOR_MWPC = 4, DETECTOR_BaF2 = 8, DETECTOR_PbWO4 = 16, DETECTOR_Veto = 32,(Additive)
-	Particles[j]->SetEPid(GetTracks()->GetVetoEnergy(fphotindex));
-	Particles[j]->SetEMWPC0(GetTracks()->GetMWPC0Energy(fphotindex));
-	Particles[j]->SetEMWPC1(GetTracks()->GetMWPC1Energy(fphotindex));
-      } //Closing For NParticles 
+	    Particles.push_back(fReadParticles->at(j));
+	    fcbPhoton = GetPhotons()->Particle(j); //TLorentzVector
+	    fphotindex =GetPhotons()->GetTrackIndex(j);
+	    Particles[j]->SetP4(fcbPhoton);
+	    Particles[j]->SetPDGcode(2112);
+	    Particles[j]->SetTime(GetTracks()->GetTime(fphotindex));//Should this be using gettrack index then get time on the index?Yes but since the particles are all photons trackNum=photonNum,see below for alternative
+	    Particles[j]->SetDetector(GetTracks()->GetDetectors(fphotindex)); //DETECTOR_NONE = 0,DETECTOR_NaI = 1, DETECTOR_PID = 2, DETECTOR_MWPC = 4, DETECTOR_BaF2 = 8, DETECTOR_PbWO4 = 16, DETECTOR_Veto = 32,(Additive)
+	    Particles[j]->SetEPid(GetTracks()->GetVetoEnergy(fphotindex));
+	    Particles[j]->SetEMWPC0(GetTracks()->GetMWPC0Energy(fphotindex));
+	    Particles[j]->SetEMWPC1(GetTracks()->GetMWPC1Energy(fphotindex));
+	  } //Closing For NParticles 
 
 
 
- for(Int_t k=0; k<GetRootinos()->GetNParticles(); k++){
+	  for(Int_t k=0; k<GetRootinos()->GetNParticles(); k++){
 	
-	Particles.push_back(fReadParticles->at(k+1));
-      	frootino = GetRootinos()->Particle(k); //TLorentzVector
-	particleindex=GetRootinos()->GetTrackIndex(k);
-	Particles[k+1]->SetP4(fcbPhoton);
-	Particles[k+1]->SetPDGcode(211);
-	Particles[k+1]->SetTime(GetTracks()->GetTime(particleindex));
-	Particles[k+1]->SetDetector(GetTracks()->GetDetectors(particleindex));
-	Particles[k+1]->SetEPid(GetTracks()->GetVetoEnergy(particleindex));
-	Particles[k+1]->SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
-	Particles[k+1]->SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
+	    Particles.push_back(fReadParticles->at(k+1));
+	    frootino = GetRootinos()->Particle(k); //TLorentzVector
+	    particleindex=GetRootinos()->GetTrackIndex(k);
+	    Particles[k+1]->SetP4(fcbPhoton);
+	    Particles[k+1]->SetPDGcode(211);
+	    Particles[k+1]->SetTime(GetTracks()->GetTime(particleindex));
+	    Particles[k+1]->SetDetector(GetTracks()->GetDetectors(particleindex));
+	    Particles[k+1]->SetEPid(GetTracks()->GetVetoEnergy(particleindex));
+	    Particles[k+1]->SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
+	    Particles[k+1]->SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
 
-      } //Closing For NParticles 
+	  } //Closing For NParticles 
 
 
 
-      for(Int_t i=0; i<GetTagger()->GetNTagged() ;i++){
+	  for(Int_t i=0; i<GetTagger()->GetNTagged() ;i++){
  	
-	ftaggedTime = GetTagger()->GetTaggedTime(i);
-	countb4 = countb4+1;
+	    ftaggedTime = GetTagger()->GetTaggedTime(i);
+	    countb4 = countb4+1;
 	
-	if ( ftaggedTime > taggLowRange && ftaggedTime < taggUpRange ) { 
+	    if ( ftaggedTime > taggLowRange && ftaggedTime < taggUpRange ) { 
 
-	  countaft=countaft+1;
-	  counter = countb4 - countaft;
+	      countaft=countaft+1;
+	      counter = countb4 - countaft;
 	  
-	  Particles.push_back(fReadParticles->at(i+2-counter));
-	  fmultiplicity = GetTrigger()->GetMultiplicity();
-	  fenergySum =GetTrigger()->GetEnergySum();
-	  fenergyBeam = GetTagger()->GetTaggedEnergy(i);
-	  beam.SetXYZM(0.,0.,fenergyBeam,0.);  
+	      Particles.push_back(fReadParticles->at(i+2-counter));
+	      fmultiplicity = GetTrigger()->GetMultiplicity();
+	      fenergySum =GetTrigger()->GetEnergySum();
+	      fenergyBeam = GetTagger()->GetTaggedEnergy(i);
+	      beam.SetXYZM(0.,0.,fenergyBeam,0.);  
 
-	  //Linear Polarisation
-	  if(!mc)flinPol =fedgePlane*( GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(i) ) );
-	  //Circular polarisation
-	  Pcirc = CircPol(fenergyBeam, ePol );	
+	      //Linear Polarisation
+	      if(!mc)flinPol =fedgePlane*( GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(i) ) );
+	      //Circular polarisation
+	      Pcirc = CircPol(fenergyBeam, ePol );	
 
-	  //Tagger Channel
-	  ftaggChannel = GetTagger()->GetTaggedChannel(i);
+	      //Tagger Channel
+	      ftaggChannel = GetTagger()->GetTaggedChannel(i);
 	
-	  //Set Edge Plane is describing setting Para Perp Moeller (+-45deg etc.) Set Detector is the tagger channel  
-  	  Particles[i+2-counter]->SetEdgePlane(fedgePlane);
-  	  Particles[i+2-counter]->SetDetector(ftaggChannel);
-	  fglasgowTaggerPhoton.SetPxPyPzE(0,0,fenergyBeam, fenergyBeam);  //TLorentzVector
-	  Particles[i+2-counter]->SetP4(fglasgowTaggerPhoton);
-	  Particles[i+2-counter]->SetPDGcode(-22);
-	  Particles[i+2-counter]->SetTime(ftaggedTime);
-	  if (flinPol>0)  Particles[i+2-counter]->SetVertex(flinPol,0,Pcirc*fbeamHelicity);
-	  if (flinPol<0)  Particles[i+2-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity);
-	  if (flinPol==0)  Particles[i+2-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity);
+	      //Set Edge Plane is describing setting Para Perp Moeller (+-45deg etc.) Set Detector is the tagger channel  
+	      Particles[i+2-counter]->SetEdgePlane(fedgePlane);
+	      Particles[i+2-counter]->SetDetector(ftaggChannel);
+	      fglasgowTaggerPhoton.SetPxPyPzE(0,0,fenergyBeam, fenergyBeam);  //TLorentzVector
+	      Particles[i+2-counter]->SetP4(fglasgowTaggerPhoton);
+	      Particles[i+2-counter]->SetPDGcode(-22);
+	      Particles[i+2-counter]->SetTime(ftaggedTime);
+	      if (flinPol>0)  Particles[i+2-counter]->SetVertex(flinPol,0,Pcirc*fbeamHelicity);
+	      if (flinPol<0)  Particles[i+2-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity);
+	      if (flinPol==0)  Particles[i+2-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity);
 	  
 
-	} //closing if TaggedTime
+	    } //closing if TaggedTime
 	
-      } //Closing for NTagged.
+	  } //Closing for NTagged.
       
-    } //closing NPIDHits if
+	} //closing NPIDHits if
     
-  } //closing Number Protons ==3 
+      } //closing Number Protons ==3 
   
-else{
+      else{
 	//Photons
-      fcrystalphot.SetXYZM(-10000,-10000,-10000,-10000);
-      fcrystalphotindex=-1; 
-      fcrystalphotmass=-10000; 
-      fcrystalphotphi=-10000;
-      fcrystalphottheta=-10000;
-      fcrystalphotpidE =-10000;
-      fcrystalphotmwpc0E =-10000; 
-      fcrystalphotmwpc1E =-10000; 
+	fcrystalphot.SetXYZM(-10000,-10000,-10000,-10000);
+	fcrystalphotindex=-1; 
+	fcrystalphotmass=-10000; 
+	fcrystalphotphi=-10000;
+	fcrystalphottheta=-10000;
+	fcrystalphotpidE =-10000;
+	fcrystalphotmwpc0E =-10000; 
+	fcrystalphotmwpc1E =-10000; 
 	//Rootinos
-      fcrystalroot.SetXYZM(-10000,-10000,-10000,-10000);
-      fcrystalrootindex =-1;
-      fcrystalrootmass=-10000;
-      fcrystalrootphi= -10000;
-      fcrystalroottheta= -10000;
-      fcrystalrootpidE = -10000;
-      fcrystalrootmwpc0E = -10000;
-      fcrystalrootmwpc1E = -10000;
+	fcrystalroot.SetXYZM(-10000,-10000,-10000,-10000);
+	fcrystalrootindex =-1;
+	fcrystalrootmass=-10000;
+	fcrystalrootphi= -10000;
+	fcrystalroottheta= -10000;
+	fcrystalrootpidE = -10000;
+	fcrystalrootmwpc0E = -10000;
+	fcrystalrootmwpc1E = -10000;
 
-      fcrystalcoplan=-10000;
+	fcrystalcoplan=-10000;
 
-}  
-    //Do Proton channel here 
+      }  
+      //Do Proton channel here 
 
-    //********************************************************************************************************************************
-    //NEED TO ADD PARTICLES VECTORS TO THSFINALSTATE FOR NEUTRONS 2122 and for charged but dunno +or- currently using vec0.
-    // How do I identify which pid hit and mwpc hit came from which particle, should be a track associated with each right so use position of phi hit in pid and phi in mwpc to check. What about scattered? Also Coplanarity should also be a good discriminator since back to back in pid and mwpc and crystal.
+      //********************************************************************************************************************************
+      //NEED TO ADD PARTICLES VECTORS TO THSFINALSTATE FOR NEUTRONS 2122 and for charged but dunno +or- currently using vec0.
+      // How do I identify which pid hit and mwpc hit came from which particle, should be a track associated with each right so use position of phi hit in pid and phi in mwpc to check. What about scattered? Also Coplanarity should also be a good discriminator since back to back in pid and mwpc and crystal.
  
-  if (GetPhotons()->GetNParticles()==0 && GetRootinos()->GetNParticles()==2){
-    ftopology=-2;
-    //PID info
-    if (NPidhits>0){
+      if (GetPhotons()->GetNParticles()==0 && GetRootinos()->GetNParticles()==2){
+	ftopology=-2;
+	//PID info
+	if (NPidhits>0){
 
-      if (NPidhits>0){
-        fpidIndex = GetDetectorHits()->GetPIDHits(0);    //The parameter in the Npidhits is the number of pid hits in the event while getPIDHits is the element number of a hit
-        fpidPhi = PIDElemPhi[fpidIndex]; //here
-      } //closingpihits
+	  if (NPidhits>0){
+	    fpidIndex = GetDetectorHits()->GetPIDHits(0);    //The parameter in the Npidhits is the number of pid hits in the event while getPIDHits is the element number of a hit
+	    fpidPhi = PIDElemPhi[fpidIndex]; //here
+	  } //closingpihits
 
-      else{  
+	  else{  
     
-        fpidPhi = -10;
-      }
+	    fpidPhi = -10;
+	  }
       
 
-      while(fNin>fReadParticles->size()){
-	fReadParticles->push_back(new THSParticle());
-      }
+	  while(fNin>fReadParticles->size()){
+	    fReadParticles->push_back(new THSParticle());
+	  }
 
-	//Rootinos, channel first look
-      fcrystalroot1 = GetRootinos()->Particle(0);
-      fcrystalrootindex1 =GetRootinos()->GetTrackIndex(0);
-      fcrystalrootmass1= fcrystalroot1.M();
-      fcrystalrootphi1= fcrystalroot1.Phi();
-      fcrystalroottheta1= fcrystalroot1.Theta();
-      fcrystalrootpidE1 = GetTracks()->GetVetoEnergy(fcrystalrootindex1);
-      fcrystalrootmwpc0E1 = GetTracks()->GetMWPC0Energy(fcrystalrootindex1);
-      fcrystalrootmwpc1E1 = GetTracks()->GetMWPC1Energy(fcrystalrootindex1);
+	  //Rootinos, channel first look
+	  fcrystalroot1 = GetRootinos()->Particle(0);
+	  fcrystalrootindex1 =GetRootinos()->GetTrackIndex(0);
+	  fcrystalrootmass1= fcrystalroot1.M();
+	  fcrystalrootphi1= fcrystalroot1.Phi();
+	  fcrystalroottheta1= fcrystalroot1.Theta();
+	  fcrystalrootpidE1 = GetTracks()->GetVetoEnergy(fcrystalrootindex1);
+	  fcrystalrootmwpc0E1 = GetTracks()->GetMWPC0Energy(fcrystalrootindex1);
+	  fcrystalrootmwpc1E1 = GetTracks()->GetMWPC1Energy(fcrystalrootindex1);
 
-      fcrystalroot2 = GetRootinos()->Particle(1);
-      fcrystalrootindex2 =GetRootinos()->GetTrackIndex(1);
-      fcrystalrootmass2= fcrystalroot2.M();
-      fcrystalrootphi2= fcrystalroot2.Phi();
-      fcrystalroottheta2= fcrystalroot2.Theta();
-      fcrystalrootpidE2 = GetTracks()->GetVetoEnergy(fcrystalrootindex2);
-      fcrystalrootmwpc0E2 = GetTracks()->GetMWPC0Energy(fcrystalrootindex2);
-      fcrystalrootmwpc1E2 = GetTracks()->GetMWPC1Energy(fcrystalrootindex2);
+	  fcrystalroot2 = GetRootinos()->Particle(1);
+	  fcrystalrootindex2 =GetRootinos()->GetTrackIndex(1);
+	  fcrystalrootmass2= fcrystalroot2.M();
+	  fcrystalrootphi2= fcrystalroot2.Phi();
+	  fcrystalroottheta2= fcrystalroot2.Theta();
+	  fcrystalrootpidE2 = GetTracks()->GetVetoEnergy(fcrystalrootindex2);
+	  fcrystalrootmwpc0E2 = GetTracks()->GetMWPC0Energy(fcrystalrootindex2);
+	  fcrystalrootmwpc1E2 = GetTracks()->GetMWPC1Energy(fcrystalrootindex2);
 
-      fcrystalcoplan2=fcrystalroot2.TLorentzVector::DeltaPhi(-fcrystalroot1);
-
-
-     for(Int_t k=0; k<GetRootinos()->GetNParticles(); k++){
-      Particles.push_back(fReadParticles->at(k));
-      frootino = GetRootinos()->Particle(k);
-      Double_t  frootino2= GetRootinos()->GetVetoEnergy(k);   //**************************************NEW PIeCE OF CODE HERE TO BE REMOVED
-      particleindex=GetRootinos()->GetTrackIndex(k) ;//Set as -1 in header so will break if has any unexpected behaviour
-      Particles[k]->SetP4(frootino);
-      Particles[k]->SetPDGcode(1E6);
-      Particles[k]->SetTime(GetTracks()->GetTime(particleindex));
-      Particles[k]->SetDetector(GetTracks()->GetDetectors(particleindex));
-      Particles[k]->SetEPid(GetTracks()->GetVetoEnergy(particleindex));
-      Particles[k]->SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
-      Particles[k]->SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
-
-      } //Closing For NParticles 
+	  fcrystalcoplan2=fcrystalroot2.TLorentzVector::DeltaPhi(-fcrystalroot1);
 
 
-      for(Int_t l=0; l<GetTagger()->GetNTagged() ;l++){
+	  for(Int_t k=0; k<GetRootinos()->GetNParticles(); k++){
+	    Particles.push_back(fReadParticles->at(k));
+	    frootino = GetRootinos()->Particle(k);
+	    Double_t  frootino2= GetRootinos()->GetVetoEnergy(k);   //**************************************NEW PIeCE OF CODE HERE TO BE REMOVED
+	    particleindex=GetRootinos()->GetTrackIndex(k) ;//Set as -1 in header so will break if has any unexpected behaviour
+	    Particles[k]->SetP4(frootino);
+	    Particles[k]->SetPDGcode(1E6);
+	    Particles[k]->SetTime(GetTracks()->GetTime(particleindex));
+	    Particles[k]->SetDetector(GetTracks()->GetDetectors(particleindex));
+	    Particles[k]->SetEPid(GetTracks()->GetVetoEnergy(particleindex));
+	    Particles[k]->SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
+	    Particles[k]->SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
+
+	  } //Closing For NParticles 
+
+
+	  for(Int_t l=0; l<GetTagger()->GetNTagged() ;l++){
       
-	ftaggedTime = GetTagger()->GetTaggedTime(l);
+	    ftaggedTime = GetTagger()->GetTaggedTime(l);
 
-	countb4 = countb4 +1;
-
-
-       	if ( ftaggedTime > taggLowRange && ftaggedTime <taggUpRange ) { 
-
-	  countaft = countaft +1;
-	  counter = countb4 - countaft;
-	  Particles.push_back(fReadParticles->at(l+2-counter));
-       	  fmultiplicity = GetTrigger()->GetMultiplicity();
-    	  fenergySum =GetTrigger()->GetEnergySum();
-    	  fenergyBeam = GetTagger()->GetTaggedEnergy(l);
-    	  beam.SetXYZM(0.,0.,fenergyBeam,0.);
+	    countb4 = countb4 +1;
 
 
-      	  fglasgowTaggerPhoton.SetPxPyPzE(0,0,fenergyBeam, fenergyBeam);  //TLorentzVector
+	    if ( ftaggedTime > taggLowRange && ftaggedTime <taggUpRange ) { 
 
-	  //Linear Polarisation
-	  if(!mc) flinPol =fedgePlane* ( GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(l) ) );
-	  //Circular Polarisation
-	  Pcirc = CircPol(fenergyBeam, ePol );	
+	      countaft = countaft +1;
+	      counter = countb4 - countaft;
+	      Particles.push_back(fReadParticles->at(l+2-counter));
+	      fmultiplicity = GetTrigger()->GetMultiplicity();
+	      fenergySum =GetTrigger()->GetEnergySum();
+	      fenergyBeam = GetTagger()->GetTaggedEnergy(l);
+	      beam.SetXYZM(0.,0.,fenergyBeam,0.);
 
-	  //Tagger Channel
-	  ftaggChannel  = GetTagger()->GetTaggedChannel(l) ;
 
-	  Particles[l+2-counter]->SetEdgePlane(fedgePlane);
-  	  Particles[l+2-counter]->SetDetector(ftaggChannel);
-	  Particles[l+2-counter]->SetP4(fglasgowTaggerPhoton);
-	  Particles[l+2-counter]->SetPDGcode(-22);
-	  Particles[l+2-counter]->SetTime(ftaggedTime);
-	  if (flinPol>0)  Particles[l+2-counter]->SetVertex(flinPol,0,Pcirc*fbeamHelicity); //Perp
-	  if (flinPol<0)  Particles[l+2-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity); //Para
-	  if (flinPol==0)  Particles[l+2-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity); //Moeller
+	      fglasgowTaggerPhoton.SetPxPyPzE(0,0,fenergyBeam, fenergyBeam);  //TLorentzVector
+
+	      //Linear Polarisation
+	      if(!mc) flinPol =fedgePlane* ( GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(l) ) );
+	      //Circular Polarisation
+	      Pcirc = CircPol(fenergyBeam, ePol );	
+
+	      //Tagger Channel
+	      ftaggChannel  = GetTagger()->GetTaggedChannel(l) ;
+
+	      Particles[l+2-counter]->SetEdgePlane(fedgePlane);
+	      Particles[l+2-counter]->SetDetector(ftaggChannel);
+	      Particles[l+2-counter]->SetP4(fglasgowTaggerPhoton);
+	      Particles[l+2-counter]->SetPDGcode(-22);
+	      Particles[l+2-counter]->SetTime(ftaggedTime);
+	      if (flinPol>0)  Particles[l+2-counter]->SetVertex(flinPol,0,Pcirc*fbeamHelicity); //Perp
+	      if (flinPol<0)  Particles[l+2-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity); //Para
+	      if (flinPol==0)  Particles[l+2-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity); //Moeller
 	  
 	  
-	} //closing if TaggedTime
+	    } //closing if TaggedTime
 	
-      } //Closing for NTagged.
+	  } //Closing for NTagged.
         
-    } //closing NPIDHits if
+	} //closing NPIDHits if
   
-  } //closing 2 photons and 1 rootino.  
+      } //closing 2 photons and 1 rootino.  
 
-else{
+      else{
 
 	//Rootinos
-      fcrystalroot1.SetXYZM(-10000,-10000,-10000,-10000);
-      fcrystalrootindex1 =-1;
-      fcrystalrootmass1=-10000;
-      fcrystalrootphi1= -10000;
-      fcrystalroottheta1= -10000;
-      fcrystalrootpidE1 = -10000;
-      fcrystalrootmwpc0E1 = -10000;
-      fcrystalrootmwpc1E1 = -10000;
+	fcrystalroot1.SetXYZM(-10000,-10000,-10000,-10000);
+	fcrystalrootindex1 =-1;
+	fcrystalrootmass1=-10000;
+	fcrystalrootphi1= -10000;
+	fcrystalroottheta1= -10000;
+	fcrystalrootpidE1 = -10000;
+	fcrystalrootmwpc0E1 = -10000;
+	fcrystalrootmwpc1E1 = -10000;
 
-      fcrystalroot2.SetXYZM(-10000,-10000,-10000,-10000);
-      fcrystalrootindex2 =-1;
-      fcrystalrootmass2=-10000;
-      fcrystalrootphi2= -10000;
-      fcrystalroottheta2= -10000;
-      fcrystalrootpidE2 = -10000;
-      fcrystalrootmwpc0E2 = -10000;
-      fcrystalrootmwpc1E2 = -10000;
+	fcrystalroot2.SetXYZM(-10000,-10000,-10000,-10000);
+	fcrystalrootindex2 =-1;
+	fcrystalrootmass2=-10000;
+	fcrystalrootphi2= -10000;
+	fcrystalroottheta2= -10000;
+	fcrystalrootpidE2 = -10000;
+	fcrystalrootmwpc0E2 = -10000;
+	fcrystalrootmwpc1E2 = -10000;
 
-      fcrystalcoplan2=-10000;
+	fcrystalcoplan2=-10000;
 
-}  
+      }  
 
-  //*************************************************************************************************************************************
+      //*************************************************************************************************************************************
   
 
-  //} //closing if 3 particles
+      //} //closing if 3 particles
+    } // If tagged exists ()>0
+
+  }// If tagged photons <200
 
 
   treePi->Fill();
