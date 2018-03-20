@@ -44,9 +44,9 @@ private:
 
 
   //PID plan create an array of length 24 to store the elements of the PID phi. DATA version
-  Double_t PIDElemPhi[24] = {8.574,22.974,37.379,51.784,66.188,80.593,94.997,109.402,123.806,138.211,152.615,167.02,-178.93,-163.16,-147.39,-131.62,-115.85,-100.08,-84.31,-68.54,-52.77,-37.01,-21.24,-5.47};
+  //Double_t PIDElemPhi[24] = {8.574,22.974,37.379,51.784,66.188,80.593,94.997,109.402,123.806,138.211,152.615,167.02,-178.93,-163.16,-147.39,-131.62,-115.85,-100.08,-84.31,-68.54,-52.77,-37.01,-21.24,-5.47};
   //Simulation Version
-  //Double_t PIDElemPhi[24] = { 172.5, 157.5, 142.5, 127.5, 112.5, 97.5, 82.5, 67.5, 52.5, 37.5, 22.5, 7.5,  -7.5, -22.5, -37.5, -52.5, -67.5, -82.5, -97.5, -112.5, -127.5, -142.5, -157.5, -172.5};
+  Double_t PIDElemPhi[24] = { 172.5, 157.5, 142.5, 127.5, 112.5, 97.5, 82.5, 67.5, 52.5, 37.5, 22.5, 7.5,  -7.5, -22.5, -37.5, -52.5, -67.5, -82.5, -97.5, -112.5, -127.5, -142.5, -157.5, -172.5};
 
 //Mott Measurements runs closest 14579,14673,14777,14893,15029,15122,15426,15584,15949
 Double_t MottMeas[9]={0.7515, 0.7629915, 0.762434, 0.7662845, 0.769435, 0.773674, 0.7759165,0.7736475, 0.7282685    };
@@ -105,7 +105,9 @@ Double_t MCMottFla = 0;
   Int_t NPidhits;
   Int_t fNin;
   Int_t particleindex=-1;
-  Double_t generatedPDGs[5]={2122, 2212, 22 ,22 ,-22};
+ // Double_t generatedPDGs[5]={2112, 2212, 22 ,22 ,-22}; //For Proton Pi0
+  Double_t generatedPDGs[5]={2212, 2112, 22 ,22 ,-22}; //For Neutron Pi0 to be tested (2212=proton according to root website , 2112 = Neutron)
+
   Double_t energySum;
   Double_t fchamber1VecPhi;
   Double_t fphidiff;
@@ -116,7 +118,10 @@ Double_t MCMottFla = 0;
   Double_t taggUpRange;
   Double_t taggLowRange;
   std::string fileNo;
-
+Double_t counterN3;
+Double_t fCoplanarity;
+TLorentzVector fPion;
+TLorentzVector fNeutron;
   
  protected:
   virtual Bool_t  Start();

@@ -12,38 +12,10 @@ chrisForTHSProject::chrisForTHSProject()
   treePi0 =  new TTree("HSParticles","Event selection tree"); //Proton/Neutron pi0 final state tree   
 
 
-  //Neutron Tree branches
-  // treePi0->Branch("Particles.","vector<THSParticle>",&Particles);
+  //pi0 Tree branches
   treePi0->Branch("Particles",&Particles);
   treePi0->Branch("Generated",&Generated);
-  // treePi0->Branch("fbeamHelicity",&fbeamHelicity);
-  // treePi0->Branch("ftaggedTime",&ftaggedTime);
-  // treePi0->Branch("feventNo",&feventNo);
-  // treePi0->Branch("fenergyBeam",&fenergyBeam);
-  // treePi0->Branch("fenergySum",&fenergySum);
-  // treePi0->Branch("fmultiplicity",&fmultiplicity);
-  // treePi0->Branch("fpidPhi",&fpidPhi);
-  // treePi0->Branch("fpidIndex",&fpidIndex);
-  // //  treePi0->Branch("fpidRootinoPhi",&fpidRootinoPhi);
-  // treePi0->Branch("fchamber1Vec.",&fchamber1Vec);
-  // treePi0->Branch("fchamber2Vec.",&fchamber2Vec);
-  // treePi0->Branch("fedgeplane",&fedgePlane);
-  // treePi0->Branch("flinPol",&flinPol);
-  // treePi0->Branch("frootinoPhi",&frootinoPhi);
-  // treePi0->Branch("rootinoClustE",&rootinoClustE);
-  // treePi0->Branch("rootinoTheta",&rootinoTheta);
-  // treePi0->Branch("rootinoPhi",&rootinoPhi);
-  // treePi0->Branch("rootinoTime",&rootinoTime);
-  // treePi0->Branch("rootinoClustS",&rootinoClustS);
-  // treePi0->Branch("rootinoClustC",&rootinoClustC);
-  // treePi0->Branch("rootinoVetoC",&rootinoVetoC);
-  // treePi0->Branch("rootinoDet",&rootinoDet);
-  // treePi0->Branch("rootinoVetoE",&rootinoVetoE);
-  // treePi0->Branch("rootinoCham1E",&rootinoCham1E);
-  // treePi0->Branch("rootinoCham2E",&rootinoCham2E);
-  // treePi0->Branch("HasTappyTaps",&HasTappyTaps);
-  // treePi0->Branch("HasCrisyBall",&HasCrisyBall);
- 
+  treePi0->Branch("Coplanarity",&fCoplanarity);
 
 
 }
@@ -57,7 +29,7 @@ Bool_t	chrisForTHSProject::Init()
 {
   cout << "Initialising physics analysis..." << endl;
   cout << "--------------------------------------------------" << endl << endl;
-  Int_t mcc=0; // 1 for simulation, 0 for  production data
+  Int_t mcc=1; // 1 for simulation, 0 for  production data
   if(mcc){
 
     cout <<"MC File detected. Processing as MC file with Neutron spectator and Proton Participant" <<endl;
@@ -110,7 +82,7 @@ void	chrisForTHSProject::ProcessEvent()
 	cout << "Events: " << GetEventNumber() << "  Events Accepted: " << nEventsWritten << endl;
     }
 
-  Int_t mc =0; //0 for production data, non-zero for simulation
+  Int_t mc =1; //0 for production data, non-zero for simulation
 
 
 
@@ -129,10 +101,6 @@ void	chrisForTHSProject::ProcessEvent()
     Double_t eventName = std::stod(tevent2) + std::stod(tevent);
     feventNo = eventName;
     //  feventNo = std::stod(eventName);
-
-    //Tagger Timing cuts
-    taggUpRange= 200;
-    taggLowRange= -200;
 
     //Linear polarisation plane setting
     if(GetLinpol()->GetPolarizationPlane()==0) fedgePlane = -1; // Para
@@ -163,15 +131,11 @@ void	chrisForTHSProject::ProcessEvent()
     if(planesetting!="Fla" && planesetting!="Neg" && planesetting!="Pos" ){
       throw std::invalid_argument("Received incorrected FileName Ending!  You have ignored the strict filename requirements which describe the polarisation state. Please make sure the filenames end in Fla, Neg, or Pos. ");
 
-
     }
 
     Int_t tempEventno = GetEventNumber();
     feventNo = std::stod(fileNo) + tempEventno;
 
-    //Tagger Timing cuts
-    taggUpRange=10;
-    taggLowRange=-10;
 
     //Linear Polarsation plane setting
     if(planesetting=="Neg" ) fedgePlane = -1; //Equating Neg file with Para polarisation state
@@ -182,7 +146,7 @@ void	chrisForTHSProject::ProcessEvent()
     //Linear Polarisation value
     //Use if !mc for the linPol parameter and assign the mc value here based on name 
 
-    if(planesetting=="Neg" ) flinPol = -1; //Equating Neg file with Para polarisation with max value
+    if(planesetting=="Neg" ) flinPol = 1; //Equating Neg file with Para polarisation with max value CAM CHANGE DUE TO linpol no longer being neg
     if(planesetting=="Pos" ) flinPol = 1;
     if(planesetting=="Fla" ) flinPol = 0; 
 
@@ -192,7 +156,7 @@ void	chrisForTHSProject::ProcessEvent()
       fGenParticles->push_back(new THSParticle());
     }
 
-    //generatedPDGs={2122, 2212, 22 ,22 ,-22}; //2122 is neutron, 2212 is proton, 22 is photon and -22 is beam.
+    //generatedPDGs={2112, 2212, 22 ,22 ,-22}; //2112 is neutron, 2212 is proton, 22 is photon and -22 is beam.
 
 
     for(Int_t j=0; j<(GetTruth()->GetfNMC()+1); j++){ //push back the 4 particles but not beam here?
@@ -217,12 +181,10 @@ void	chrisForTHSProject::ProcessEvent()
   }
 
 
-
-
   //Clearing the vectors.
   Particles.clear();
 
-  //Mott measurements for electron beam polarisation
+  //Mott measurements for electron beam polarisation  //CAM NEED more runs(sept)
   Double_t runNo = std::stod(fileNo);
   if (runNo<=4626) ePol = MottMeas[0]; 
   if (runNo>4626 && runNo<=4725 ) ePol = MottMeas[1]; 
@@ -241,38 +203,17 @@ void	chrisForTHSProject::ProcessEvent()
   //MWPC information
   targetPosition.SetXYZ(target.X(),target.Y(),target.Z());
 
-  Int_t iii = 0;
-
-  if (GetMWPCHitsChris()->GetNMWPCHitsChrisChamber1() != 0){
-    fchamber1Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber1X(iii),GetMWPCHitsChris()->GetMWPCChamber1Y(iii),GetMWPCHitsChris()->GetMWPCChamber1Z(iii));
-  }
-  else{
-    fchamber1Vec.SetXYZ(-1000,-1000,-1000);
-  }
-
-  if (GetMWPCHitsChris()->GetNMWPCHitsChrisChamber2() != 0){
-    fchamber2Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber2X(iii),GetMWPCHitsChris()->GetMWPCChamber2Y(iii),GetMWPCHitsChris()->GetMWPCChamber2Z(iii));
-  }
-  else{
-    fchamber2Vec.SetXYZ(-1000,-1000,-1000);
-  }
+  //  Int_t iii = 0;
+  //  if (GetMWPCHitsChris()->GetNMWPCHitsChrisChamber1() != 0){
+  //    fchamber1Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber1X(iii),GetMWPCHitsChris()->GetMWPCChamber1Y(iii),GetMWPCHitsChris()->GetMWPCChamber1Z(iii));
+  //  }
+  //  else{
+  //    fchamber1Vec.SetXYZ(-1000,-1000,-1000);
+  //  }
 
 
   //PID information
   NPidhits = GetDetectorHits()->GetNPIDHits();
-  
-  // if (NPidhits>0){
-  //   fpidIndex = GetDetectorHits()->GetPIDHits(0);    //The parameter in the Npidhits is the number of pid hits in the event while getPIDHits is the element number of a hit
-  //   fpidPhi = PIDElemPhi[fpidIndex]; //here
-
-  // } //closingpihits
-
-  // else{  
-    
-  //   fpidPhi = -10;
-  // }
-
-
   
   //Fill Beam Helicity (Two different determined states when helicity is 0 or 1, others are error codes) Chosen 1 and -1 for helicity from now on. 
   //Check for error codes here?? Need to decide if it is necessary? Should only be a small effect so come back to it once everything is working
@@ -286,9 +227,6 @@ void	chrisForTHSProject::ProcessEvent()
   
 
   fNin= 3+ (GetTagger()->GetNTagged());
-  Int_t countb4 = 0;
-  Int_t countaft = 0;
-  Int_t counter = 0;
 
   if(GetTagger()->GetNTagged()<200){  
     if(GetTagger()->GetNTagged()>0){  
@@ -315,45 +253,35 @@ void	chrisForTHSProject::ProcessEvent()
 	    Particles[j]->SetDetector(GetTracks()->GetDetectors(j)); //DETECTOR_NONE = 0,DETECTOR_NaI = 1, DETECTOR_PID = 2, DETECTOR_MWPC = 4, DETECTOR_BaF2 = 8, DETECTOR_PbWO4 = 16, DETECTOR_Veto = 32,(Additive)
 
 	  } //Closing For NParticles 
+	fNeutron= GetPhotons()->Particle(0) ;
+	fPion= GetPhotons()->Particle(1) + GetPhotons()->Particle(2) ;
+	fCoplanarity = (fNeutron.TLorentzVector::DeltaPhi(-fPion) )*TMath::RadToDeg();
+
 
 	  for(Int_t i=0; i<GetTagger()->GetNTagged() ;i++){
 
 	    ftaggedTime = GetTagger()->GetTaggedTime(i);
-	    countb4 = countb4+1;
-	
-	    //	if ( ftaggedTime > taggLowRange && ftaggedTime < taggUpRange ) { 
-
-	    countaft=countaft+1;
-	    counter = countb4 - countaft;
-	  
-	    Particles.push_back(fReadParticles->at(i+3-counter));
+	    Particles.push_back(fReadParticles->at(i+3));
 	    fmultiplicity = GetTrigger()->GetMultiplicity();
 	    fenergySum =GetTrigger()->GetEnergySum();
 	    fenergyBeam = GetTagger()->GetTaggedEnergy(i);
 	    if(fenergyBeam==0)cout << fenergyBeam << " BEam Energy " << GetTagger()->GetTaggedChannel(i) <<" Tagger Channel"<<endl;
 	    beam.SetXYZM(0.,0.,fenergyBeam,0.);  
-
 	    //Linear Polarisation
-	    if(!mc)flinPol =fedgePlane*( GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(i) ) );
+	    if(!mc)flinPol =( GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(i) ) );
 	    //Circular polarisation
 	    Pcirc = CircPol(fenergyBeam, ePol );	
-
 	    //Tagger Channel
 	    ftaggChannel = GetTagger()->GetTaggedChannel(i);
-	
 	    //Set Edge Plane is describing setting Para Perp Moeller (+-45deg etc.) Set Detector is the tagger channel  
-	    Particles[i+3-counter]->SetEdgePlane(fedgePlane);
-	    Particles[i+3-counter]->SetDetector(ftaggChannel);
+	    Particles[i+3]->SetEdgePlane(fedgePlane);
+	    Particles[i+3]->SetDetector(ftaggChannel);
 	    fglasgowTaggerPhoton.SetPxPyPzE(0,0,fenergyBeam, fenergyBeam);  //TLorentzVector
-	    Particles[i+3-counter]->SetP4(fglasgowTaggerPhoton);
-	    Particles[i+3-counter]->SetPDGcode(-22);
-	    Particles[i+3-counter]->SetTime(ftaggedTime);
-	    if (flinPol>0)  Particles[i+3-counter]->SetVertex(flinPol,0,Pcirc*fbeamHelicity);
-	    if (flinPol<0)  Particles[i+3-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity);
-	    if (flinPol==0)  Particles[i+3-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity);
-	  
-
-	    //	} //closing if TaggedTime
+	    Particles[i+3]->SetP4(fglasgowTaggerPhoton);
+	    Particles[i+3]->SetPDGcode(-22);
+	    Particles[i+3]->SetTime(ftaggedTime);
+	    //  Revising Linear polarisation storage for HASPECT. Now saying linpol is always positive and using edge plane to determine what type it is. Also all linpol goes into x-component of vertex.
+	    Particles[i+3]->SetVertex(flinPol,0,Pcirc*fbeamHelicity);
 	
 	  } //Closing for NTagged.
       
@@ -364,7 +292,9 @@ void	chrisForTHSProject::ProcessEvent()
       //Do Proton channel here 
 
       //********************************************************************************************************************************
-    
+    else{
+	fCoplanarity = -500;
+}
  
       if (GetPhotons()->GetNParticles()==2 && GetRootinos()->GetNParticles()==1){
 
@@ -373,7 +303,7 @@ void	chrisForTHSProject::ProcessEvent()
 
 	  if (NPidhits>0){
 	    fpidIndex = GetDetectorHits()->GetPIDHits(0);    //The parameter in the Npidhits is the number of pid hits in the event while getPIDHits is the element number of a hit
-	    fpidPhi = PIDElemPhi[fpidIndex]; //here
+	    fpidPhi = PIDElemPhi[fpidIndex]; 
 	  } //closingpihits
 
 	  else{  
@@ -405,54 +335,37 @@ void	chrisForTHSProject::ProcessEvent()
 	    Particles[k+1]->SetDetector(GetTracks()->GetDetectors(particleindex));
 	      
 	  } //Closing For NParticles 
-        
+
+
+
 	  for(Int_t l=0; l<GetTagger()->GetNTagged() ;l++){
       
 	    ftaggedTime = GetTagger()->GetTaggedTime(l);
-
-	    countb4 = countb4 +1; //The counters are redundant since were used for a bad tag time cut meth.
-
-
-	    //       	if ( ftaggedTime > taggLowRange && ftaggedTime <taggUpRange ) { 
-
-	    countaft = countaft +1;
-	    counter = countb4 - countaft;
-	    Particles.push_back(fReadParticles->at(l+3-counter));
+	    Particles.push_back(fReadParticles->at(l+3));
 	    fmultiplicity = GetTrigger()->GetMultiplicity();
 	    fenergySum =GetTrigger()->GetEnergySum();
 	    fenergyBeam = GetTagger()->GetTaggedEnergy(l);
 	    if(fenergyBeam==0)cout << fenergyBeam << " BEam Energy " << GetTagger()->GetTaggedChannel(l) <<" Tagger Channel"<<endl;
 	    beam.SetXYZM(0.,0.,fenergyBeam,0.);
-
-
 	    fglasgowTaggerPhoton.SetPxPyPzE(0,0,fenergyBeam, fenergyBeam);  //TLorentzVector
-
 	    //Linear Polarisation
-	    if(!mc) flinPol =fedgePlane* ( GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(l) ) );
+	    if(!mc) flinPol = ( GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(l) ) );
 	    //Circular Polarisation
 	    Pcirc = CircPol(fenergyBeam, ePol );	
-
 	    //Tagger Channel
 	    ftaggChannel  = GetTagger()->GetTaggedChannel(l) ;
-
-	    Particles[l+3-counter]->SetEdgePlane(fedgePlane);
-	    Particles[l+3-counter]->SetDetector(ftaggChannel);
-	    Particles[l+3-counter]->SetP4(fglasgowTaggerPhoton);
-	    Particles[l+3-counter]->SetPDGcode(-22);
-	    Particles[l+3-counter]->SetTime(ftaggedTime);
-	    if (flinPol>0)  Particles[l+3-counter]->SetVertex(flinPol,0,Pcirc*fbeamHelicity); //Perp
-	    if (flinPol<0)  Particles[l+3-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity); //Para
-	    if (flinPol==0)  Particles[l+3-counter]->SetVertex(0,flinPol,Pcirc*fbeamHelicity); //Moeller
-	  
-	  
-	    //	} //closing if TaggedTime
+	    Particles[l+3]->SetEdgePlane(fedgePlane);
+	    Particles[l+3]->SetDetector(ftaggChannel);
+	    Particles[l+3]->SetP4(fglasgowTaggerPhoton);
+	    Particles[l+3]->SetPDGcode(-22);
+	    Particles[l+3]->SetTime(ftaggedTime);
+	    Particles[l+3]->SetVertex(flinPol,0,Pcirc*fbeamHelicity); //Perp
 	
 	  } //Closing for NTagged.
         
 	} //closing NPIDHits if
   
       } //closing 2 photons and 1 rootino.  
-
 
 
       //*************************************************************************************************************************************
