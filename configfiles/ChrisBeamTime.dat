@@ -24,13 +24,14 @@
 #SIMS
 #Input-Directory: /w/work14/chris/LatestAnalysisRuns/Sims/SimsJan17/GoatOutput/Deuterium/BeamAsym/NegPolarisation/
 #Input-Directory: /scratch/chris/simtest/
-##Input-Directory: /w/work1/home/chris/LatestAnalysisRuns/Sims/SimsOct17/GoatOutput/Deuterium/Flat/oneFile/
+#Input-Directory: /w/work1/home/chris/LatestAnalysisRuns/Sims/SimsOct17/GoatOutput/Deuterium/NPi0/
+#Input-Directory: /scratch/chris/temp/fixed/
 
 #EmptyTarget
-Input-Directory: /w/work1/home/chris/LatestAnalysisRuns/Data/DataJul17/GoatOutput/EmptyTarget/Para/
+#Input-Directory: /w/work1/home/chris/LatestAnalysisRuns/Data/DataJul17/GoatOutput/EmptyTarget/Para/
 
 #Production
-#Input-Directory: /w/work1/home/chris/LatestAnalysisRuns/Data/DataJul17/GoatOutput/Perp/OneFile/
+Input-Directory: /w/work1/home/chris/LatestAnalysisRuns/Data/DataJul17/GoatOutput/Perp/
 #Input-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataDec17ChargedPion/ChrisOutput/
 
 
@@ -102,15 +103,15 @@ Input-Directory: /w/work1/home/chris/LatestAnalysisRuns/Data/DataJul17/GoatOutpu
 #Output-Directory: /w/work14/chris/LatestAnalysisRuns/Sims/SimsJan17/ChrisOutput/Deuterium/BeamAsym/NegPolarisation/
 ##Output-Directory: /w/work1/home/chris/LatestAnalysisRuns/Sims/SimsOct17/ChrisOutput/Deuterium/Flat/
 #Output-Directory: /scratch/chris/simtest/
-
+####Output-Directory: /scratch/chris/temp/fixed/
 
 #Emptytarget
 #Output-Directory: /w/work1/home/chris/LatestAnalysisRuns/Data/DataJul17/ChrisOutput/EmptyTarget/Perp/
 
 #Production
 #Output-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataJul17/ChrisOutput/Perp/
-Output-Directory: /scratch/chris/temp/
-#Output-Directory: /w/work1/home/chris/LatestAnalysisRuns/Data/DataDec17ChargedPion/ChrisOutput/Para/
+#Output-Directory: /scratch/chris/temp/
+Output-Directory: /w/work1/home/chris/LatestAnalysisRuns/Data/DataDec17ChargedPion/ChrisOutput/Perp/
 
 
 

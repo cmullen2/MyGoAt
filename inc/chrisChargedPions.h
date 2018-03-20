@@ -8,11 +8,13 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#ifdef __MAKECINT__
-#pragma link C++ class vector<THSParticle*>+;//want to make tree branch
-#pragma link C++ class vector<THSParticle>+;//want to make tree branch Can get rid all pragma links here since they are in THSParticle and have no effect here.
-#pragma link C++ class vector<TVector3*>+;//want to make tree branch
-#endif
+#include <TCutG.h>
+#include <chrono>
+//#ifdef __MAKECINT__
+//#pragma link C++ class vector<THSParticle*>+;//want to make tree branch
+//#pragma link C++ class vector<THSParticle>+;//want to make tree branch Can get rid all pragma links here since they are in THSParticle and have no effect here.
+//#pragma link C++ class vector<TVector3*>+;//want to make tree branch
+//#endif
 #include "GTreeManager.h"
 #include "chrisPPhysics.h"
 #include "GTreeTrack.h"
@@ -23,8 +25,8 @@
 #include "TGraph.h"
 #include "THSParticle.h"
 #include "TROOT.h"
-#pragma link C++ class vector<TVector3*>+;//want to make tree branch
-#pragma link C++ class vector<TVector3>+;//want to make tree branch
+//#pragma link C++ class vector<TVector3*>+;//want to make tree branch
+//#pragma link C++ class vector<TVector3>+;//want to make tree branch
 
 using namespace std;
 
@@ -79,7 +81,18 @@ private:
   Int_t fedgePlane;
   Int_t ftaggChannel;
 
+  //Vectors containing all wire chamber hits
+  vector<TVector3> MWPC1Hits;
+  vector<TVector3> MWPC2Hits;
+
+
+  //Timing of functions and code snippets
+  clock_t str1,str2,str3,end1,end2,end3;
+
   //Other parameters used in .cc
+
+
+
 
   TLorentzVector fcbPhoton;
   TLorentzVector fglasgowTaggerPhoton;
@@ -133,6 +146,19 @@ private:
   Double_t fcrystalcoplan;
 
 
+//temp for testing tcutg
+  TLorentzVector fcrystalrootIn;
+  Int_t fcrystalrootindexIn;
+  Double_t fcrystalrootmassIn;
+  Double_t fcrystalrootphiIn;
+  Double_t fcrystalrootthetaIn;
+  Double_t fcrystalrootpidEIn;
+  Double_t fcrystalrootmwpc0EIn;
+  Double_t fcrystalrootmwpc1EIn;
+
+
+//Other Channel below
+
   TLorentzVector fcrystalroot1;
   Int_t fcrystalrootindex1;
   Double_t fcrystalrootmass1;
@@ -155,9 +181,33 @@ private:
 
 
 
+//temp for testing tcutg
+  TLorentzVector fcrystalroot1In;
+  Int_t fcrystalrootindex1In;
+  Double_t fcrystalrootmass1In;
+  Double_t fcrystalrootphi1In;
+  Double_t fcrystalroottheta1In;
+  Double_t fcrystalrootpidE1In;
+  Double_t fcrystalrootmwpc0E1In;
+  Double_t fcrystalrootmwpc1E1In;
+
+  TLorentzVector fcrystalroot2In;
+  Int_t fcrystalrootindex2In;
+  Double_t fcrystalrootmass2In;
+  Double_t fcrystalrootphi2In;
+  Double_t fcrystalroottheta2In;
+  Double_t fcrystalrootpidE2In;
+  Double_t fcrystalrootmwpc0E2In;
+  Double_t fcrystalrootmwpc1E2In;
+
+//graphical cuts of E deltaE plots
+
+  TCutG* ProtonCut;
+  TCutG* PipCut;
+  TCutG* PimCut;
 
 
- 
+
   
  protected:
   virtual Bool_t  Start();

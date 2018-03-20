@@ -29,8 +29,8 @@
 
 #SIMS
 #Input-Directory: /w/work14/chris/LatestAnalysisRuns/Sims/SimsJan17/AcquOutput/Deuterium/BeamAsym/NegPolarisation/
-Input-Directory: /w/work14/chris/
-
+#Input-Directory: /w/work14/chris/
+Input-Directory: /scratch/chris/temp/fixed/
 
 
 #Empty Target
@@ -97,7 +97,7 @@ Input-Directory: /w/work14/chris/
 
 #SIMS
 #Output-Directory: /w/work14/chris/LatestAnalysisRuns/Sims/SimsJan17/GoatOutput/Deuterium/BeamAsym/NegPolarisation/
-Output-Directory: /scratch/chris/
+Output-Directory: /scratch/chris/temp/fixed/
 #
 #EmptyTarget
 #Output-Directory: /w/work14/chris/LatestAnalysisRuns/Data/DataJul17/GoatOutput/EmptyTarget/Perp/
