@@ -22,9 +22,10 @@
 #include "TVector3.h"
 #include "TGraph.h"
 #include "THSParticle.h"
+#include "THSEventInfo.h"
 #include "TROOT.h"
-#pragma link C++ class vector<TVector3*>+;//want to make tree branch
-#pragma link C++ class vector<TVector3>+;//want to make tree branch
+//#pragma link C++ class vector<TVector3*>+;//want to make tree branch
+//#pragma link C++ class vector<TVector3>+;//want to make tree branch
 
 using namespace std;
 
@@ -32,7 +33,7 @@ using namespace std;
 
 class	chrisForTHSProject  : public chrisPPhysics
 {
-private:
+ private:
 
 
 
@@ -48,17 +49,25 @@ private:
   //Simulation Version
   Double_t PIDElemPhi[24] = { 172.5, 157.5, 142.5, 127.5, 112.5, 97.5, 82.5, 67.5, 52.5, 37.5, 22.5, 7.5,  -7.5, -22.5, -37.5, -52.5, -67.5, -82.5, -97.5, -112.5, -127.5, -142.5, -157.5, -172.5};
 
-//Mott Measurements runs closest 14579,14673,14777,14893,15029,15122,15426,15584,15949
-Double_t MottMeas[9]={0.7515, 0.7629915, 0.762434, 0.7662845, 0.769435, 0.773674, 0.7759165,0.7736475, 0.7282685    };
+  //Mott Measurements runs closest 14579,14673,14777,14893,15029,15122,15426,15584,15949
+  Double_t MottMeas[9]={0.7515, 0.7629915, 0.762434, 0.7662845, 0.769435, 0.773674, 0.7759165,0.7736475, 0.7282685    };
 
-Double_t MCMottNeg = 1;
-Double_t MCMottPos = -1;
-Double_t MCMottFla = 0;
+  Double_t MCMottNeg = 1;
+  Double_t MCMottPos = -1;
+  Double_t MCMottFla = 0;
 
 
   //Branches in the trees
-  vector<THSParticle*> Particles;
-  vector<THSParticle*> Generated;
+  vector<THSParticle> Particles;
+  vector<THSParticle> Generated;
+
+  THSEventInfo fEventInfo;
+
+
+  //Deprecated MWPC Method
+
+  vector<HSPosition> MWPC1Hits;
+  vector<HSPosition> MWPC2Hits;
 
   
   Double_t fbeamHelicity;
@@ -78,8 +87,8 @@ Double_t MCMottFla = 0;
 
   //Other parameters used in .cc
 
-  vector<THSParticle*> * fReadParticles=nullptr;
-  vector<THSParticle*> * fGenParticles=nullptr;
+  //  vector<THSParticle*> * fReadParticles=nullptr;
+  //  vector<THSParticle*> * fGenParticles=nullptr;
 
   THSParticle particle1;
   //THSParticle *DummyProton;
@@ -105,8 +114,24 @@ Double_t MCMottFla = 0;
   Int_t NPidhits;
   Int_t fNin;
   Int_t particleindex=-1;
- // Double_t generatedPDGs[5]={2112, 2212, 22 ,22 ,-22}; //For Proton Pi0
-  Double_t generatedPDGs[5]={2212, 2112, 22 ,22 ,-22}; //For Neutron Pi0 to be tested (2212=proton according to root website , 2112 = Neutron)
+  Int_t rootindex=-1;
+  Int_t photindex=-1;
+  Int_t photindex2=-1;
+  //  Double_t generatedPDGs[5]={2112, 2212, 22 ,22 ,-22}; //For Proton Pi0
+  // Double_t generatedPDGs[5]={2212, 2112, 22 ,22 ,-22}; //For Neutron Pi0 to be tested (2212=proton according to root website , 2112 = Neutron)
+  //BGSIMS
+  //  Double_t generatedPDGs[7]={2112, 2212, 22, 22, 22 ,22 ,-22}; //For Proton Pi0Pi0
+  Double_t generatedPDGs[6]={2212, -211, 2212, 22, 22, -22}; //For Proton Pi0PiM
+  //  Double_t generatedPDGs[5]={2112, 211, -211, 2212, -22}; //For Proton PiPPiM
+
+  //  Double_t generatedPDGs[7]={2212, 2112, 22, 22, 22 ,22 ,-22}; //For Neutron Pi0Pi0
+  //  Double_t generatedPDGs[6]={2112, 211, 2112, 22, 22,-22}; //For Neutron PiPPi0
+  //  Double_t generatedPDGs[5]={2212, -211 ,211, 2112 ,-22}; //For Neutron PiPPiM
+
+  //  Double_t generatedPDGs[5]={2112, 2212, 22 ,22 ,-22}; //For Proton Eta
+  //  Double_t generatedPDGs[5]={2212, 2112, 22 ,22 ,-22}; //For Neutron Eta
+
+
 
   Double_t energySum;
   Double_t fchamber1VecPhi;
@@ -118,10 +143,6 @@ Double_t MCMottFla = 0;
   Double_t taggUpRange;
   Double_t taggLowRange;
   std::string fileNo;
-Double_t counterN3;
-Double_t fCoplanarity;
-TLorentzVector fPion;
-TLorentzVector fNeutron;
   
  protected:
   virtual Bool_t  Start();
