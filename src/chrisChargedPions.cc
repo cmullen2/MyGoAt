@@ -25,7 +25,7 @@ Bool_t	chrisChargedPions::Init()
 {
   cout << "Initialising physics analysis..." << endl;
   cout << "--------------------------------------------------" << endl << endl;
-  Int_t mcc=1; // 1 for simulation, 0 for  production data
+  Int_t mcc=0; // 1 for simulation, 0 for  production data
   if(mcc){
 
     cout <<"MC File detected. Processing as MC file with Neutron spectator and Proton Participant" <<endl;
@@ -92,7 +92,7 @@ void	chrisChargedPions::ProcessEvent()
 	cout << "Events: " << GetEventNumber() << "  Events Accepted: " << nEventsWritten << endl;
     }
 
-  Int_t mc =1; //0 for production data, non-zero for simulation
+  Int_t mc =0; //0 for production data, non-zero for simulation
 
   if(!mc){
 
