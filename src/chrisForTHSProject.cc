@@ -369,7 +369,8 @@ void	chrisForTHSProject::ProcessEvent()
 	    Particles.push_back(part2);  
 	  } //Closing For NParticles 
 
-
+	  fEventInfo.SetBeamHel(fbeamHelicity);
+	  fEventInfo.SetTarPolDir(fedgePlane);
 
 	  for(Int_t l=0; l<GetTagger()->GetNTagged() ;l++){
       
@@ -384,8 +385,9 @@ void	chrisForTHSProject::ProcessEvent()
 	    fglasgowTaggerPhoton.SetPxPyPzE(0,0,fenergyBeam, fenergyBeam);  //TLorentzVector
 	    //Linear Polarisation
 	    if(!mc) flinPol = ( GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(l) ) );
+	    fEventInfo.SetTarPolDir(flinPol);
 	    //Circular Polarisation
-	    Pcirc = CircPol(fenergyBeam, ePol );	
+	    fEventInfo.SetBeamPol( CircPol(fenergyBeam, ePol ));	
 	    //Tagger Channel
 	    ftaggChannel  = GetTagger()->GetTaggedChannel(l) ;
 	    //	    part.SetEdgePlane(fedgePlane);  //COMMENT BACK IN ONCE FIXED THE HASPECT CODE

@@ -10,11 +10,6 @@
 #include <vector>
 #include <TCutG.h>
 #include <chrono>
-//#ifdef __MAKECINT__
-//#pragma link C++ class vector<THSParticle*>+;//want to make tree branch
-//#pragma link C++ class vector<THSParticle>+;//want to make tree branch Can get rid all pragma links here since they are in THSParticle and have no effect here.
-//#pragma link C++ class vector<TVector3*>+;//want to make tree branch
-//#endif
 #include "GTreeManager.h"
 #include "chrisPPhysics.h"
 #include "GTreeTrack.h"
@@ -24,9 +19,9 @@
 #include "TVector3.h"
 #include "TGraph.h"
 #include "THSParticle.h"
+#include "THSEventInfo.h"
 #include "TROOT.h"
-//#pragma link C++ class vector<TVector3*>+;//want to make tree branch
-//#pragma link C++ class vector<TVector3>+;//want to make tree branch
+
 
 using namespace std;
 
@@ -59,12 +54,11 @@ private:
 
 
   //Branches in the trees
-  vector<THSParticle*> Particles;
-  vector<THSParticle*> Generated;
+  vector<THSParticle> Particles;
+  vector<THSParticle> Generated;
 
-  //vectors for number of thsparticles per event 
-  vector<THSParticle*> * fReadParticles=nullptr;
-  vector<THSParticle*> * fGenParticles=nullptr;
+
+  THSEventInfo fEventInfo;
 
   TVector3 fchamber2Vec;
   TVector3 fchamber1Vec;

@@ -8,84 +8,11 @@ TCutG* OpenCut(TString,TString);
 chrisChargedPions::chrisChargedPions()
 { 
   gROOT->ProcessLine("#include <vector>");
-
   treePi =  new TTree("HSParticles","Event selection tree"); //Proton/Neutron pi-+ final state tree   
-
-
   //Charged Pion channel Tree branches
   treePi->Branch("Particles",&Particles);
   treePi->Branch("Generated",&Generated);
-  
-
-  treePi->Branch("Topo",&ftopology);
-
-  treePi->Branch("crystalPhoton",&fcrystalphot);
-  treePi->Branch("crystalPhotonmass",&fcrystalphotmass);
-  treePi->Branch("crystalPhotonphi",&fcrystalphotphi);
-  treePi->Branch("crystalPhotontheta",&fcrystalphottheta);
-  treePi->Branch("crystalPhotonpidE",&fcrystalphotpidE);
-  treePi->Branch("crystalPhotonMWPC0E",&fcrystalphotmwpc0E);
-  treePi->Branch("crystalPhotonMWPC1E",&fcrystalphotmwpc1E);
-
-  treePi->Branch("crystalRootino",&fcrystalroot);
-  treePi->Branch("crystalRootinomass",&fcrystalrootmass);
-  treePi->Branch("crystalRootinophi",&fcrystalrootphi);
-  treePi->Branch("crystalRootinotheta",&fcrystalroottheta);
-  treePi->Branch("crystalRootinopidE",&fcrystalrootpidE);
-  treePi->Branch("crystalRootinoMWPC0E",&fcrystalrootmwpc0E);
-  treePi->Branch("crystalRootinoMWPC1E",&fcrystalrootmwpc1E);
-
-//temp for checking if tcutg works
-  treePi->Branch("crystalRootinoIn",&fcrystalrootIn);
-  treePi->Branch("crystalRootinomassIn",&fcrystalrootmassIn);
-  treePi->Branch("crystalRootinophiIn",&fcrystalrootphiIn);
-  treePi->Branch("crystalRootinothetaIn",&fcrystalrootthetaIn);
-  treePi->Branch("crystalRootinopidEIn",&fcrystalrootpidEIn);
-  treePi->Branch("crystalRootinoMWPC0EIn",&fcrystalrootmwpc0EIn);
-  treePi->Branch("crystalRootinoMWPC1EIn",&fcrystalrootmwpc1EIn);
-
-
-  treePi->Branch("crystalCoplan",&fcrystalcoplan);
-
-
-  treePi->Branch("crystalRootino1",&fcrystalroot1);
-  treePi->Branch("crystalRootinomass1",&fcrystalrootmass1);
-  treePi->Branch("crystalRootinophi1",&fcrystalrootphi1);
-  treePi->Branch("crystalRootinotheta1",&fcrystalroottheta1);
-  treePi->Branch("crystalRootinopidE1",&fcrystalrootpidE1);
-  treePi->Branch("crystalRootinoMWPC0E1",&fcrystalrootmwpc0E1);
-  treePi->Branch("crystalRootinoMWPC1E1",&fcrystalrootmwpc1E1);
-
-  treePi->Branch("crystalRootino2",&fcrystalroot2);
-  treePi->Branch("crystalRootinomass2",&fcrystalrootmass2);
-  treePi->Branch("crystalRootinophi2",&fcrystalrootphi2);
-  treePi->Branch("crystalRootinotheta2",&fcrystalroottheta2);
-  treePi->Branch("crystalRootinopidE2",&fcrystalrootpidE2);
-  treePi->Branch("crystalRootinoMWPC0E2",&fcrystalrootmwpc0E2);
-  treePi->Branch("crystalRootinoMWPC1E2",&fcrystalrootmwpc1E2);
-
-
-//Temp for checking if tcutg works
-  treePi->Branch("crystalRootino1In",&fcrystalroot1In);
-  treePi->Branch("crystalRootinomass1In",&fcrystalrootmass1In);
-  treePi->Branch("crystalRootinophi1In",&fcrystalrootphi1In);
-  treePi->Branch("crystalRootinotheta1In",&fcrystalroottheta1In);
-  treePi->Branch("crystalRootinopidE1In",&fcrystalrootpidE1In);
-  treePi->Branch("crystalRootinoMWPC0E1In",&fcrystalrootmwpc0E1In);
-  treePi->Branch("crystalRootinoMWPC1E1In",&fcrystalrootmwpc1E1In);
-
-  treePi->Branch("crystalRootino2In",&fcrystalroot2In);
-  treePi->Branch("crystalRootinomass2In",&fcrystalrootmass2In);
-  treePi->Branch("crystalRootinophi2In",&fcrystalrootphi2In);
-  treePi->Branch("crystalRootinotheta2In",&fcrystalroottheta2In);
-  treePi->Branch("crystalRootinopidE2In",&fcrystalrootpidE2In);
-  treePi->Branch("crystalRootinoMWPC0E2In",&fcrystalrootmwpc0E2In);
-  treePi->Branch("crystalRootinoMWPC1E2In",&fcrystalrootmwpc1E2In);
-
-
-  treePi->Branch("crystalCoplan2",&fcrystalcoplan2);
-
-
+  treePi->Branch("EventInfo",&fEventInfo);  
 
 }
 
@@ -114,12 +41,7 @@ Bool_t	chrisChargedPions::Init()
   target.SetXYZM(0.0,0.0,-65.0,1875.613);	//NEEDS CHANGING currently deuteron
   //	target.SetXYZM(0.0,0.0,-65.0,938.272);	//NEEDS CHANGING only TEMP for a SIM
   fNin = (3 + (GetTagger()->GetNTagged()) ) ; //Estimate of Number of input particles(tagged+ball+rootinos etc.) Can and will calc this!(3+NTagged)
-  fReadParticles=new vector<THSParticle*>;
-  fGenParticles=new vector<THSParticle*>;  //The number of these should be fNMC +1 for beam
-  for(Int_t m=0; m<fNin; m++ ){
-    fReadParticles->push_back(new THSParticle());
-    fGenParticles->push_back(new THSParticle());
-  }
+
   cout << "Target 4-Vector is (" << target.X() <<"," << target.Y() << ","<< target.Z() <<","<<target.M()<<")"  << endl;
   if(!InitBackgroundCuts()) return kFALSE;
   if(!InitTargetMass()) return kFALSE;
@@ -153,17 +75,16 @@ Bool_t	chrisChargedPions::Start()
 void	chrisChargedPions::ProcessEvent()
 {
 
-if(GetEventNumber() == 10)str1 = clock();
-if(GetEventNumber() == 300000){
+  if(GetEventNumber() == 10)str1 = clock();
+  if(GetEventNumber() == 300000)
+    {
 
-   end1=clock();
-
-    cout << "Time required for execution: "
-    << (Double_t)(end1-str1)/CLOCKS_PER_SEC
-    << " seconds." << "\n\n";
-}
-auto start1 = std::chrono::high_resolution_clock::now();
-
+      end1=clock();
+      cout << "Time required for execution: "
+	   << (Double_t)(end1-str1)/CLOCKS_PER_SEC
+	   << " seconds." << "\n\n";
+    }
+  auto start1 = std::chrono::high_resolution_clock::now();
 
   if(usePeriodMacro == 1)
     {
@@ -175,7 +96,6 @@ auto start1 = std::chrono::high_resolution_clock::now();
 
   if(!mc){
 
-
     // Unique Event ID
     std::string outFile = outputFile->GetName();
     std::size_t pos = outFile.find("_1");
@@ -186,9 +106,8 @@ auto start1 = std::chrono::high_resolution_clock::now();
     std::string tevent2 = fileNo + "0000";
     Double_t eventName = std::stod(tevent2) + std::stod(tevent);
     feventNo = eventName;
-    //  feventNo = std::stod(eventName);
  
-   //Linear polarisation plane setting
+    //Linear polarisation plane setting
     if(GetLinpol()->GetPolarizationPlane()==0) fedgePlane = -1; // Para
     if(GetLinpol()->GetPolarizationPlane()==1) fedgePlane = 1; // Perp
     if(GetLinpol()->GetPolarizationPlane()==2) fedgePlane = 0; //Moeller or other
@@ -198,7 +117,6 @@ auto start1 = std::chrono::high_resolution_clock::now();
       {
 	if(GetEventNumber() % period == 0){
 	  cout << "Using Production Data var mc = " << mc << endl;
-	 // cout << "Tagger cuts " << taggUpRange << " " << taggLowRange << endl;
 	  cout << "Edge plane setting " << fedgePlane << endl;
 	}
       }
@@ -206,75 +124,48 @@ auto start1 = std::chrono::high_resolution_clock::now();
 
   }
   else{
-    //MC needs to deal with event no, ePol and linpol and where para or perp. Also needs to deal with truth values by adding to Generated
-    //cout << " Using MC data " << endl;
-    //IMPORTANT! A strict naming convention is applied to the files that requires Neg and Pos or Fla to be in the name for the polarisation plane. blah_Fla.root _Pos.root etc
-
-
-
+    
     Generated.clear();
     std::string outFile = outputFile->GetName();
-    //    std::string filert = outFile.substr( outFile.length() - 11  );
     std::string filert = outFile.substr(outFile.size() -8  ); //Pos.root etc is last 8 chars
-    //  cout <<" Substring is filert " << filert << endl;
-
     std::string planesetting = filert.substr(0,3);  // Isolate pos,fla etc
-    //  cout << " plane setting " << planesetting <<endl;
-
+   
     if(planesetting=="Neg" ) fileNo = "11110000";
     if(planesetting=="Pos" ) fileNo = "22220000";
     if(planesetting=="Fla" ) fileNo = "33330000";
 
-    if(planesetting!="Fla" && planesetting!="Neg" && planesetting!="Pos" ){
-      throw std::invalid_argument("Received incorrect FileName Ending!  You have ignored the strict filename requirements which describe the polarisation state. Please make sure the filenames end in Fla, Neg, or Pos. ");
+    if(planesetting!="Fla" && planesetting!="Neg" && planesetting!="Pos" )
+      {
+	throw std::invalid_argument("Received incorrect FileName Ending!  You have ignored the strict filename requirements which describe the polarisation state. Please make sure the filenames end in Fla, Neg, or Pos. ");
 
-    }
+      }
 
     Int_t tempEventno = GetEventNumber();
     feventNo = std::stod(fileNo) + tempEventno;
-
-    //Tagger Timing cuts Deprecated
-    //taggUpRange=10;
-    //taggLowRange=-10;
 
     //Linear Polarsation plane setting
     if(planesetting=="Neg" ) fedgePlane = -1; //Equating Neg file with Para polarisation state
     if(planesetting=="Pos" ) fedgePlane = 1;
     if(planesetting=="Fla" ) fedgePlane = 0;  //Flat simulation is equated with Amo runs
 
-
-    //Linear Polarisation value
-    //Use if !mc for the linPol parameter and assign the mc value here based on name 
-
     if(planesetting=="Neg" ) flinPol = 1; //Equating Neg file with Para polarisation with max value
     if(planesetting=="Pos" ) flinPol = 1;
     if(planesetting=="Fla" ) flinPol = 0; 
 
 
-    //fGenerated truth information added as THSParticles here.
-    while((GetTruth()->GetfNMC()+1)>fGenParticles->size()){
-      fGenParticles->push_back(new THSParticle());
-    }
-
-    //generatedPDGs={2112, 2212, 22 ,22 ,-22}; // gamma + D -> nspec p pi0. 2112 is neutron(spec), 2212 is proton(final), 22 is photon(from pi0) and -22 is beam.
-    //generatedPDGs={2212, 2112, 22 ,22 ,-22}; // gamma + D -> n pspec pi0. 2112 is neutron, 2212 is proton, 22 is photon and -22 is beam.
-    //generatedPDGs={2212,2212,-211,-22}; // gamma + D -> p pspec pi-. 2212 is proton(final state part. and spec.), -211 is pi- and -22 is beam.
-    //generatedPDGs={2112,2112,211,-22}; // gamma + D -> n nspec pi+. 2112 is neutron(final state part. and spec.), 211 is pi+ and -22 is beam.
-
     for(Int_t j=0; j<(GetTruth()->GetfNMC()+1); j++){ //push back the 4 particles but not beam here? For the charged channels will be 3 particles + beam
-
-      Generated.push_back(fGenParticles->at(j));
+      THSParticle Gen;
       if(j<GetTruth()->GetfNMC()){
-	Generated[j]->SetXYZT(1000 * (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(0+(j*3)) ), 1000 *  (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(1+(j*3))), 1000 * (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(2+(j*3))), 1000*GetTruth()->GettruthElab(j));
+	Gen.SetXYZT(1000 * (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(0+(j*3)) ), 1000 *  (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(1+(j*3))), 1000 * (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(2+(j*3))), 1000*GetTruth()->GettruthElab(j));
       }
 
       else{ //push back the beam here
-	Generated[j]->SetXYZT(1000*(GetTruth()->GettruthBeam(3))*(GetTruth()->GettruthBeam(0)), 1000*(GetTruth()->GettruthBeam(3))*(GetTruth()->GettruthBeam(1)), 1000*(GetTruth()->GettruthBeam(3))*(GetTruth()->GettruthBeam(2)), 1000*GetTruth()->GettruthBeam(4));
+	Gen.SetXYZT(1000*(GetTruth()->GettruthBeam(3))*(GetTruth()->GettruthBeam(0)), 1000*(GetTruth()->GettruthBeam(3))*(GetTruth()->GettruthBeam(1)), 1000*(GetTruth()->GettruthBeam(3))*(GetTruth()->GettruthBeam(2)), 1000*GetTruth()->GettruthBeam(4));
       }
 
-      Generated[j]->SetPDGcode(generatedPDGs[j]);
-      Generated[j]->SetVertex(GetTruth()->GettruthVertex(0),GetTruth()->GettruthVertex(1),GetTruth()->GettruthVertex(2));
-
+      Gen.SetPDGcode(generatedPDGs[j]);
+      Gen.SetVertex(GetTruth()->GettruthVertex(0),GetTruth()->GettruthVertex(1),GetTruth()->GettruthVertex(2));//What is this line about???
+      Generated.push_back(Gen);
 
     }
 
@@ -289,9 +180,6 @@ auto start1 = std::chrono::high_resolution_clock::now();
 
 
   }
-
-
-
 
   //Clearing the vectors.
   Particles.clear();
@@ -317,9 +205,7 @@ auto start1 = std::chrono::high_resolution_clock::now();
 
   //PID information
   NPidhits = GetDetectorHits()->GetNPIDHits();
-  
-  //Fill Beam Helicity (Two different determined states when helicity is 0 or 1, others are error codes) Chosen 1 and -1 for helicity from now on. 
-  //Check for error codes here?? Need to decide if it is necessary? Should only be a small effect so come back to it once everything is working
+  //Helicity information
   Bool_t Helicity = GetTrigger()->GetHelicity();
   if(Helicity == 1){
     fbeamHelicity = 1;
@@ -328,13 +214,6 @@ auto start1 = std::chrono::high_resolution_clock::now();
     fbeamHelicity = -1;
   }
   
-
-//Graphical cuts
-//ProtonCut = OpenCut("PProtonCut.root","PProtonCut");
-//PipCut = OpenCut("NPipCut.root","NPipCut");
-//PimCut = OpenCut("PPimCut.root","PPimCut");
-
-
   fNin= 3+ (GetTagger()->GetNTagged());
 
   if(GetTagger()->GetNTagged()<200){  
@@ -381,95 +260,88 @@ auto start1 = std::chrono::high_resolution_clock::now();
 	    fcrystalrootmwpc0EIn = GetTracks()->GetMWPC0Energy(fcrystalrootindex);
 	    fcrystalrootmwpc1EIn = GetTracks()->GetMWPC1Energy(fcrystalrootindex);
 
-	for(Int_t iii=0; iii<GetMWPCHitsChris()->GetNMWPCHitsChrisChamber1(); iii++){
+	    // for(Int_t iii=0; iii<GetMWPCHitsChris()->GetNMWPCHitsChrisChamber1(); iii++){
 	
-        fchamber1Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber1X(iii),GetMWPCHitsChris()->GetMWPCChamber1Y(iii),GetMWPCHitsChris()->GetMWPCChamber1Z(iii));
-	MWPC1Hits.push_back(fchamber1Vec);
-}
+	    //   fchamber1Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber1X(iii),GetMWPCHitsChris()->GetMWPCChamber1Y(iii),GetMWPCHitsChris()->GetMWPCChamber1Z(iii));
+	    //   MWPC1Hits.push_back(fchamber1Vec);
+	    // }
 
 
-	for(Int_t jjj=0; jjj<GetMWPCHitsChris()->GetNMWPCHitsChrisChamber2(); jjj++){
+	    // for(Int_t jjj=0; jjj<GetMWPCHitsChris()->GetNMWPCHitsChrisChamber2(); jjj++){
 
-        fchamber2Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber2X(jjj),GetMWPCHitsChris()->GetMWPCChamber2Y(jjj),GetMWPCHitsChris()->GetMWPCChamber2Z(jjj));
-	MWPC2Hits.push_back(fchamber2Vec);
-}
-
-
-	    while(fNin>fReadParticles->size()){
-	      fReadParticles->push_back(new THSParticle());
-	    }
-
-
+	    //   fchamber2Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber2X(jjj),GetMWPCHitsChris()->GetMWPCChamber2Y(jjj),GetMWPCHitsChris()->GetMWPCChamber2Z(jjj));
+	    //   MWPC2Hits.push_back(fchamber2Vec);
+	    // }
 
       
 	    for(Int_t j=0; j<GetPhotons()->GetNParticles(); j++){ 
 
-	      Particles.push_back(fReadParticles->at(j));
+	      THSParticle part;
 	      fcbPhoton = GetPhotons()->Particle(j); //TLorentzVector
 	      fphotindex =GetPhotons()->GetTrackIndex(j);
-	      Particles[j]->SetP4(fcbPhoton);
-	      Particles[j]->SetPDGcode(2112);
-	      Particles[j]->SetTime(GetTracks()->GetTime(fphotindex));//Should this be using gettrack index then get time on the index?Yes but since the particles are all photons trackNum=photonNum,see below for alternative
-	      Particles[j]->SetDetector(GetTracks()->GetDetectors(fphotindex)); //DETECTOR_NONE = 0,DETECTOR_NaI = 1, DETECTOR_PID = 2, DETECTOR_MWPC = 4, DETECTOR_BaF2 = 8, DETECTOR_PbWO4 = 16, DETECTOR_Veto = 32,(Additive)
-	      Particles[j]->SetEPid(GetTracks()->GetVetoEnergy(fphotindex));
-	      Particles[j]->SetEMWPC0(GetTracks()->GetMWPC0Energy(fphotindex));
-	      Particles[j]->SetEMWPC1(GetTracks()->GetMWPC1Energy(fphotindex));
- 	//      Particles[j]->SetMWPC0Hits(MWPC1Hits); //a vector of TVector3's.
-	//      Particles[j]->SetMWPC1Hits(MWPC2Hits);
-	      //Particles[j]->Set(GetTracks()->Get(fphotindex));
+	      part.SetP4(fcbPhoton);
+	      part.SetPDGcode(2112);
+	      part.SetTime(GetTracks()->GetTime(fphotindex));
+	      part.SetDetector(GetTracks()->GetDetectors(fphotindex));
+	      part.SetEPid(GetTracks()->GetVetoEnergy(fphotindex));
+	      part.SetEMWPC0(GetTracks()->GetMWPC0Energy(fphotindex));
+	      part.SetEMWPC1(GetTracks()->GetMWPC1Energy(fphotindex));
+	      //      part.SetMWPC0Hits(MWPC1Hits); //a vector of TVector3's.
+	      //      part.SetMWPC1Hits(MWPC2Hits);
+	      //part.Set(GetTracks()->Get(fphotindex));
+	      Particles.push_back(part);
 	    } //Closing For NParticles 
 
 
 
 	    for(Int_t k=0; k<GetRootinos()->GetNParticles(); k++){
-	
-	      Particles.push_back(fReadParticles->at(k+1));
+
+	      THSParticle part;
 	      frootino = GetRootinos()->Particle(k); //TLorentzVector
 	      particleindex=GetRootinos()->GetTrackIndex(k);
-	      Particles[k+1]->SetP4(fcbPhoton);
-	      Particles[k+1]->SetPDGcode(211);
-	      Particles[k+1]->SetTime(GetTracks()->GetTime(particleindex));
-	      Particles[k+1]->SetDetector(GetTracks()->GetDetectors(particleindex));
-	      Particles[k+1]->SetEPid(GetTracks()->GetVetoEnergy(particleindex));
-	      Particles[k+1]->SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
-	      Particles[k+1]->SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
- 	      Particles[k+1]->SetMWPC0Hits(MWPC1Hits); //a vector of TVector3's.
-	      Particles[k+1]->SetMWPC1Hits(MWPC2Hits);
+	      part.SetP4(fcbPhoton);
+	      part.SetPDGcode(211);
+	      part.SetTime(GetTracks()->GetTime(particleindex));
+	      part.SetDetector(GetTracks()->GetDetectors(particleindex));
+	      part.SetEPid(GetTracks()->GetVetoEnergy(particleindex));
+	      part.SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
+	      part.SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
+	      //  part.SetMWPC0Hits(MWPC1Hits); //a vector of TVector3's.
+	      //  part.SetMWPC1Hits(MWPC2Hits);
+	      Particles.push_back(part);
 
 	    } //Closing For NParticles 
 
 	    MWPC1Hits.clear();
 	    MWPC2Hits.clear();
 
+	    fEventInfo.SetBeamHel(fbeamHelicity);
+	    fEventInfo.SetTarPolDir(fedgePlane);
 
 	    for(Int_t i=0; i<GetTagger()->GetNTagged() ;i++){
  	
+	      THSParticle part;
 	      ftaggedTime = GetTagger()->GetTaggedTime(i);
-	
-	  
-	      Particles.push_back(fReadParticles->at(i+2));
 	      fmultiplicity = GetTrigger()->GetMultiplicity();
 	      fenergySum =GetTrigger()->GetEnergySum();
 	      fenergyBeam = GetTagger()->GetTaggedEnergy(i);
 	      beam.SetXYZM(0.,0.,fenergyBeam,0.);  
-
 	      //Linear Polarisation
 	      if(!mc)flinPol =( GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(i) ) );
+	      fEventInfo.SetTarPol(flinPol);
 	      //Circular polarisation
-	      Pcirc = CircPol(fenergyBeam, ePol );	
-
+	      fEventInfo.SetBeamPol( CircPol(fenergyBeam, ePol ));	
 	      //Tagger Channel
 	      ftaggChannel = GetTagger()->GetTaggedChannel(i);
-	
-	      //Set Edge Plane is describing setting Para Perp Moeller (+-45deg etc.) Set Detector is the tagger channel  
-	      Particles[i+2]->SetEdgePlane(fedgePlane);
-	      Particles[i+2]->SetDetector(ftaggChannel);
+	      // part.SetEdgePlane(fedgePlane);
+	      part.SetDetector(ftaggChannel);
 	      fglasgowTaggerPhoton.SetPxPyPzE(0,0,fenergyBeam, fenergyBeam);  //TLorentzVector
-	      Particles[i+2]->SetP4(fglasgowTaggerPhoton);
-	      Particles[i+2]->SetPDGcode(-22);
-	      Particles[i+2]->SetTime(ftaggedTime);
-	      Particles[i+2]->SetVertex(flinPol,0,Pcirc*fbeamHelicity);
-	
+	      part.SetP4(fglasgowTaggerPhoton);
+	      part.SetPDGcode(-22);
+	      part.SetTime(ftaggedTime);
+	      part.SetVertex(flinPol,0,Pcirc*fbeamHelicity);
+	      Particles.push_back(part); 
+
 	    } //Closing for NTagged.
 	
 	  }//Closing if IsInside graphical cut      
@@ -510,10 +382,6 @@ auto start1 = std::chrono::high_resolution_clock::now();
 	fcrystalrootmwpc0EIn = -10000;
 	fcrystalrootmwpc1EIn = -10000;
 
-
-
-
-
       }  
       //Do Proton channel here 
 
@@ -535,10 +403,6 @@ auto start1 = std::chrono::high_resolution_clock::now();
     
 	    fpidPhi = -10;
 	  }
-      
-
-	
-
 
 	  //Rootinos, channel first look
 	  fcrystalroot1 = GetRootinos()->Particle(0);
@@ -561,170 +425,146 @@ auto start1 = std::chrono::high_resolution_clock::now();
 
 	  fcrystalcoplan2=fcrystalroot2.TLorentzVector::DeltaPhi(-fcrystalroot1);
 
-//Form two new variables one for each particle with the energy correction for proton applied. combos check 1p&2m(1ecorr) 2p&1m(2ecorr) 
+	  //Form two new variables one for each particle with the energy correction for proton applied. combos check 1p&2m(1ecorr) 2p&1m(2ecorr) 
           fcrystalroot1ECorr = ProtonELossCorrection(fcrystalroot1.Theta(), fcrystalroot1.E());
 	  fcrystalroot2ECorr = ProtonELossCorrection(fcrystalroot2.Theta(), fcrystalroot2.E());
 
 	  if(  ( (ProtonCut->IsInside(fcrystalroot1ECorr,fcrystalrootpidE1)) && (PimCut->IsInside(fcrystalroot2.E(),fcrystalrootpidE2)) )  || (    (PimCut->IsInside(fcrystalroot1.E(),fcrystalrootpidE1)) && (ProtonCut->IsInside(fcrystalroot2ECorr,fcrystalrootpidE2)) ) ){
-	//  if(  ( (ProtonCut->IsInside(fcrystalroot1.E(),fcrystalrootpidE1)) && (PimCut->IsInside(fcrystalroot2.E(),fcrystalrootpidE2)) )  || (    (PimCut->IsInside(fcrystalroot1.E(),fcrystalrootpidE1)) && (ProtonCut->IsInside(fcrystalroot2.E(),fcrystalrootpidE2)) ) ){
+	    //  if(  ( (ProtonCut->IsInside(fcrystalroot1.E(),fcrystalrootpidE1)) && (PimCut->IsInside(fcrystalroot2.E(),fcrystalrootpidE2)) )  || (    (PimCut->IsInside(fcrystalroot1.E(),fcrystalrootpidE1)) && (ProtonCut->IsInside(fcrystalroot2.E(),fcrystalrootpidE2)) ) ){
 
-	  fcrystalroot1In = GetRootinos()->Particle(0);
-	  fcrystalrootindex1In = GetRootinos()->GetTrackIndex(0);
-	  fcrystalrootmass1In = fcrystalroot1.M();
-	  fcrystalrootphi1In = fcrystalroot1.Phi();
-	  fcrystalroottheta1In = fcrystalroot1.Theta();
-	  fcrystalrootpidE1In = GetTracks()->GetVetoEnergy(fcrystalrootindex1);
-	  fcrystalrootmwpc0E1In = GetTracks()->GetMWPC0Energy(fcrystalrootindex1);
-	  fcrystalrootmwpc1E1In = GetTracks()->GetMWPC1Energy(fcrystalrootindex1);
+	    fcrystalroot1In = GetRootinos()->Particle(0);
+	    fcrystalrootindex1In = GetRootinos()->GetTrackIndex(0);
+	    fcrystalrootmass1In = fcrystalroot1.M();
+	    fcrystalrootphi1In = fcrystalroot1.Phi();
+	    fcrystalroottheta1In = fcrystalroot1.Theta();
+	    fcrystalrootpidE1In = GetTracks()->GetVetoEnergy(fcrystalrootindex1);
+	    fcrystalrootmwpc0E1In = GetTracks()->GetMWPC0Energy(fcrystalrootindex1);
+	    fcrystalrootmwpc1E1In = GetTracks()->GetMWPC1Energy(fcrystalrootindex1);
 
-	  fcrystalroot2In = GetRootinos()->Particle(1);
-	  fcrystalrootindex2In = GetRootinos()->GetTrackIndex(1);
-	  fcrystalrootmass2In = fcrystalroot2.M();
-	  fcrystalrootphi2In = fcrystalroot2.Phi();
-	  fcrystalroottheta2In = fcrystalroot2.Theta();
-	  fcrystalrootpidE2In = GetTracks()->GetVetoEnergy(fcrystalrootindex2);
-	  fcrystalrootmwpc0E2In = GetTracks()->GetMWPC0Energy(fcrystalrootindex2);
-	  fcrystalrootmwpc1E2In = GetTracks()->GetMWPC1Energy(fcrystalrootindex2);
+	    fcrystalroot2In = GetRootinos()->Particle(1);
+	    fcrystalrootindex2In = GetRootinos()->GetTrackIndex(1);
+	    fcrystalrootmass2In = fcrystalroot2.M();
+	    fcrystalrootphi2In = fcrystalroot2.Phi();
+	    fcrystalroottheta2In = fcrystalroot2.Theta();
+	    fcrystalrootpidE2In = GetTracks()->GetVetoEnergy(fcrystalrootindex2);
+	    fcrystalrootmwpc0E2In = GetTracks()->GetMWPC0Energy(fcrystalrootindex2);
+	    fcrystalrootmwpc1E2In = GetTracks()->GetMWPC1Energy(fcrystalrootindex2);
 
 
-	for(Int_t iii=0; iii<GetMWPCHitsChris()->GetNMWPCHitsChrisChamber1(); iii++){
+	    // for(Int_t iii=0; iii<GetMWPCHitsChris()->GetNMWPCHitsChrisChamber1(); iii++){
 	
-        fchamber1Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber1X(iii),GetMWPCHitsChris()->GetMWPCChamber1Y(iii),GetMWPCHitsChris()->GetMWPCChamber1Z(iii));
-	MWPC1Hits.push_back(fchamber1Vec);
-}
+	    //   fchamber1Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber1X(iii),GetMWPCHitsChris()->GetMWPCChamber1Y(iii),GetMWPCHitsChris()->GetMWPCChamber1Z(iii));
+	    //   MWPC1Hits.push_back(fchamber1Vec);
+	    // }
 
 
-	for(Int_t jjj=0; jjj<GetMWPCHitsChris()->GetNMWPCHitsChrisChamber2(); jjj++){
+	    // for(Int_t jjj=0; jjj<GetMWPCHitsChris()->GetNMWPCHitsChrisChamber2(); jjj++){
 
-        fchamber2Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber2X(jjj),GetMWPCHitsChris()->GetMWPCChamber2Y(jjj),GetMWPCHitsChris()->GetMWPCChamber2Z(jjj));
-	MWPC2Hits.push_back(fchamber2Vec);
-}
-
-
-
-
-	  while(fNin>fReadParticles->size()){
-	    fReadParticles->push_back(new THSParticle());
-	  }
-
-if( (ProtonCut->IsInside(fcrystalroot1ECorr,fcrystalrootpidE1)) && (PimCut->IsInside(fcrystalroot2.E(),fcrystalrootpidE2)) ){
-//first rootino is proton, second is pi-
-
-	    Particles.push_back(fReadParticles->at(0));
-            frootino = GetRootinos()->Particle(0);
-	    particleindex=GetRootinos()->GetTrackIndex(0) ;//Set as -1 in header so will break if has any unexpected behaviour
-	    Particles[0]->SetP4(frootino);
-	    Particles[0]->SetPDGcode(2212);
-	    Particles[0]->SetTime(GetTracks()->GetTime(particleindex));
-	    Particles[0]->SetDetector(GetTracks()->GetDetectors(particleindex));
-	    Particles[0]->SetEPid(GetTracks()->GetVetoEnergy(particleindex));
-	    Particles[0]->SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
-	    Particles[0]->SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
-	    Particles[0]->SetMWPC0Hits(MWPC1Hits); //a vector of TVector3's.
-	    Particles[0]->SetMWPC1Hits(MWPC2Hits);
-
-
-	    Particles.push_back(fReadParticles->at(1));
-	    frootino = GetRootinos()->Particle(1);
-	    particleindex=GetRootinos()->GetTrackIndex(1) ;//Set as -1 in header so will break if has any unexpected behaviour
-	    Particles[1]->SetP4(frootino);
-	    Particles[1]->SetPDGcode(-211);
-	    Particles[1]->SetTime(GetTracks()->GetTime(particleindex));
-	    Particles[1]->SetDetector(GetTracks()->GetDetectors(particleindex));
-	    Particles[1]->SetEPid(GetTracks()->GetVetoEnergy(particleindex));
-	    Particles[1]->SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
-	    Particles[1]->SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
-	    Particles[1]->SetMWPC0Hits(MWPC1Hits); //a vector of TVector3's.
-	    Particles[1]->SetMWPC1Hits(MWPC2Hits);
+	    //   fchamber2Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber2X(jjj),GetMWPCHitsChris()->GetMWPCChamber2Y(jjj),GetMWPCHitsChris()->GetMWPCChamber2Z(jjj));
+	    //   MWPC2Hits.push_back(fchamber2Vec);
+	    // }
 
 
 
-}
+	    if( (ProtonCut->IsInside(fcrystalroot1ECorr,fcrystalrootpidE1)) && (PimCut->IsInside(fcrystalroot2.E(),fcrystalrootpidE2)) ){
+	      //first rootino is proton, second is pi-
 
-if(       (PimCut->IsInside(fcrystalroot1.E(),fcrystalrootpidE1)) && (ProtonCut->IsInside(fcrystalroot2ECorr,fcrystalrootpidE2))        ){
-//first rootino is pi-, second is proton
+	      THSParticle part;
+	      frootino = GetRootinos()->Particle(0);
+	      particleindex=GetRootinos()->GetTrackIndex(0) ;
+	      part.SetP4(frootino);
+	      part.SetPDGcode(2212);
+	      part.SetTime(GetTracks()->GetTime(particleindex));
+	      part.SetDetector(GetTracks()->GetDetectors(particleindex));
+	      part.SetEPid(GetTracks()->GetVetoEnergy(particleindex));
+	      part.SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
+	      part.SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
+	      //	      part.SetMWPC0Hits(MWPC1Hits); //a vector of TVector3's.
+	      //	      part.SetMWPC1Hits(MWPC2Hits);
+	      Particles.push_back(part);
 
+	      THSParticle part2;
+	      frootino = GetRootinos()->Particle(1);
+	      particleindex=GetRootinos()->GetTrackIndex(1) ;
+	      part2.SetP4(frootino);
+	      part2.SetPDGcode(-211);
+	      part2.SetTime(GetTracks()->GetTime(particleindex));
+	      part2.SetDetector(GetTracks()->GetDetectors(particleindex));
+	      part2.SetEPid(GetTracks()->GetVetoEnergy(particleindex));
+	      part2.SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
+	      part2.SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
+	      //	      part2.SetMWPC0Hits(MWPC1Hits); //a vector of TVector3's.
+	      //	      part2.SetMWPC1Hits(MWPC2Hits);
+	      Particles.push_back(part2);
+	    }
 
+	    if(       (PimCut->IsInside(fcrystalroot1.E(),fcrystalrootpidE1)) && (ProtonCut->IsInside(fcrystalroot2ECorr,fcrystalrootpidE2))        ){
+	      //first rootino is pi-, second is proton
 
+	      THSParticle part;
+	      frootino = GetRootinos()->Particle(0);
+	      particleindex=GetRootinos()->GetTrackIndex(0) ;//Set as -1 in header so will break if has any unexpected behaviour
+	      part.SetP4(frootino);
+	      part.SetPDGcode(-211);
+	      part.SetTime(GetTracks()->GetTime(particleindex));
+	      part.SetDetector(GetTracks()->GetDetectors(particleindex));
+	      part.SetEPid(GetTracks()->GetVetoEnergy(particleindex));
+	      part.SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
+	      part.SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
+	      //	      part.SetMWPC0Hits(MWPC1Hits); //a vector of TVector3's.
+	      //	      part.SetMWPC1Hits(MWPC2Hits);
+	      Particles.push_back(part);
 
-	    Particles.push_back(fReadParticles->at(0));
-            frootino = GetRootinos()->Particle(0);
-	    particleindex=GetRootinos()->GetTrackIndex(0) ;//Set as -1 in header so will break if has any unexpected behaviour
-	    Particles[0]->SetP4(frootino);
-	    Particles[0]->SetPDGcode(-211);
-	    Particles[0]->SetTime(GetTracks()->GetTime(particleindex));
-	    Particles[0]->SetDetector(GetTracks()->GetDetectors(particleindex));
-	    Particles[0]->SetEPid(GetTracks()->GetVetoEnergy(particleindex));
-	    Particles[0]->SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
-	    Particles[0]->SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
-	    Particles[0]->SetMWPC0Hits(MWPC1Hits); //a vector of TVector3's.
-	    Particles[0]->SetMWPC1Hits(MWPC2Hits);
+	      THSParticle part2;
+	      frootino = GetRootinos()->Particle(1);
+	      particleindex=GetRootinos()->GetTrackIndex(1) ;//Set as -1 in header so will break if has any unexpected behaviour
+	      part2.SetP4(frootino);
+	      part2.SetPDGcode(2212);
+	      part2.SetTime(GetTracks()->GetTime(particleindex));
+	      part2.SetDetector(GetTracks()->GetDetectors(particleindex));
+	      part2.SetEPid(GetTracks()->GetVetoEnergy(particleindex));
+	      part2.SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
+	      part2.SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
+	      //	      part2.SetMWPC0Hits(MWPC1Hits); //a vector of TVector3's.
+	      //	      part2.SetMWPC1Hits(MWPC2Hits);
+	      Particles.push_back(part2);
 
-
-	    Particles.push_back(fReadParticles->at(1));
-	    frootino = GetRootinos()->Particle(1);
-	    particleindex=GetRootinos()->GetTrackIndex(1) ;//Set as -1 in header so will break if has any unexpected behaviour
-	    Particles[1]->SetP4(frootino);
-	    Particles[1]->SetPDGcode(2212);
-	    Particles[1]->SetTime(GetTracks()->GetTime(particleindex));
-	    Particles[1]->SetDetector(GetTracks()->GetDetectors(particleindex));
-	    Particles[1]->SetEPid(GetTracks()->GetVetoEnergy(particleindex));
-	    Particles[1]->SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
-	    Particles[1]->SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
-	    Particles[1]->SetMWPC0Hits(MWPC1Hits); //a vector of TVector3's.
-	    Particles[1]->SetMWPC1Hits(MWPC2Hits);
-
-}
-
-/*	  for(Int_t k=0; k<GetRootinos()->GetNParticles(); k++){
-	    Particles.push_back(fReadParticles->at(k));
-	    frootino = GetRootinos()->Particle(k);
-	    particleindex=GetRootinos()->GetTrackIndex(k) ;//Set as -1 in header so will break if has any unexpected behaviour
-	    Particles[k]->SetP4(frootino);
-	    Particles[k]->SetPDGcode(1E6);
-	    Particles[k]->SetTime(GetTracks()->GetTime(particleindex));
-	    Particles[k]->SetDetector(GetTracks()->GetDetectors(particleindex));
-	    Particles[k]->SetEPid(GetTracks()->GetVetoEnergy(particleindex));
-	    Particles[k]->SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
-	    Particles[k]->SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
-	    Particles[k]->SetMWPC0Hits(MWPC1Hits); //a vector of TVector3's.
-	    Particles[k]->SetMWPC1Hits(MWPC2Hits);
-	  } //Closing For NParticles */
+	    }
 
 	    MWPC1Hits.clear();
 	    MWPC2Hits.clear();
 
-	  for(Int_t l=0; l<GetTagger()->GetNTagged() ;l++){
-      
-	    ftaggedTime = GetTagger()->GetTaggedTime(l);
+	    fEventInfo.SetBeamHel(fbeamHelicity);
+            fEventInfo.SetTarPolDir(fedgePlane);
 
-	      Particles.push_back(fReadParticles->at(l+2));
+
+	    for(Int_t l=0; l<GetTagger()->GetNTagged() ;l++){
+      
+	      ftaggedTime = GetTagger()->GetTaggedTime(l);
+	      THSParticle part;
 	      fmultiplicity = GetTrigger()->GetMultiplicity();
 	      fenergySum =GetTrigger()->GetEnergySum();
 	      fenergyBeam = GetTagger()->GetTaggedEnergy(l);
 	      beam.SetXYZM(0.,0.,fenergyBeam,0.);
-
-
 	      fglasgowTaggerPhoton.SetPxPyPzE(0,0,fenergyBeam, fenergyBeam);  //TLorentzVector
-
 	      //Linear Polarisation
 	      if(!mc) flinPol =( GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(l) ) );
+	      fEventInfo.SetTarPol(flinPol);
 	      //Circular Polarisation
-	      Pcirc = CircPol(fenergyBeam, ePol );	
-
+	      fEventInfo.SetBeamPol( CircPol(fenergyBeam, ePol ));
 	      //Tagger Channel
 	      ftaggChannel  = GetTagger()->GetTaggedChannel(l) ;
-
-	      Particles[l+2]->SetEdgePlane(fedgePlane);
-	      Particles[l+2]->SetDetector(ftaggChannel);
-	      Particles[l+2]->SetP4(fglasgowTaggerPhoton);
-	      Particles[l+2]->SetPDGcode(-22);
-	      Particles[l+2]->SetTime(ftaggedTime);
-	      Particles[l+2]->SetVertex(flinPol,0,Pcirc*fbeamHelicity); //Perp
+	      // part.SetEdgePlane(fedgePlane);
+	      part.SetDetector(ftaggChannel);
+	      part.SetP4(fglasgowTaggerPhoton);
+	      part.SetPDGcode(-22);
+	      part.SetTime(ftaggedTime);
+	      part.SetVertex(flinPol,0,Pcirc*fbeamHelicity); //Perp
+	      Particles.push_back(part);
 	
-	  } //Closing for NTagged.
+	    } //Closing for NTagged.
         
-	} //Closing if graphical cut options
+	  } //Closing if graphical cut options
 
 	} //closing NPIDHits if
   
@@ -789,10 +629,10 @@ if(       (PimCut->IsInside(fcrystalroot1.E(),fcrystalrootpidE1)) && (ProtonCut-
   
   nEventsWritten++;
 
-auto finish = std::chrono::high_resolution_clock::now();  
+  auto finish = std::chrono::high_resolution_clock::now();  
 
-std::chrono::duration<double> elapsed = finish -start1;
-//cout << " Elapsed for function: " << elapsed.count() << endl;
+  std::chrono::duration<double> elapsed = finish -start1;
+  //cout << " Elapsed for function: " << elapsed.count() << endl;
 
 } //closing function
 

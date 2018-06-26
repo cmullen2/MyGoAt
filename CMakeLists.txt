@@ -155,7 +155,7 @@ add_executable(pi0-example
    )
 target_link_libraries(pi0-example ${LIBS} ${ROOT_LIBRARIES})
 
-
+#deprecated
 #add_executable(chrispi0
 #   ${GOAT_BASE}
 #   ${GOAT_GHIST}
@@ -167,6 +167,7 @@ target_link_libraries(pi0-example ${LIBS} ${ROOT_LIBRARIES})
 #   )
 #target_link_libraries(chrispi0 ${LIBS} ${ROOT_LIBRARIES} ${HS_LIBRARIES} )
 
+#deprecated
 #add_executable(chrisNpi0
 #   ${GOAT_BASE}
 #   ${GOAT_GHIST}
@@ -190,16 +191,16 @@ add_executable(chrisHaspect
 target_link_libraries(chrisHaspect ${LIBS} ${ROOT_LIBRARIES} ${HS_LIBRARIES} )
 
 
-#add_executable(chrisCharged
-#   ${GOAT_BASE}
-#   ${GOAT_GHIST}
-#   inc/chrisPPhysics.h
-#   src/chrisPPhysics.cc
-#   inc/chrisChargedPions.h
-#   src/chrisChargedPions.cc
-#   src/chrisCharged_example_main.cc
- #  )
-#target_link_libraries(chrisCharged ${LIBS} ${ROOT_LIBRARIES} ${HS_LIBRARIES} )
+add_executable(chrisCharged
+   ${GOAT_BASE}
+   ${GOAT_GHIST}
+   inc/chrisPPhysics.h
+   src/chrisPPhysics.cc
+   inc/chrisChargedPions.h
+   src/chrisChargedPions.cc
+   src/chrisCharged_example_main.cc
+   )
+target_link_libraries(chrisCharged ${LIBS} ${ROOT_LIBRARIES} ${HS_LIBRARIES} )
 
 
 
