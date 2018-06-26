@@ -47,9 +47,9 @@ private:
 
 
   //PID plan create an array of length 24 to store the elements of the PID phi. DATA version
-  Double_t PIDElemPhi[24] = {8.574,22.974,37.379,51.784,66.188,80.593,94.997,109.402,123.806,138.211,152.615,167.02,-178.93,-163.16,-147.39,-131.62,-115.85,-100.08,-84.31,-68.54,-52.77,-37.01,-21.24,-5.47};
+//  Double_t PIDElemPhi[24] = {8.574,22.974,37.379,51.784,66.188,80.593,94.997,109.402,123.806,138.211,152.615,167.02,-178.93,-163.16,-147.39,-131.62,-115.85,-100.08,-84.31,-68.54,-52.77,-37.01,-21.24,-5.47};
   //Simulation Version
-  //Double_t PIDElemPhi[24] = { 172.5, 157.5, 142.5, 127.5, 112.5, 97.5, 82.5, 67.5, 52.5, 37.5, 22.5, 7.5,  -7.5, -22.5, -37.5, -52.5, -67.5, -82.5, -97.5, -112.5, -127.5, -142.5, -157.5, -172.5};
+  Double_t PIDElemPhi[24] = { 172.5, 157.5, 142.5, 127.5, 112.5, 97.5, 82.5, 67.5, 52.5, 37.5, 22.5, 7.5,  -7.5, -22.5, -37.5, -52.5, -67.5, -82.5, -97.5, -112.5, -127.5, -142.5, -157.5, -172.5};
 
   //Mott Measurements runs closest 14579,14673,14777,14893,15029,15122,15426,15584,15949
   Double_t MottMeas[9]={0.7515, 0.7629915, 0.762434, 0.7662845, 0.769435, 0.773674, 0.7759165,0.7736475, 0.7282685};
@@ -110,8 +110,8 @@ private:
   Int_t fphotindex=-1;	//Track index for photons
   //Double_t generatedPDGs[5]={2112, 2212, 22 ,22 ,-22}; //p pi0
   //Double_t generatedPDGs[5]={2212, 2112, 22 ,22 ,-22};//n pi0
-  Double_t generatedPDGs[4]={2112, 2112, -211 ,-22};//p pi-
-  //Double_t generatedPDGs[4]={2212, 2212, 211 ,-22};//n pi+
+  Double_t generatedPDGs[4]={2212,  -211,2212 ,-22};//p pi- (gpn->pi- p pspec ) ALWAYS CHECK THE ORDERING
+  //Double_t generatedPDGs[4]={2112, 2112, 211 ,-22};//n pi+ nspec
   Double_t energySum;
   Double_t fchamber1VecPhi;
   Double_t fphidiff;
@@ -200,6 +200,9 @@ private:
   Double_t fcrystalrootmwpc0E2In;
   Double_t fcrystalrootmwpc1E2In;
 
+  Double_t fcrystalroot1ECorr;
+  Double_t fcrystalroot2ECorr;
+
 //graphical cuts of E deltaE plots
 
   TCutG* ProtonCut;
@@ -219,6 +222,21 @@ private:
   chrisChargedPions();
   virtual ~chrisChargedPions();
   virtual Bool_t  Init();
-  
+ 
+
+  Double_t ProtonELossCorrection(Double_t ProtTheta, Double_t NaIDeposit)
+  {
+    //Mikhails proton energy correction for the polarimeter Mainz beamtime of Aug 16
+    // Returns kinetic energy of proton from the deposit in the sodium iodide and proton theta angle(in radians?)  (test case of theta=90deg or pi/2 rads gives no change in Ekin)
+
+    Double_t E_kin=NaIDeposit+(201.915-57.9314*sin(ProtTheta))*(exp((-0.000800067-0.00451967*sin(ProtTheta))*NaIDeposit))+(-82.3023+23.2409*sin(ProtTheta));
+
+    return (E_kin);
+
+  }
+
+
+
+ 
 };
 #endif

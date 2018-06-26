@@ -22,8 +22,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 find_package(ROOT "5.30" REQUIRED)
 
 # since all subprojects need ROOT, set that up here
-include_directories(${ROOT_INCLUDES} ${CMAKE_SOURCE_DIR}/inc /home/chris/Docs/haspy/HASPECT6/HaSpect/)
-#include_directories(${ROOT_INCLUDES} ${CMAKE_SOURCE_DIR}/inc /home/chris/HASPECT6/HaSpect/)
+#include_directories(${ROOT_INCLUDES} ${CMAKE_SOURCE_DIR}/inc ${HSANA}/)
+include_directories(${ROOT_INCLUDES} ${CMAKE_SOURCE_DIR}/inc /home/chris/NewHaspect2018/HASPECT6/HaSpect/)
+#include_directories(${ROOT_INCLUDES} ${CMAKE_SOURCE_DIR}/inc /home/chris/Docs/haspy/HASPECT6/HaSpect/)
 
 #ROOT_GENERATE_DICTIONARY(/home/chris/NewHaspect/HaSpect/THSParticle.h /home/chris/GoAT/THSParticleLinkDef.h /home/chris/GoAT/G__THSParticle /home/chris/NewHaspect/HaSpect)
 #add_library(THSParticle SHARED /home/chris/NewHaspect/HaSpect/THSParticle.C)
@@ -33,7 +34,8 @@ link_directories(${ROOT_LIBRARY_DIR})
 
 include_directories(inc)
 set(ROOT_LIBRARIES "${ROOT_LIBRARIES} -lEG")
-set(HS_LIBRARIES "-L/home/chris/Docs/haspy/HASPECT6/HaSpect/ -lTHSParticle")
+#set(HS_LIBRARIES "-L/home/chris/Docs/haspy/HASPECT6/HaSpect/ -lTHSParticle")
+set(HS_LIBRARIES "-L/home/chris/NewHaspect2018/HASPECT6/HaSpect/ -lTHSParticle -lTHSEventInfo")
 #set(HS_LIBRARIES "-L/home/chris/HASPECT6/HaSpect/ -lTHSParticle")
 
 
@@ -154,27 +156,27 @@ add_executable(pi0-example
 target_link_libraries(pi0-example ${LIBS} ${ROOT_LIBRARIES})
 
 
-add_executable(chrispi0
-   ${GOAT_BASE}
-   ${GOAT_GHIST}
-   inc/chrisPPhysics.h
-   src/chrisPPhysics.cc
-   inc/chrisPPi0Example.h
-   src/chrisPPi0Example.cc
-   src/chrispi0_example_main.cc
-   )
-target_link_libraries(chrispi0 ${LIBS} ${ROOT_LIBRARIES} ${HS_LIBRARIES} )
+#add_executable(chrispi0
+#   ${GOAT_BASE}
+#   ${GOAT_GHIST}
+#   inc/chrisPPhysics.h
+#   src/chrisPPhysics.cc
+#   inc/chrisPPi0Example.h
+#   src/chrisPPi0Example.cc
+#   src/chrispi0_example_main.cc
+#   )
+#target_link_libraries(chrispi0 ${LIBS} ${ROOT_LIBRARIES} ${HS_LIBRARIES} )
 
-add_executable(chrisNpi0
-   ${GOAT_BASE}
-   ${GOAT_GHIST}
-   inc/chrisPPhysics.h
-   src/chrisPPhysics.cc
-   inc/chrisNPi0.h
-   src/chrisNPi0.cc
-   src/chrisN_example_main.cc
-   )
-target_link_libraries(chrisNpi0 ${LIBS} ${ROOT_LIBRARIES} ${HS_LIBRARIES})
+#add_executable(chrisNpi0
+#   ${GOAT_BASE}
+#   ${GOAT_GHIST}
+#   inc/chrisPPhysics.h
+#   src/chrisPPhysics.cc
+#   inc/chrisNPi0.h
+#   src/chrisNPi0.cc
+#   src/chrisN_example_main.cc
+#   )
+#target_link_libraries(chrisNpi0 ${LIBS} ${ROOT_LIBRARIES} ${HS_LIBRARIES})
 
 add_executable(chrisHaspect
    ${GOAT_BASE}
@@ -188,16 +190,16 @@ add_executable(chrisHaspect
 target_link_libraries(chrisHaspect ${LIBS} ${ROOT_LIBRARIES} ${HS_LIBRARIES} )
 
 
-add_executable(chrisCharged
-   ${GOAT_BASE}
-   ${GOAT_GHIST}
-   inc/chrisPPhysics.h
-   src/chrisPPhysics.cc
-   inc/chrisChargedPions.h
-   src/chrisChargedPions.cc
-   src/chrisCharged_example_main.cc
-   )
-target_link_libraries(chrisCharged ${LIBS} ${ROOT_LIBRARIES} ${HS_LIBRARIES} )
+#add_executable(chrisCharged
+#   ${GOAT_BASE}
+#   ${GOAT_GHIST}
+#   inc/chrisPPhysics.h
+#   src/chrisPPhysics.cc
+#   inc/chrisChargedPions.h
+#   src/chrisChargedPions.cc
+#   src/chrisCharged_example_main.cc
+ #  )
+#target_link_libraries(chrisCharged ${LIBS} ${ROOT_LIBRARIES} ${HS_LIBRARIES} )
 
 
 

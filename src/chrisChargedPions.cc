@@ -98,7 +98,7 @@ Bool_t	chrisChargedPions::Init()
 {
   cout << "Initialising physics analysis..." << endl;
   cout << "--------------------------------------------------" << endl << endl;
-  Int_t mcc=0; // 1 for simulation, 0 for  production data
+  Int_t mcc=1; // 1 for simulation, 0 for  production data
   if(mcc){
 
     cout <<"MC File detected. Processing as MC file with Neutron spectator and Proton Participant" <<endl;
@@ -171,7 +171,7 @@ auto start1 = std::chrono::high_resolution_clock::now();
 	cout << "Events: " << GetEventNumber() << "  Events Accepted: " << nEventsWritten << endl;
     }
 
-  Int_t mc =0; //0 for production data, non-zero for simulation
+  Int_t mc =1; //0 for production data, non-zero for simulation
 
   if(!mc){
 
@@ -414,8 +414,8 @@ auto start1 = std::chrono::high_resolution_clock::now();
 	      Particles[j]->SetEPid(GetTracks()->GetVetoEnergy(fphotindex));
 	      Particles[j]->SetEMWPC0(GetTracks()->GetMWPC0Energy(fphotindex));
 	      Particles[j]->SetEMWPC1(GetTracks()->GetMWPC1Energy(fphotindex));
- 	      Particles[j]->SetMWPC0Hits(MWPC1Hits); //a vector of TVector3's.
-	      Particles[j]->SetMWPC1Hits(MWPC2Hits);
+ 	//      Particles[j]->SetMWPC0Hits(MWPC1Hits); //a vector of TVector3's.
+	//      Particles[j]->SetMWPC1Hits(MWPC2Hits);
 	      //Particles[j]->Set(GetTracks()->Get(fphotindex));
 	    } //Closing For NParticles 
 
@@ -561,8 +561,12 @@ auto start1 = std::chrono::high_resolution_clock::now();
 
 	  fcrystalcoplan2=fcrystalroot2.TLorentzVector::DeltaPhi(-fcrystalroot1);
 
+//Form two new variables one for each particle with the energy correction for proton applied. combos check 1p&2m(1ecorr) 2p&1m(2ecorr) 
+          fcrystalroot1ECorr = ProtonELossCorrection(fcrystalroot1.Theta(), fcrystalroot1.E());
+	  fcrystalroot2ECorr = ProtonELossCorrection(fcrystalroot2.Theta(), fcrystalroot2.E());
 
-	  if(  ( (ProtonCut->IsInside(fcrystalroot1.E(),fcrystalrootpidE1)) && (PimCut->IsInside(fcrystalroot2.E(),fcrystalrootpidE2)) )  || (    (PimCut->IsInside(fcrystalroot1.E(),fcrystalrootpidE1)) && (ProtonCut->IsInside(fcrystalroot2.E(),fcrystalrootpidE2)) ) ){
+	  if(  ( (ProtonCut->IsInside(fcrystalroot1ECorr,fcrystalrootpidE1)) && (PimCut->IsInside(fcrystalroot2.E(),fcrystalrootpidE2)) )  || (    (PimCut->IsInside(fcrystalroot1.E(),fcrystalrootpidE1)) && (ProtonCut->IsInside(fcrystalroot2ECorr,fcrystalrootpidE2)) ) ){
+	//  if(  ( (ProtonCut->IsInside(fcrystalroot1.E(),fcrystalrootpidE1)) && (PimCut->IsInside(fcrystalroot2.E(),fcrystalrootpidE2)) )  || (    (PimCut->IsInside(fcrystalroot1.E(),fcrystalrootpidE1)) && (ProtonCut->IsInside(fcrystalroot2.E(),fcrystalrootpidE2)) ) ){
 
 	  fcrystalroot1In = GetRootinos()->Particle(0);
 	  fcrystalrootindex1In = GetRootinos()->GetTrackIndex(0);
@@ -603,7 +607,7 @@ auto start1 = std::chrono::high_resolution_clock::now();
 	    fReadParticles->push_back(new THSParticle());
 	  }
 
-if( (ProtonCut->IsInside(fcrystalroot1.E(),fcrystalrootpidE1)) && (PimCut->IsInside(fcrystalroot2.E(),fcrystalrootpidE2)) ){
+if( (ProtonCut->IsInside(fcrystalroot1ECorr,fcrystalrootpidE1)) && (PimCut->IsInside(fcrystalroot2.E(),fcrystalrootpidE2)) ){
 //first rootino is proton, second is pi-
 
 	    Particles.push_back(fReadParticles->at(0));
@@ -637,7 +641,7 @@ if( (ProtonCut->IsInside(fcrystalroot1.E(),fcrystalrootpidE1)) && (PimCut->IsIns
 
 }
 
-if(       (PimCut->IsInside(fcrystalroot1.E(),fcrystalrootpidE1)) && (ProtonCut->IsInside(fcrystalroot2.E(),fcrystalrootpidE2))        ){
+if(       (PimCut->IsInside(fcrystalroot1.E(),fcrystalrootpidE1)) && (ProtonCut->IsInside(fcrystalroot2ECorr,fcrystalrootpidE2))        ){
 //first rootino is pi-, second is proton
 
 
