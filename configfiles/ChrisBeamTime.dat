@@ -112,9 +112,10 @@ Input-Directory: /w/work1/home/chris/LatestAnalysisRuns/Data/DataJul17/GoatOutpu
 
 #Production
 #Output-Directory: /w/work1/home/chris/LatestAnalysisRuns/Data/DataJul17/ChrisOutput/Perp/VertexInfo/
-Output-Directory: /scratch/chris/temp/GenVectTest/
+#Output-Directory: /scratch/chris/temp/GenVectTest/
 #Output-Directory: /w/work1/home/chris/LatestAnalysisRuns/Data/DataDec17ChargedPion/ChrisOutput/EmptyTarget/Perp/
-
+#Output-Directory: /w/work1/home/chris/GenVectMethod/ChargedPions/
+Output-Directory: /w/work1/home/chris/GenVectMethod/NeutralPions/
 
 
 #Output-Directory: /home/chris/GoAT/

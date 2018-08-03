@@ -8,11 +8,6 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#ifdef __MAKECINT__
-#pragma link C++ class vector<THSParticle*>+;//want to make tree branch
-#pragma link C++ class vector<THSParticle>+;//want to make tree branch Can get rid all pragma links here since they are in THSParticle and have no effect here.
-#pragma link C++ class vector<TVector3*>+;//want to make tree branch
-#endif
 #include "GTreeManager.h"
 #include "chrisPPhysics.h"
 #include "GTreeTrack.h"
@@ -24,124 +19,69 @@
 #include "THSParticle.h"
 #include "THSEventInfo.h"
 #include "TROOT.h"
-//#pragma link C++ class vector<TVector3*>+;//want to make tree branch
-//#pragma link C++ class vector<TVector3>+;//want to make tree branch
+
 
 using namespace std;
-
-
 
 class	chrisForTHSProject  : public chrisPPhysics
 {
  private:
-
-
 
   TTree *treePi0;
  
   Int_t	   usePeriodMacro;
   Int_t    period;
   Int_t    nEventsWritten;
-
-
-  //PID plan create an array of length 24 to store the elements of the PID phi. DATA version
-  //Double_t PIDElemPhi[24] = {8.574,22.974,37.379,51.784,66.188,80.593,94.997,109.402,123.806,138.211,152.615,167.02,-178.93,-163.16,-147.39,-131.62,-115.85,-100.08,-84.31,-68.54,-52.77,-37.01,-21.24,-5.47};
-  //Simulation Version
-  Double_t PIDElemPhi[24] = { 172.5, 157.5, 142.5, 127.5, 112.5, 97.5, 82.5, 67.5, 52.5, 37.5, 22.5, 7.5,  -7.5, -22.5, -37.5, -52.5, -67.5, -82.5, -97.5, -112.5, -127.5, -142.5, -157.5, -172.5};
-
-  //Mott Measurements runs closest 14579,14673,14777,14893,15029,15122,15426,15584,15949
-  Double_t MottMeas[9]={0.7515, 0.7629915, 0.762434, 0.7662845, 0.769435, 0.773674, 0.7759165,0.7736475, 0.7282685    };
-
-  Double_t MCMottNeg = 1;
-  Double_t MCMottPos = -1;
-  Double_t MCMottFla = 0;
-
-
+  
   //Branches in the trees
   vector<THSParticle> Particles;
   vector<THSParticle> Generated;
-
   THSEventInfo fEventInfo;
 
 
-  //Deprecated MWPC Method
+  TLorentzVector fcbPhoton;
+  TLorentzVector fglasgowTaggerPhoton;
+  TLorentzVector beam;
+  TLorentzVector frootino;
 
-  vector<HSPosition> MWPC1Hits;
-  vector<HSPosition> MWPC2Hits;
 
+
+  //Mott Measurements runs closest 14579,14673,14777,14893,15029,15122,15426,15584,15949
+  Double_t MottMeas[9]={0.7515, 0.7629915, 0.762434, 0.7662845, 0.769435, 0.773674, 0.7759165,0.7736475, 0.7282685    };
+  Double_t MCMottNeg = 1;
+  Double_t MCMottPos = -1;
+  Double_t MCMottFla = 0;
   
   Double_t fbeamHelicity;
   Double_t ftaggedTime;
   Double_t feventNo;
   Double_t fenergyBeam;
   Double_t fenergySum;
+
   Int_t fmultiplicity;
-  Double_t fpidPhi;
-  Int_t fpidIndex;
-  TVector3 fchamber1Vec;
-  TVector3 fchamber2Vec;
-  Double_t fpidRootinoPhi;
   Int_t fedgePlane;
   Int_t ftaggChannel;
-  Double_t frootinoPhi;
 
-  //Other parameters used in .cc
 
-  //  vector<THSParticle*> * fReadParticles=nullptr;
-  //  vector<THSParticle*> * fGenParticles=nullptr;
 
-  THSParticle particle1;
-  //THSParticle *DummyProton;
-  //THSParticle *fballPhotons;
-  //THSParticle *ftaggPhotons;
-  THSParticle ftaggPhotons;
-  THSParticle fballPhotons;
-  THSParticle fcbRootino;
-  
 
-  TLorentzVector fcbPhoton;
-  TLorentzVector fglasgowTaggerPhoton;
-  TLorentzVector missingp4;
-  TLorentzVector beam;
-  TLorentzVector target;
-  TLorentzVector particle;
-  TLorentzVector frootino;
 
-  
+
+
   Int_t PidHitIndex;
   Int_t multiplicity;
   Int_t EventNumber;
   Int_t NPidhits;
-  Int_t fNin;
   Int_t particleindex=-1;
   Int_t rootindex=-1;
   Int_t photindex=-1;
   Int_t photindex2=-1;
-  //  Double_t generatedPDGs[5]={2112, 2212, 22 ,22 ,-22}; //For Proton Pi0
-  // Double_t generatedPDGs[5]={2212, 2112, 22 ,22 ,-22}; //For Neutron Pi0 to be tested (2212=proton according to root website , 2112 = Neutron)
-  //BGSIMS
-  //  Double_t generatedPDGs[7]={2112, 2212, 22, 22, 22 ,22 ,-22}; //For Proton Pi0Pi0
+
   Double_t generatedPDGs[6]={2212, -211, 2212, 22, 22, -22}; //For Proton Pi0PiM
-  //  Double_t generatedPDGs[5]={2112, 211, -211, 2212, -22}; //For Proton PiPPiM
-
-  //  Double_t generatedPDGs[7]={2212, 2112, 22, 22, 22 ,22 ,-22}; //For Neutron Pi0Pi0
-  //  Double_t generatedPDGs[6]={2112, 211, 2112, 22, 22,-22}; //For Neutron PiPPi0
-  //  Double_t generatedPDGs[5]={2212, -211 ,211, 2112 ,-22}; //For Neutron PiPPiM
-
-  //  Double_t generatedPDGs[5]={2112, 2212, 22 ,22 ,-22}; //For Proton Eta
-  //  Double_t generatedPDGs[5]={2212, 2112, 22 ,22 ,-22}; //For Neutron Eta
-
-
-
-  Double_t energySum;
-  Double_t fchamber1VecPhi;
-  Double_t fphidiff;
   TVector3 targetPosition;
   Double_t flinPol;
   Double_t ePol; 
   Double_t Pcirc; 
-  Double_t taggUpRange;
-  Double_t taggLowRange;
   std::string fileNo;
   
  protected:

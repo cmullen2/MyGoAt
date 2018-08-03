@@ -31,26 +31,13 @@ Bool_t	chrisForTHSProject::Init()
   cout << "--------------------------------------------------" << endl << endl;
   Int_t mcc=0; // 1 for simulation, 0 for  production data
   if(mcc){
-
     cout <<"MC File detected. Processing as MC file with Neutron spectator and Proton Participant" <<endl;
     cout << "Please check the histograms for Truth branch for Elab,Plab and dircos for each particle" <<endl;
     cout << "Truth->Draw('dircos[0][1]') Truth->Draw('truthElab[0]')  etc ..." <<endl;
-
   }
 
   std::string config = ReadConfig("Period-Macro");
   if( sscanf(config.c_str(),"%d\n", &period) == 1 ) usePeriodMacro = 1;
-
-  target.SetXYZM(0.0,0.0,-65.0,1875.613);	//NEEDS CHANGING currently deuteron
-  //	target.SetXYZM(0.0,0.0,-65.0,938.272);	//NEEDS CHANGING only TEMP for a SIM
-  fNin = (3+ (GetTagger()->GetNTagged()) ) ; //Estimate of Number of input particles(tagged+ball+rootinos etc.) Can and will calc this!(3+NTagged)
-  //  fReadParticles=new vector<THSParticle>;
-  //  fGenParticles=new vector<THSParticle>;  //The number of these should be fNMC +1 for beam
-  /*  for(Int_t m=0; m<fNin; m++ ){
-    fReadParticles->push_back(new THSParticle());
-    fGenParticles->push_back(new THSParticle());
-  }
-  */
   if(!InitBackgroundCuts()) return kFALSE;
   if(!InitTargetMass()) return kFALSE;
   if(!InitTaggerChannelCuts()) return kFALSE;
@@ -83,7 +70,6 @@ void	chrisForTHSProject::ProcessEvent()
     }
 
   Int_t mc =0; //0 for production data, non-zero for simulation
-
 
   if(!mc){
 
@@ -138,29 +124,17 @@ void	chrisForTHSProject::ProcessEvent()
     if(planesetting=="Fla" ) flinPol = 0; 
 
 
-    //fGenerated truth information added as THSParticles here.
-    // while((GetTruth()->GetfNMC()+1)>fGenParticles->size()){
-    //   fGenParticles->push_back(new THSParticle());
-    // }
-
-    //generatedPDGs={2112, 2212, 22 ,22 ,-22}; //2112 is neutron, 2212 is proton, 22 is photon and -22 is beam.
     for(Int_t j=0; j<(GetTruth()->GetfNMC()+1); j++){ //push back the 4 particles but not beam here?
 
        THSParticle Gen;
        if(j<GetTruth()->GetfNMC()){
 	Gen.SetXYZT(1000 * (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(0+(j*3)) ), 1000 *  (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(1+(j*3))), 1000 * (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(2+(j*3))), 1000*GetTruth()->GettruthElab(j));
       }
-
       else{
 	Gen.SetXYZT(1000 * (GetTruth()->GettruthBeam(3)) * (GetTruth()->GettruthBeam(0)), 1000 *  (GetTruth()->GettruthBeam(3)) * (GetTruth()->GettruthBeam(1)), 1000 * (GetTruth()->GettruthBeam(3)) * (GetTruth()->GettruthBeam(2)), 1000*GetTruth()->GettruthBeam(4));
-	//	Generated[j]->P4p()->SetPxPyPzE(1000 * (GetTruth()->GettruthBeam(3)) * (GetTruth()->GettruthBeam(0)), 1000 *  (GetTruth()->GettruthBeam(3)) * (GetTruth()->GettruthBeam(1)), 1000 * (GetTruth()->GettruthBeam(3)) * (GetTruth()->GettruthBeam(2)), 1000*GetTruth()->GettruthBeam(4));
-	//	cout << Generated[j]->P4().E() <<" Mass next " << Generated[j]->P4().M()  << endl;
-	//cout << GetTruth()->GettruthBeam(0) << " zero " << GetTruth()->GettruthBeam(1) << " one "<< GetTruth()->GettruthBeam(2) << " two "<< GetTruth()->GettruthBeam(3) <<" three " << GetTruth()->GettruthBeam(4) << " Four " <<   endl; 
       }
-
       Gen.SetPDGcode(generatedPDGs[j]);
       Gen.SetVertex(GetTruth()->GettruthVertex(0),GetTruth()->GettruthVertex(1),GetTruth()->GettruthVertex(2));
-
       Generated.push_back(Gen);
     }
 
@@ -186,9 +160,6 @@ void	chrisForTHSProject::ProcessEvent()
   if (runNo==33330000 ) ePol = MCMottFla;
 
 
-  //MWPC information
-  targetPosition.SetXYZ(target.X(),target.Y(),target.Z());
-
   //PID information
   NPidhits = GetDetectorHits()->GetNPIDHits();
   
@@ -202,9 +173,6 @@ void	chrisForTHSProject::ProcessEvent()
     fbeamHelicity = -1;
   }
   
-
-  fNin= 3+ (GetTagger()->GetNTagged());
-
   if(GetTagger()->GetNTagged()<200){  
     if(GetTagger()->GetNTagged()>0){  
       //************************************************************************************************************************
@@ -213,29 +181,7 @@ void	chrisForTHSProject::ProcessEvent()
 
 	//PID info
 	if (NPidhits==0){
-	  if (fNin-(GetTagger()->GetNTagged())!=3)cout << fNin << " Nparts " << GetTagger()->GetNTagged() <<" TaggedParticles "  << endl;
-	  if (GetTagger()->GetNTagged()>100)cout<< GetTagger()->GetNTagged()<<endl;
-	  //	  while(fNin>fReadParticles->size()){
-	  //	    fReadParticles->push_back(new THSParticle());
-	  //	  }
-
-
-	  // //MWPC info 
-	  // for(Int_t iii=0; iii<GetMWPCHitsChris()->GetNMWPCHitsChrisChamber1(); iii++){
-	
-	  //   fchamber1Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber1X(iii),GetMWPCHitsChris()->GetMWPCChamber1Y(iii),GetMWPCHitsChris()->GetMWPCChamber1Z(iii));
-	  //   MWPC1Hits.push_back(fchamber1Vec);
-	  // }
-
-
-	  // for(Int_t jjj=0; jjj<GetMWPCHitsChris()->GetNMWPCHitsChrisChamber2(); jjj++){
-
-	  //   fchamber2Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber2X(jjj),GetMWPCHitsChris()->GetMWPCChamber2Y(jjj),GetMWPCHitsChris()->GetMWPCChamber2Z(jjj));
-	  //   MWPC2Hits.push_back(fchamber2Vec);
-	  // }
-
-
-      
+	  if (GetTagger()->GetNTagged()>100)cout<< GetTagger()->GetNTagged()<<endl; 
 	  for(Int_t j=0; j<GetPhotons()->GetNParticles(); j++){ 
 
 	    THSParticle part;
@@ -245,17 +191,9 @@ void	chrisForTHSProject::ProcessEvent()
 	    part.SetPDGcode(22);
 	    part.SetTime(GetTracks()->GetTime(j));//Should this be using gettrack index then get time on the index?Yes but since the particles are all photons trackNum=photonNum,see below for alternative
 	    part.SetDetector(GetTracks()->GetDetectors(j)); //DETECTOR_NONE = 0,DETECTOR_NaI = 1, DETECTOR_PID = 2, DETECTOR_MWPC = 4, DETECTOR_BaF2 = 8, DETECTOR_PbWO4 = 16, DETECTOR_Veto = 32,(Additive)
-	    part.SetPseudoVertex(GetTracks()->GetPseudoVertexX(j), GetTracks()->GetPseudoVertexY(j) ,GetTracks()->GetPseudoVertexZ(j));
-	    part.SetMWPC0Hits(MWPC1Hits);
-	    part.SetMWPC1Hits(MWPC2Hits);
-
 	    Particles.push_back(part);
 
 	  } //Closing For NParticles 
-
-	  MWPC1Hits.clear();
-	  MWPC2Hits.clear();
-
 
 	  fEventInfo.SetBeamHel(fbeamHelicity );
 	  fEventInfo.SetTarPolDir(fedgePlane);
@@ -264,7 +202,6 @@ void	chrisForTHSProject::ProcessEvent()
 	    THSParticle part;
 
 	    ftaggedTime = GetTagger()->GetTaggedTime(i);
-	    //Particles.push_back(fReadParticles->at(i+3));
 	    fmultiplicity = GetTrigger()->GetMultiplicity();
 	    fenergySum =GetTrigger()->GetEnergySum();
 	    fenergyBeam = GetTagger()->GetTaggedEnergy(i);
@@ -275,18 +212,12 @@ void	chrisForTHSProject::ProcessEvent()
 	    fEventInfo.SetTarPol(flinPol);
 	    //Circular polarisation
 	    fEventInfo.SetBeamPol( CircPol(fenergyBeam, ePol ));
-	    //Pcirc = CircPol(fenergyBeam, ePol );	
-	    //Tagger Channel
 	    ftaggChannel = GetTagger()->GetTaggedChannel(i);
-	    //Set Edge Plane is describing setting Para Perp Moeller (+-45deg etc.) Set Detector is the tagger channel  
-	    //  part.SetEdgePlane(fedgePlane);//COMMENT BACK IN ONCE FIXED THE HASPECT CODE
 	    part.SetDetector(ftaggChannel);
 	    fglasgowTaggerPhoton.SetPxPyPzE(0,0,fenergyBeam, fenergyBeam);  //TLorentzVector(HSLorentzVector)
 	    part.SetP4(fglasgowTaggerPhoton);
 	    part.SetPDGcode(-22);
 	    part.SetTime(ftaggedTime);
-	    //  Revising Linear polarisation storage for HASPECT. Now saying linpol is always positive and using edge plane to determine what type it is. Also all linpol goes into x-component of vertex.
-	    part.SetVertex(flinPol,0,Pcirc*fbeamHelicity);
 	    Particles.push_back(part);
 	  } //Closing for NTagged.
       
@@ -303,39 +234,6 @@ void	chrisForTHSProject::ProcessEvent()
 	//PID info
 	if (NPidhits>0){
 
-	  if (NPidhits>0){
-	    fpidIndex = GetDetectorHits()->GetPIDHits(0);    //The parameter in the Npidhits is the number of pid hits in the event while getPIDHits is the element number of a hit
-	    fpidPhi = PIDElemPhi[fpidIndex]; 
-	  } //closingpihits
-
-	  else{  
-    
-	    fpidPhi = -10;
-	  }
-
-	  //	  rootindex = GetRootinos()->GetTrackIndex(0);
-	  //	  photindex = GetPhotons()->GetTrackIndex(0);
-	  //	  photindex2 = GetPhotons()->GetTrackIndex(1);
-	  //Commented out for SIMS	  if( (GetTracks()->GetPseudoVertexZ(rootindex)>70 || GetTracks()->GetPseudoVertexZ(rootindex)<20) &&(GetTracks()->GetPseudoVertexZ(photindex)>70 || GetTracks()->GetPseudoVertexZ(photindex)<20) && (GetTracks()->GetPseudoVertexZ(photindex2)>70 || GetTracks()->GetPseudoVertexZ(photindex2)<20)   ){
-
-	  //	  while(fNin>fReadParticles->size()){
-	  //  fReadParticles->push_back(new THSParticle());
-	  // }
-
-	  // //MWPC info 
-	  // for(Int_t iii=0; iii<GetMWPCHitsChris()->GetNMWPCHitsChrisChamber1(); iii++){
-	
-	  //   fchamber1Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber1X(iii),GetMWPCHitsChris()->GetMWPCChamber1Y(iii),GetMWPCHitsChris()->GetMWPCChamber1Z(iii));
-	  //   MWPC1Hits.push_back(fchamber1Vec);
-	  // }
-
-
-	  // for(Int_t jjj=0; jjj<GetMWPCHitsChris()->GetNMWPCHitsChrisChamber2(); jjj++){
-
-	  //   fchamber2Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber2X(jjj),GetMWPCHitsChris()->GetMWPCChamber2Y(jjj),GetMWPCHitsChris()->GetMWPCChamber2Z(jjj));
-	  //   MWPC2Hits.push_back(fchamber2Vec);
-	  // }
-
 
 	  THSParticle part;
 	  //Particles.push_back(fReadParticles->at(0));
@@ -345,27 +243,18 @@ void	chrisForTHSProject::ProcessEvent()
 	  part.SetPDGcode(2212);
 	  part.SetTime(GetTracks()->GetTime(particleindex));
 	  part.SetDetector(GetTracks()->GetDetectors(particleindex));
-	  part.SetPseudoVertex( GetTracks()->GetPseudoVertexX(particleindex), GetTracks()->GetPseudoVertexY(particleindex), GetTracks()->GetPseudoVertexZ(particleindex) );
-	  part.SetMWPC0Hits(MWPC1Hits);
-	  part.SetMWPC1Hits(MWPC2Hits);
-
 	  Particles.push_back(part);
-	
-	  MWPC1Hits.clear();
-	  MWPC2Hits.clear();
 	  part.Clear();//clear or reset??
 
 
 	  for(Int_t k=0; k<GetPhotons()->GetNParticles(); k++){
 	    THSParticle part2;
 	    particleindex=GetPhotons()->GetTrackIndex(k);
-	    // Particles.push_back(fReadParticles->at(k+1));
 	    fcbPhoton = GetPhotons()->Particle(k); //TLorentzVector
 	    part2.SetP4(fcbPhoton);
 	    part2.SetPDGcode(22);
 	    part2.SetTime(GetTracks()->GetTime(particleindex));
 	    part2.SetDetector(GetTracks()->GetDetectors(particleindex));
-	    part2.SetPseudoVertex( GetTracks()->GetPseudoVertexX(particleindex), GetTracks()->GetPseudoVertexY(particleindex) , GetTracks()->GetPseudoVertexZ(particleindex));
 	    Particles.push_back(part2);  
 	  } //Closing For NParticles 
 
@@ -376,7 +265,6 @@ void	chrisForTHSProject::ProcessEvent()
       
 	    THSParticle part3;
 	    ftaggedTime = GetTagger()->GetTaggedTime(l);
-	    //	    Particles.push_back(fReadParticles->at(l+3));
 	    fmultiplicity = GetTrigger()->GetMultiplicity();
 	    fenergySum =GetTrigger()->GetEnergySum();
 	    fenergyBeam = GetTagger()->GetTaggedEnergy(l);
@@ -390,13 +278,10 @@ void	chrisForTHSProject::ProcessEvent()
 	    fEventInfo.SetBeamPol( CircPol(fenergyBeam, ePol ));	
 	    //Tagger Channel
 	    ftaggChannel  = GetTagger()->GetTaggedChannel(l) ;
-	    //	    part.SetEdgePlane(fedgePlane);  //COMMENT BACK IN ONCE FIXED THE HASPECT CODE
 	    part3.SetDetector(ftaggChannel);
 	    part3.SetP4(fglasgowTaggerPhoton);
 	    part3.SetPDGcode(-22);
 	    part3.SetTime(ftaggedTime);
-	    part3.SetVertex(flinPol,0,Pcirc*fbeamHelicity); //Perp
-	
 	    Particles.push_back(part3);
 
 	  } //Closing for NTagged.
