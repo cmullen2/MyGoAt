@@ -93,6 +93,7 @@ private:
   TLorentzVector beam;
   TLorentzVector target;
   TLorentzVector frootino;
+  TLorentzVector frootino2;
 
   TVector3 targetPosition;
   Int_t PidHitIndex;

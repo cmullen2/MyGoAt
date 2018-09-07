@@ -48,12 +48,12 @@ Bool_t	chrisChargedPions::Init()
   if(!InitTaggerChannelCuts()) return kFALSE;
   if(!InitTaggerScalers()) return kFALSE;
   cout << "--------------------------------------------------" << endl;
-  cout << "Setting up Graphical cuts " << endl;
+  /*  cout << "Setting up Graphical cuts " << endl;
   //Graphical cuts
   ProtonCut = OpenCut("PProtonCut.root","PProtonCut");
   PipCut = OpenCut("NPipCut.root","NPipCut");
   PimCut = OpenCut("PPimCut.root","PPimCut");
-
+  */
   return kTRUE;
 
 }
@@ -224,399 +224,124 @@ void	chrisChargedPions::ProcessEvent()
 	ftopology=2;
 	//PID info
 	if (NPidhits>0){
+	  for(Int_t j=0; j<GetPhotons()->GetNParticles(); j++){ 
+	    THSParticle part;
+	    fcbPhoton = GetPhotons()->Particle(j); //TLorentzVector
+	    fphotindex =GetPhotons()->GetTrackIndex(j);
+	    part.SetP4(fcbPhoton);
+	    part.SetPDGcode(2112);
+	    part.SetTime(GetTracks()->GetTime(fphotindex));
+	    part.SetDetector(GetTracks()->GetDetectors(fphotindex));
+	    part.SetEPid(GetTracks()->GetVetoEnergy(fphotindex));
+	    part.SetEMWPC0(GetTracks()->GetMWPC0Energy(fphotindex));
+	    part.SetEMWPC1(GetTracks()->GetMWPC1Energy(fphotindex));
+	    Particles.push_back(part);
 
-
-	  //Photons
-	  fcrystalphot = GetPhotons()->Particle(0);
-	  fcrystalphotindex =GetPhotons()->GetTrackIndex(0);
-	  fcrystalphotmass= fcrystalphot.M();
-	  fcrystalphotphi= fcrystalphot.Phi();
-	  fcrystalphottheta= fcrystalphot.Theta();
-	  fcrystalphotpidE = GetTracks()->GetVetoEnergy(fcrystalphotindex);
-	  fcrystalphotmwpc0E = GetTracks()->GetMWPC0Energy(fcrystalphotindex);
-	  fcrystalphotmwpc1E = GetTracks()->GetMWPC1Energy(fcrystalphotindex);
-	  //Rootinos
-	  fcrystalroot = GetRootinos()->Particle(0);
-	  fcrystalrootindex =GetRootinos()->GetTrackIndex(0);
-	  fcrystalrootmass= fcrystalroot.M();
-	  fcrystalrootphi= fcrystalroot.Phi();
-	  fcrystalroottheta= fcrystalroot.Theta();
-	  fcrystalrootpidE = GetTracks()->GetVetoEnergy(fcrystalrootindex);
-	  fcrystalrootmwpc0E = GetTracks()->GetMWPC0Energy(fcrystalrootindex);
-	  fcrystalrootmwpc1E = GetTracks()->GetMWPC1Energy(fcrystalrootindex);
-
-	  fcrystalcoplan=fcrystalroot.TLorentzVector::DeltaPhi(-fcrystalphot);
-
-
-	  if( PipCut->IsInside(fcrystalroot.E(),fcrystalrootpidE) ){
-
-
-	    fcrystalrootIn = GetRootinos()->Particle(0);
-	    fcrystalrootindexIn = GetRootinos()->GetTrackIndex(0);
-	    fcrystalrootmassIn = fcrystalroot.M();
-	    fcrystalrootphiIn = fcrystalroot.Phi();
-	    fcrystalrootthetaIn = fcrystalroot.Theta();
-	    fcrystalrootpidEIn = GetTracks()->GetVetoEnergy(fcrystalrootindex);
-	    fcrystalrootmwpc0EIn = GetTracks()->GetMWPC0Energy(fcrystalrootindex);
-	    fcrystalrootmwpc1EIn = GetTracks()->GetMWPC1Energy(fcrystalrootindex);
-
-	    // for(Int_t iii=0; iii<GetMWPCHitsChris()->GetNMWPCHitsChrisChamber1(); iii++){
+	  } //Closing For NParticles 
 	
-	    //   fchamber1Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber1X(iii),GetMWPCHitsChris()->GetMWPCChamber1Y(iii),GetMWPCHitsChris()->GetMWPCChamber1Z(iii));
-	    //   MWPC1Hits.push_back(fchamber1Vec);
-	    // }
-
-
-	    // for(Int_t jjj=0; jjj<GetMWPCHitsChris()->GetNMWPCHitsChrisChamber2(); jjj++){
-
-	    //   fchamber2Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber2X(jjj),GetMWPCHitsChris()->GetMWPCChamber2Y(jjj),GetMWPCHitsChris()->GetMWPCChamber2Z(jjj));
-	    //   MWPC2Hits.push_back(fchamber2Vec);
-	    // }
-
-      
-	    for(Int_t j=0; j<GetPhotons()->GetNParticles(); j++){ 
-
-	      THSParticle part;
-	      fcbPhoton = GetPhotons()->Particle(j); //TLorentzVector
-	      fphotindex =GetPhotons()->GetTrackIndex(j);
-	      part.SetP4(fcbPhoton);
-	      part.SetPDGcode(2112);
-	      part.SetTime(GetTracks()->GetTime(fphotindex));
-	      part.SetDetector(GetTracks()->GetDetectors(fphotindex));
-	      part.SetEPid(GetTracks()->GetVetoEnergy(fphotindex));
-	      part.SetEMWPC0(GetTracks()->GetMWPC0Energy(fphotindex));
-	      part.SetEMWPC1(GetTracks()->GetMWPC1Energy(fphotindex));
-	      //      part.SetMWPC0Hits(MWPC1Hits); //a vector of TVector3's.
-	      //      part.SetMWPC1Hits(MWPC2Hits);
-	      //part.Set(GetTracks()->Get(fphotindex));
-	      Particles.push_back(part);
-	    } //Closing For NParticles 
-
-
-
-	    for(Int_t k=0; k<GetRootinos()->GetNParticles(); k++){
-
-	      THSParticle part;
-	      frootino = GetRootinos()->Particle(k); //TLorentzVector
-	      particleindex=GetRootinos()->GetTrackIndex(k);
-	      part.SetP4(fcbPhoton);
-	      part.SetPDGcode(211);
-	      part.SetTime(GetTracks()->GetTime(particleindex));
-	      part.SetDetector(GetTracks()->GetDetectors(particleindex));
-	      part.SetEPid(GetTracks()->GetVetoEnergy(particleindex));
-	      part.SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
-	      part.SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
-	      //  part.SetMWPC0Hits(MWPC1Hits); //a vector of TVector3's.
-	      //  part.SetMWPC1Hits(MWPC2Hits);
-	      Particles.push_back(part);
-
-	    } //Closing For NParticles 
-
-	    MWPC1Hits.clear();
-	    MWPC2Hits.clear();
-
-	    fEventInfo.SetBeamHel(fbeamHelicity);
-	    fEventInfo.SetTarPolDir(fedgePlane);
-
-	    for(Int_t i=0; i<GetTagger()->GetNTagged() ;i++){
- 	
-	      THSParticle part;
-	      ftaggedTime = GetTagger()->GetTaggedTime(i);
-	      fmultiplicity = GetTrigger()->GetMultiplicity();
-	      fenergySum =GetTrigger()->GetEnergySum();
-	      fenergyBeam = GetTagger()->GetTaggedEnergy(i);
-	      beam.SetXYZM(0.,0.,fenergyBeam,0.);  
-	      //Linear Polarisation
-	      if(!mc)flinPol =( GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(i) ) );
-	      fEventInfo.SetTarPol(flinPol);
-	      //Circular polarisation
-	      fEventInfo.SetBeamPol( CircPol(fenergyBeam, ePol ));	
-	      //Tagger Channel
-	      ftaggChannel = GetTagger()->GetTaggedChannel(i);
-	      // part.SetEdgePlane(fedgePlane);
-	      part.SetDetector(ftaggChannel);
-	      fglasgowTaggerPhoton.SetPxPyPzE(0,0,fenergyBeam, fenergyBeam);  //TLorentzVector
-	      part.SetP4(fglasgowTaggerPhoton);
-	      part.SetPDGcode(-22);
-	      part.SetTime(ftaggedTime);
-	      part.SetVertex(flinPol,0,Pcirc*fbeamHelicity);
-	      Particles.push_back(part); 
-
-	    } //Closing for NTagged.
+	  for(Int_t k=0; k<GetRootinos()->GetNParticles(); k++){
+	    THSParticle part;
+	    frootino = GetRootinos()->Particle(k); //TLorentzVector
+	    particleindex=GetRootinos()->GetTrackIndex(k);
+	    part.SetP4(frootino);
+	    part.SetPDGcode(211);
+	    part.SetTime(GetTracks()->GetTime(particleindex));
+	    part.SetDetector(GetTracks()->GetDetectors(particleindex));
+	    part.SetEPid(GetTracks()->GetVetoEnergy(particleindex));
+	    part.SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));  
+	    part.SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
+	    Particles.push_back(part);
 	
-	  }//Closing if IsInside graphical cut      
+	  } //Closing For NParticles 
+	
+	  fEventInfo.SetBeamHel(fbeamHelicity);  
+	  fEventInfo.SetTarPolDir(fedgePlane);
+	
+	  for(Int_t i=0; i<GetTagger()->GetNTagged() ;i++){
+	    THSParticle part;
+	    ftaggedTime = GetTagger()->GetTaggedTime(i);
+	    fmultiplicity = GetTrigger()->GetMultiplicity();
+	    fenergySum =GetTrigger()->GetEnergySum();
+	    fenergyBeam = GetTagger()->GetTaggedEnergy(i);
+	    beam.SetXYZM(0.,0.,fenergyBeam,0.);  
+	    //Linear Polarisation
+	    if(!mc)flinPol =( GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(i) ) );
+	    fEventInfo.SetTarPol(flinPol);
+	    //Circular polarisation
+	    fEventInfo.SetBeamPol( CircPol(fenergyBeam, ePol ));	
+	    //Tagger Channel
+	    ftaggChannel = GetTagger()->GetTaggedChannel(i);
+	    // part.SetEdgePlane(fedgePlane);
+	    part.SetDetector(ftaggChannel);
+	    fglasgowTaggerPhoton.SetPxPyPzE(0,0,fenergyBeam, fenergyBeam);  //TLorentzVector
+	    part.SetP4(fglasgowTaggerPhoton);
+	    part.SetPDGcode(-22);
+	    part.SetTime(ftaggedTime);
+	    part.SetVertex(flinPol,0,Pcirc*fbeamHelicity);
+	    Particles.push_back(part); 
 
+	  } //Closing for NTagged.
+	
 	} //closing NPIDHits if
     
       } //closing Number rootinos and photons
   
-      else{
-	//Photons
-	fcrystalphot.SetXYZM(-10000,-10000,-10000,-10000);
-	fcrystalphotindex=-1; 
-	fcrystalphotmass=-10000; 
-	fcrystalphotphi=-10000;
-	fcrystalphottheta=-10000;
-	fcrystalphotpidE =-10000;
-	fcrystalphotmwpc0E =-10000; 
-	fcrystalphotmwpc1E =-10000; 
-	//Rootinos
-	fcrystalroot.SetXYZM(-10000,-10000,-10000,-10000);
-	fcrystalrootindex =-1;
-	fcrystalrootmass=-10000;
-	fcrystalrootphi= -10000;
-	fcrystalroottheta= -10000;
-	fcrystalrootpidE = -10000;
-	fcrystalrootmwpc0E = -10000;
-	fcrystalrootmwpc1E = -10000;
-
-	fcrystalcoplan=-10000;
-
-	
-	fcrystalrootIn.SetXYZM(-10000,-10000,-10000,-10000);
-	fcrystalrootindexIn =-1;
-	fcrystalrootmassIn=-10000;
-	fcrystalrootphiIn= -10000;
-	fcrystalrootthetaIn= -10000;
-	fcrystalrootpidEIn = -10000;
-	fcrystalrootmwpc0EIn = -10000;
-	fcrystalrootmwpc1EIn = -10000;
-
-      }  
       //Do Proton channel here 
 
       //********************************************************************************************************************************
-      //NEED TO ADD PARTICLES VECTORS TO THSFINALSTATE FOR NEUTRONS 2122 and for charged but dunno +or- currently using vec0.
-      // How do I identify which pid hit and mwpc hit came from which particle, should be a track associated with each right so use position of phi hit in pid and phi in mwpc to check. What about scattered? Also Coplanarity should also be a good discriminator since back to back in pid and mwpc and crystal.
- 
       if (GetPhotons()->GetNParticles()==0 && GetRootinos()->GetNParticles()==2){
 	ftopology=-2;
 	//PID info
 	if (NPidhits>0){
 
-	  if (NPidhits>0){
-	    fpidIndex = GetDetectorHits()->GetPIDHits(0);    //The parameter in the Npidhits is the number of pid hits in the event while getPIDHits is the element number of a hit
-	    fpidPhi = PIDElemPhi[fpidIndex]; //here
-	  } //closingpihits
-
-	  else{  
-    
-	    fpidPhi = -10;
-	  }
-
-	  //Rootinos, channel first look
-	  fcrystalroot1 = GetRootinos()->Particle(0);
-	  fcrystalrootindex1 =GetRootinos()->GetTrackIndex(0);
-	  fcrystalrootmass1= fcrystalroot1.M();
-	  fcrystalrootphi1= fcrystalroot1.Phi();
-	  fcrystalroottheta1= fcrystalroot1.Theta();
-	  fcrystalrootpidE1 = GetTracks()->GetVetoEnergy(fcrystalrootindex1);
-	  fcrystalrootmwpc0E1 = GetTracks()->GetMWPC0Energy(fcrystalrootindex1);
-	  fcrystalrootmwpc1E1 = GetTracks()->GetMWPC1Energy(fcrystalrootindex1);
-
-	  fcrystalroot2 = GetRootinos()->Particle(1);
-	  fcrystalrootindex2 =GetRootinos()->GetTrackIndex(1);
-	  fcrystalrootmass2= fcrystalroot2.M();
-	  fcrystalrootphi2= fcrystalroot2.Phi();
-	  fcrystalroottheta2= fcrystalroot2.Theta();
-	  fcrystalrootpidE2 = GetTracks()->GetVetoEnergy(fcrystalrootindex2);
-	  fcrystalrootmwpc0E2 = GetTracks()->GetMWPC0Energy(fcrystalrootindex2);
-	  fcrystalrootmwpc1E2 = GetTracks()->GetMWPC1Energy(fcrystalrootindex2);
-
-	  fcrystalcoplan2=fcrystalroot2.TLorentzVector::DeltaPhi(-fcrystalroot1);
-
-	  //Form two new variables one for each particle with the energy correction for proton applied. combos check 1p&2m(1ecorr) 2p&1m(2ecorr) 
-          fcrystalroot1ECorr = ProtonELossCorrection(fcrystalroot1.Theta(), fcrystalroot1.E());
-	  fcrystalroot2ECorr = ProtonELossCorrection(fcrystalroot2.Theta(), fcrystalroot2.E());
-
-	  if(  ( (ProtonCut->IsInside(fcrystalroot1ECorr,fcrystalrootpidE1)) && (PimCut->IsInside(fcrystalroot2.E(),fcrystalrootpidE2)) )  || (    (PimCut->IsInside(fcrystalroot1.E(),fcrystalrootpidE1)) && (ProtonCut->IsInside(fcrystalroot2ECorr,fcrystalrootpidE2)) ) ){
-	    //  if(  ( (ProtonCut->IsInside(fcrystalroot1.E(),fcrystalrootpidE1)) && (PimCut->IsInside(fcrystalroot2.E(),fcrystalrootpidE2)) )  || (    (PimCut->IsInside(fcrystalroot1.E(),fcrystalrootpidE1)) && (ProtonCut->IsInside(fcrystalroot2.E(),fcrystalrootpidE2)) ) ){
-
-	    fcrystalroot1In = GetRootinos()->Particle(0);
-	    fcrystalrootindex1In = GetRootinos()->GetTrackIndex(0);
-	    fcrystalrootmass1In = fcrystalroot1.M();
-	    fcrystalrootphi1In = fcrystalroot1.Phi();
-	    fcrystalroottheta1In = fcrystalroot1.Theta();
-	    fcrystalrootpidE1In = GetTracks()->GetVetoEnergy(fcrystalrootindex1);
-	    fcrystalrootmwpc0E1In = GetTracks()->GetMWPC0Energy(fcrystalrootindex1);
-	    fcrystalrootmwpc1E1In = GetTracks()->GetMWPC1Energy(fcrystalrootindex1);
-
-	    fcrystalroot2In = GetRootinos()->Particle(1);
-	    fcrystalrootindex2In = GetRootinos()->GetTrackIndex(1);
-	    fcrystalrootmass2In = fcrystalroot2.M();
-	    fcrystalrootphi2In = fcrystalroot2.Phi();
-	    fcrystalroottheta2In = fcrystalroot2.Theta();
-	    fcrystalrootpidE2In = GetTracks()->GetVetoEnergy(fcrystalrootindex2);
-	    fcrystalrootmwpc0E2In = GetTracks()->GetMWPC0Energy(fcrystalrootindex2);
-	    fcrystalrootmwpc1E2In = GetTracks()->GetMWPC1Energy(fcrystalrootindex2);
 
 
-	    // for(Int_t iii=0; iii<GetMWPCHitsChris()->GetNMWPCHitsChrisChamber1(); iii++){
+	  for(Int_t k=0; k<GetRootinos()->GetNParticles(); k++){
+	    THSParticle part2;
+	    frootino2 = GetRootinos()->Particle(k); //TLorentzVector
+	    particleindex=GetRootinos()->GetTrackIndex(k);
+	    part2.SetP4(frootino2);
+	    part2.SetPDGcode(1E4);
+	    part2.SetTime(GetTracks()->GetTime(particleindex));
+	    part2.SetDetector(GetTracks()->GetDetectors(particleindex));
+	    part2.SetEPid(GetTracks()->GetVetoEnergy(particleindex));
+	    part2.SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));  
+	    part2.SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
+	    Particles.push_back(part2);
 	
-	    //   fchamber1Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber1X(iii),GetMWPCHitsChris()->GetMWPCChamber1Y(iii),GetMWPCHitsChris()->GetMWPCChamber1Z(iii));
-	    //   MWPC1Hits.push_back(fchamber1Vec);
-	    // }
+	  } //Closing For NParticles 
 
+	  fEventInfo.SetBeamHel(fbeamHelicity);
+	  fEventInfo.SetTarPolDir(fedgePlane);
 
-	    // for(Int_t jjj=0; jjj<GetMWPCHitsChris()->GetNMWPCHitsChrisChamber2(); jjj++){
-
-	    //   fchamber2Vec.SetXYZ(GetMWPCHitsChris()->GetMWPCChamber2X(jjj),GetMWPCHitsChris()->GetMWPCChamber2Y(jjj),GetMWPCHitsChris()->GetMWPCChamber2Z(jjj));
-	    //   MWPC2Hits.push_back(fchamber2Vec);
-	    // }
-
-
-
-	    if( (ProtonCut->IsInside(fcrystalroot1ECorr,fcrystalrootpidE1)) && (PimCut->IsInside(fcrystalroot2.E(),fcrystalrootpidE2)) ){
-	      //first rootino is proton, second is pi-
-
-	      THSParticle part;
-	      frootino = GetRootinos()->Particle(0);
-	      particleindex=GetRootinos()->GetTrackIndex(0) ;
-	      part.SetP4(frootino);
-	      part.SetPDGcode(2212);
-	      part.SetTime(GetTracks()->GetTime(particleindex));
-	      part.SetDetector(GetTracks()->GetDetectors(particleindex));
-	      part.SetEPid(GetTracks()->GetVetoEnergy(particleindex));
-	      part.SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
-	      part.SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
-	      //	      part.SetMWPC0Hits(MWPC1Hits); //a vector of TVector3's.
-	      //	      part.SetMWPC1Hits(MWPC2Hits);
-	      Particles.push_back(part);
-
-	      THSParticle part2;
-	      frootino = GetRootinos()->Particle(1);
-	      particleindex=GetRootinos()->GetTrackIndex(1) ;
-	      part2.SetP4(frootino);
-	      part2.SetPDGcode(-211);
-	      part2.SetTime(GetTracks()->GetTime(particleindex));
-	      part2.SetDetector(GetTracks()->GetDetectors(particleindex));
-	      part2.SetEPid(GetTracks()->GetVetoEnergy(particleindex));
-	      part2.SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
-	      part2.SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
-	      //	      part2.SetMWPC0Hits(MWPC1Hits); //a vector of TVector3's.
-	      //	      part2.SetMWPC1Hits(MWPC2Hits);
-	      Particles.push_back(part2);
-	    }
-
-	    if(       (PimCut->IsInside(fcrystalroot1.E(),fcrystalrootpidE1)) && (ProtonCut->IsInside(fcrystalroot2ECorr,fcrystalrootpidE2))        ){
-	      //first rootino is pi-, second is proton
-
-	      THSParticle part;
-	      frootino = GetRootinos()->Particle(0);
-	      particleindex=GetRootinos()->GetTrackIndex(0) ;//Set as -1 in header so will break if has any unexpected behaviour
-	      part.SetP4(frootino);
-	      part.SetPDGcode(-211);
-	      part.SetTime(GetTracks()->GetTime(particleindex));
-	      part.SetDetector(GetTracks()->GetDetectors(particleindex));
-	      part.SetEPid(GetTracks()->GetVetoEnergy(particleindex));
-	      part.SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
-	      part.SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
-	      //	      part.SetMWPC0Hits(MWPC1Hits); //a vector of TVector3's.
-	      //	      part.SetMWPC1Hits(MWPC2Hits);
-	      Particles.push_back(part);
-
-	      THSParticle part2;
-	      frootino = GetRootinos()->Particle(1);
-	      particleindex=GetRootinos()->GetTrackIndex(1) ;//Set as -1 in header so will break if has any unexpected behaviour
-	      part2.SetP4(frootino);
-	      part2.SetPDGcode(2212);
-	      part2.SetTime(GetTracks()->GetTime(particleindex));
-	      part2.SetDetector(GetTracks()->GetDetectors(particleindex));
-	      part2.SetEPid(GetTracks()->GetVetoEnergy(particleindex));
-	      part2.SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
-	      part2.SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
-	      //	      part2.SetMWPC0Hits(MWPC1Hits); //a vector of TVector3's.
-	      //	      part2.SetMWPC1Hits(MWPC2Hits);
-	      Particles.push_back(part2);
-
-	    }
-
-	    MWPC1Hits.clear();
-	    MWPC2Hits.clear();
-
-	    fEventInfo.SetBeamHel(fbeamHelicity);
-            fEventInfo.SetTarPolDir(fedgePlane);
-
-
-	    for(Int_t l=0; l<GetTagger()->GetNTagged() ;l++){
-      
-	      ftaggedTime = GetTagger()->GetTaggedTime(l);
-	      THSParticle part;
-	      fmultiplicity = GetTrigger()->GetMultiplicity();
-	      fenergySum =GetTrigger()->GetEnergySum();
-	      fenergyBeam = GetTagger()->GetTaggedEnergy(l);
-	      beam.SetXYZM(0.,0.,fenergyBeam,0.);
-	      fglasgowTaggerPhoton.SetPxPyPzE(0,0,fenergyBeam, fenergyBeam);  //TLorentzVector
-	      //Linear Polarisation
-	      if(!mc) flinPol =( GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(l) ) );
-	      fEventInfo.SetTarPol(flinPol);
-	      //Circular Polarisation
-	      fEventInfo.SetBeamPol( CircPol(fenergyBeam, ePol ));
-	      //Tagger Channel
-	      ftaggChannel  = GetTagger()->GetTaggedChannel(l) ;
-	      // part.SetEdgePlane(fedgePlane);
-	      part.SetDetector(ftaggChannel);
-	      part.SetP4(fglasgowTaggerPhoton);
-	      part.SetPDGcode(-22);
-	      part.SetTime(ftaggedTime);
-	      part.SetVertex(flinPol,0,Pcirc*fbeamHelicity); //Perp
-	      Particles.push_back(part);
+	  for(Int_t l=0; l<GetTagger()->GetNTagged() ;l++){
+	    ftaggedTime = GetTagger()->GetTaggedTime(l);
+	    THSParticle part;
+	    fmultiplicity = GetTrigger()->GetMultiplicity();
+	    fenergySum =GetTrigger()->GetEnergySum();
+	    fenergyBeam = GetTagger()->GetTaggedEnergy(l);
+	    beam.SetXYZM(0.,0.,fenergyBeam,0.);
+	    fglasgowTaggerPhoton.SetPxPyPzE(0,0,fenergyBeam, fenergyBeam);  //TLorentzVector
+	    //Linear Polarisation
+	    if(!mc) flinPol =( GetLinpol()->GetPolarizationDegree(GetTagger()->GetTaggedChannel(l) ) );
+	    fEventInfo.SetTarPol(flinPol);
+	    //Circular Polarisation
+	    fEventInfo.SetBeamPol( CircPol(fenergyBeam, ePol ));
+	    //Tagger Channel
+	    ftaggChannel  = GetTagger()->GetTaggedChannel(l) ;
+	    // part.SetEdgePlane(fedgePlane);
+	    part.SetDetector(ftaggChannel);
+	    part.SetP4(fglasgowTaggerPhoton);
+	    part.SetPDGcode(-22);
+	    part.SetTime(ftaggedTime);
+	    part.SetVertex(flinPol,0,Pcirc*fbeamHelicity); //Perp
+	    Particles.push_back(part);
 	
-	    } //Closing for NTagged.
-        
-	  } //Closing if graphical cut options
-
+	  } //Closing for NTagged.
+ 
 	} //closing NPIDHits if
   
       } //closing 2 photons and 1 rootino.  
-
-      else{
-
-	//Rootinos
-	fcrystalroot1.SetXYZM(-10000,-10000,-10000,-10000);
-	fcrystalrootindex1 =-1;
-	fcrystalrootmass1=-10000;
-	fcrystalrootphi1= -10000;
-	fcrystalroottheta1= -10000;
-	fcrystalrootpidE1 = -10000;
-	fcrystalrootmwpc0E1 = -10000;
-	fcrystalrootmwpc1E1 = -10000;
-
-	fcrystalroot2.SetXYZM(-10000,-10000,-10000,-10000);
-	fcrystalrootindex2 =-1;
-	fcrystalrootmass2=-10000;
-	fcrystalrootphi2= -10000;
-	fcrystalroottheta2= -10000;
-	fcrystalrootpidE2 = -10000;
-	fcrystalrootmwpc0E2 = -10000;
-	fcrystalrootmwpc1E2 = -10000;
-
-	fcrystalcoplan2=-10000;
-
-
-
-	fcrystalroot1In.SetXYZM(-10000,-10000,-10000,-10000);
-	fcrystalrootindex1In =-1;
-	fcrystalrootmass1In=-10000;
-	fcrystalrootphi1In= -10000;
-	fcrystalroottheta1In= -10000;
-	fcrystalrootpidE1In = -10000;
-	fcrystalrootmwpc0E1In = -10000;
-	fcrystalrootmwpc1E1In = -10000;
-
-	fcrystalroot2In.SetXYZM(-10000,-10000,-10000,-10000);
-	fcrystalrootindex2In =-1;
-	fcrystalrootmass2In=-10000;
-	fcrystalrootphi2In= -10000;
-	fcrystalroottheta2In= -10000;
-	fcrystalrootpidE2In = -10000;
-	fcrystalrootmwpc0E2In = -10000;
-	fcrystalrootmwpc1E2In = -10000;
-
-
-
-
-      }  
 
       //*************************************************************************************************************************************
 
