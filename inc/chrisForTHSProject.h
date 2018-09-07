@@ -77,7 +77,28 @@ class	chrisForTHSProject  : public chrisPPhysics
   Int_t photindex=-1;
   Int_t photindex2=-1;
 
-  Double_t generatedPDGs[6]={2212, -211, 2212, 22, 22, -22}; //For Proton Pi0PiM
+
+  //Double_t generatedPDGs[5]={2112, 2212, 22 ,22 ,-22}; //For Proton Pi0
+  //Double_t generatedPDGs[5]={2212, 2112, 22 ,22 ,-22}; //For Neutron Pi0 to be tested (2212=proton according to root website , 2112 = Neutron)
+  Double_t generatedPDGs[5]={2212, 22, 22 ,22 ,-22}; //CHANGED FOR DEREKS NEW HASPECT, PDG MUST MATCH PARTICLES(cant have neutron if part only knows it as a gamma, order still preserved)
+  //BGSIMS
+  //  Double_t generatedPDGs[7]={2112, 2212, 22, 22, 22 ,22 ,-22}; //For Proton Pi0Pi0
+  //Double_t generatedPDGs[6]={2212, -211, 2212, 22, 22, -22}; //For Proton Pi0PiM (done)
+  //  Double_t generatedPDGs[5]={2112, 211, -211, 2212, -22}; //For Proton PiPPiM
+
+  //  Double_t generatedPDGs[7]={2212, 2112, 22, 22, 22 ,22 ,-22}; //For Neutron Pi0Pi0
+ //   Double_t generatedPDGs[6]={2112, 211, 2112, 22, 22,-22}; //For Neutron PiPPi0
+ //   Double_t generatedPDGs[5]={2212, -211 ,211, 2112 ,-22}; //For Neutron PiPPiM
+
+ //   Double_t generatedPDGs[5]={2112, 2212, 22 ,22 ,-22}; //For Proton Eta
+//  Double_t generatedPDGs[5]={2212, 2112, 22 ,22 ,-22}; //For Neutron Eta
+
+
+
+//  Double_t generatedPDGs[4]={2112, 2212, 22, -22}; //For Proton Compton
+ // Double_t generatedPDGs[5]={2212, 2112, 22,-22}; //For Neutron Compton
+
+//  Double_t generatedPDGs[6]={2212, -211, 2212, 22, 22, -22}; //For Proton Pi0PiM
   TVector3 targetPosition;
   Double_t flinPol;
   Double_t ePol; 

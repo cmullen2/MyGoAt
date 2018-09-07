@@ -115,7 +115,7 @@ Input-Directory: /w/work1/home/chris/LatestAnalysisRuns/Data/DataJul17/GoatOutpu
 #Output-Directory: /scratch/chris/temp/GenVectTest/
 #Output-Directory: /w/work1/home/chris/LatestAnalysisRuns/Data/DataDec17ChargedPion/ChrisOutput/EmptyTarget/Perp/
 #Output-Directory: /w/work1/home/chris/GenVectMethod/ChargedPions/
-Output-Directory: /w/work1/home/chris/GenVectMethod/NeutralPions/
+Output-Directory: /w/work1/home/chris/GenVectMethod/NeutralPions/TestNew/
 
 
 #Output-Directory: /home/chris/GoAT/
