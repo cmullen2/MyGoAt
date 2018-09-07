@@ -5,15 +5,19 @@ PionEnergyCorrection::PionEnergyCorrection()
 { 
   gROOT->ProcessLine("#include <vector>");
   treePi0 =  new TTree("HSParticles","Event selection tree"); //Proton/Neutron pi0 final state tree   
-  //pi0 Tree branches
-  treePi0->Branch("TruthPLab",&TruthPLab);
-  treePi0->Branch("TruthELab",&TruthELab);
-  treePi0->Branch("TruthTheta",&TruthTheta);
-  treePi0->Branch("DetectedClusterE",&DetectedClusterE);
-  treePi0->Branch("DetectedParticleE",&DetectedParticleE);
-  treePi0->Branch("DetectedTheta",&DetectedTheta);
-  treePi0->Branch("DeltaE",&DeltaE);
+  treePi0->Branch("Particles",&Particles);
+  treePi0->Branch("Generated",&Generated);
+  treePi0->Branch("EventInfo",&fEventInfo);
 
+  /*  //pi0 Tree branches
+      treePi0->Branch("TruthPLab",&TruthPLab);
+      treePi0->Branch("TruthELab",&TruthELab);
+      treePi0->Branch("TruthTheta",&TruthTheta);
+      treePi0->Branch("DetectedClusterE",&DetectedClusterE);
+      treePi0->Branch("DetectedParticleE",&DetectedParticleE);
+      treePi0->Branch("DetectedTheta",&DetectedTheta);
+      treePi0->Branch("DeltaE",&DeltaE);
+  */
 }
 
 PionEnergyCorrection::~PionEnergyCorrection()
@@ -60,20 +64,23 @@ void	PionEnergyCorrection::ProcessEvent()
     }
 
   //********************************************************************************************************************************
+  Generated.clear();
+  Particles.clear();
+
   if (GetRootinos()->GetNParticles()==1){
 
-	//Truth Info
+    //Truth Info
     TruthPLab = 1000*(GetTruth()->GettruthPlab(1));
     TruthELab = 1000*(GetTruth()->GettruthElab(1));
- //   TruthTheta = atan2((( (GetTruth()->GettruthPlab(1))*1000*(GetTruth()->Getdircos(3)) )^2 + ( (GetTruth()->GettruthPlab(1)) *1000* (GetTruth()->Getdircos(4)) )^2 )^0.5, GetTruth()->GettruthPlab(1)*1000*GetTruth()->Getdircos(5) ); //tan-1 ( (x^2+y^2)/z  )
-   Double_t X = ( (GetTruth()->GettruthPlab(1))*1000*(GetTruth()->Getdircos(3)) ) ;
-   Double_t X2= X*X;
-   Double_t Y =( (GetTruth()->GettruthPlab(1)) *1000* (GetTruth()->Getdircos(4)) ) ;
-   Double_t Y2= Y*Y;
-   Double_t Z = (GetTruth()->GettruthPlab(1)*1000*GetTruth()->Getdircos(5)); //tan-1 ( (x^2+y^2)/z  )
+    //   TruthTheta = atan2((( (GetTruth()->GettruthPlab(1))*1000*(GetTruth()->Getdircos(3)) )^2 + ( (GetTruth()->GettruthPlab(1)) *1000* (GetTruth()->Getdircos(4)) )^2 )^0.5, GetTruth()->GettruthPlab(1)*1000*GetTruth()->Getdircos(5) ); //tan-1 ( (x^2+y^2)/z  )
+    Double_t X = ( (GetTruth()->GettruthPlab(1))*1000*(GetTruth()->Getdircos(3)) ) ;
+    Double_t X2= X*X;
+    Double_t Y =( (GetTruth()->GettruthPlab(1)) *1000* (GetTruth()->Getdircos(4)) ) ;
+    Double_t Y2= Y*Y;
+    Double_t Z = (GetTruth()->GettruthPlab(1)*1000*GetTruth()->Getdircos(5)); //tan-1 ( (x^2+y^2)/z  )
 
-   Double_t Numerator = sqrt(X2 + Y2)  ;
-   TruthTheta = atan2( Numerator,Z ) ;
+    Double_t Numerator = sqrt(X2 + Y2)  ;
+    TruthTheta = atan2( Numerator,Z ) ;
 
     frootino = GetRootinos()->Particle(0);
     particleindex=GetRootinos()->GetTrackIndex(0);//Set as -1 in header so will break if has any unexpected behaviour
@@ -84,9 +91,29 @@ void	PionEnergyCorrection::ProcessEvent()
 
     DeltaE = TruthELab - DetectedParticleE;
 
-    treePi0->Fill();
+
+
+
+    THSParticle Gen;
+    Gen.SetXYZT(X,Y,Z,TruthELab);
+    //	Gen.SetVertex();  //Is This needed?
+    Gen.SetPDGcode(-211);
+    Generated.push_back(Gen);//Generated defined in header, need to add the libs to PionE in Cmake
+
+    THSParticle part;
+    part.SetP4(frootino);
+    part.SetPDGcode(-211);
+    part.SetDetector(GetTracks()->GetDetectors(particleindex ));
+    Particles.push_back(part);
+    
+    //part.Clear();
+    //Gen.Clear();
+
+    //treePi0->Fill();
   } //closing 2 photons and 1 rootino.  
   //*************************************************************************************************************************************
+   
+  treePi0->Fill();
   nEventsWritten++;
 } //closing function
 
