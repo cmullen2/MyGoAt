@@ -124,7 +124,7 @@ void	chrisForTHSProject::ProcessEvent()
     if(planesetting=="Fla" ) flinPol = 0; 
 
 
-    for(Int_t j=0; j<(GetTruth()->GetfNMC()+1); j++){ //push back the 4 particles but not beam here?
+    for(Int_t j=1; j<(GetTruth()->GetfNMC()+1); j++){ //push back the 4 particles but not beam here?
 
        THSParticle Gen;
        if(j<GetTruth()->GetfNMC()){
@@ -133,7 +133,7 @@ void	chrisForTHSProject::ProcessEvent()
       else{
 	Gen.SetXYZT(1000 * (GetTruth()->GettruthBeam(3)) * (GetTruth()->GettruthBeam(0)), 1000 *  (GetTruth()->GettruthBeam(3)) * (GetTruth()->GettruthBeam(1)), 1000 * (GetTruth()->GettruthBeam(3)) * (GetTruth()->GettruthBeam(2)), 1000*GetTruth()->GettruthBeam(4));
       }
-      Gen.SetPDGcode(generatedPDGs[j]);
+      Gen.SetPDGcode(generatedPDGs[j-1]);
       Gen.SetVertex(GetTruth()->GettruthVertex(0),GetTruth()->GettruthVertex(1),GetTruth()->GettruthVertex(2));
       Generated.push_back(Gen);
     }

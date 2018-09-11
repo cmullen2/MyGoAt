@@ -80,7 +80,8 @@ class	chrisForTHSProject  : public chrisPPhysics
 
   //Double_t generatedPDGs[5]={2112, 2212, 22 ,22 ,-22}; //For Proton Pi0
   //Double_t generatedPDGs[5]={2212, 2112, 22 ,22 ,-22}; //For Neutron Pi0 to be tested (2212=proton according to root website , 2112 = Neutron)
-  Double_t generatedPDGs[5]={2212, 22, 22 ,22 ,-22}; //CHANGED FOR DEREKS NEW HASPECT, PDG MUST MATCH PARTICLES(cant have neutron if part only knows it as a gamma, order still preserved)
+ /// Double_t generatedPDGs[5]={2212, 22, 22 ,22 ,-22}; //CHANGED FOR DEREKS NEW HASPECT, PDG MUST MATCH PARTICLES(cant have neutron if part only knows it as a gamma, order still preserved)
+  Double_t generatedPDGs[4]={22, 22 ,22 ,-22}; //CHANGED FOR DEREKS NEW HASPECT, PDG MUST MATCH PARTICLES(cant have neutron if part only knows it as a gamma, order still preserved)
   //BGSIMS
   //  Double_t generatedPDGs[7]={2112, 2212, 22, 22, 22 ,22 ,-22}; //For Proton Pi0Pi0
   //Double_t generatedPDGs[6]={2212, -211, 2212, 22, 22, -22}; //For Proton Pi0PiM (done)
