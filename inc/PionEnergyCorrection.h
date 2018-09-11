@@ -34,23 +34,28 @@ class	PionEnergyCorrection  : public chrisPPhysics
   //Branches in the trees
   vector<THSParticle> Particles;
   vector<THSParticle> Generated;
-  Double_t TruthPLab;
-  Double_t TruthELab;
-  Double_t TruthTheta;
-  Double_t DetectedClusterE;
-  Double_t DetectedParticleE;
-  Double_t DeltaE;
-  Double_t DetectedTheta;
+  THSParticle part;
+  THSParticle Gen;
+  Double_t TruthPLab=0;
+  Double_t TruthELab=0;
+  Double_t TruthTheta=0;
+  Double_t DetectedClusterE=0;
+  Double_t DetectedParticleE=0;
+  Double_t DeltaE=0;
+  Double_t DetectedTheta=0;
   THSEventInfo fEventInfo;
+  Double_t X =0;
+  Double_t X2=0;
+  Double_t Y =0;
+  Double_t Y2=0;
+  Double_t Z=0;
+  Double_t Numerator=-1;
   TLorentzVector fcbPhoton;
   TLorentzVector fglasgowTaggerPhoton;
   TLorentzVector beam;
   TLorentzVector frootino;
-  //Mott Measurements runs closest 14579,14673,14777,14893,15029,15122,15426,15584,15949
-  Double_t MottMeas[9]={0.7515, 0.7629915, 0.762434, 0.7662845, 0.769435, 0.773674, 0.7759165,0.7736475, 0.7282685    };
-  Double_t MCMottNeg = 1;
-  Double_t MCMottPos = -1;
-  Double_t MCMottFla = 0;
+  Double_t DE = 1.2;
+//Mott Measurements runs closest 14579,14673,14777,14893,15029,15122,15426,15584,15949
   Double_t fbeamHelicity;
   Double_t ftaggedTime;
   Double_t feventNo;

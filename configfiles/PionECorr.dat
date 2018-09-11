@@ -5,11 +5,11 @@
 #Production
 #Input-Directory: /w/work1/home/chris/LatestAnalysisRuns/Sims/SimsOct17/GoatOutput/Deuterium/NPip/
 #Input-Directory: /w/work1/home/chris/LatestAnalysisRuns/Sims/SimsOct17/GoatOutput/Deuterium/NPipOnlyPion/
-Input-Directory: /w/work1/home/chris/LatestAnalysisRuns/Sims/SimsOct17/GoatOutput/Deuterium/PPiMOnlyPion/
+Input-Directory: /w/work1/home/chris/LatestAnalysisRuns/Sims/SimsOct17/GoatOutput/Deuterium/PPiMOnlyPion/50Files/
 
 #Output-Directory: /w/work3/home/chris/LatestAnalysisRuns/Sims/PionECorr/
-#Output-Directory: /w/work3/home/chris/LatestAnalysisRuns/Sims/PionECorr/NPipOnlyPion/
-Output-Directory: /w/work3/home/chris/LatestAnalysisRuns/Sims/PionECorr/PPiM/
+#Output-Directory: /w/work3/home/chris/LatestAnalysisRuns/Sims/PionECorr/NPipOnlyPion/HaspectMethod/
+Output-Directory: /w/work3/home/chris/LatestAnalysisRuns/Sims/PionECorr/PPiM/HaspectMethod/
 
 
 # Set prompt and random windows (standard library and GH1 library)
