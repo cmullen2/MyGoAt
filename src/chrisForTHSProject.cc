@@ -29,7 +29,7 @@ Bool_t	chrisForTHSProject::Init()
 {
   cout << "Initialising physics analysis..." << endl;
   cout << "--------------------------------------------------" << endl << endl;
-  Int_t mcc=1; // 1 for simulation, 0 for  production data
+  Int_t mcc=0; // 1 for simulation, 0 for  production data
   if(mcc){
     cout <<"MC File detected. Processing as MC file with Neutron spectator and Proton Participant" <<endl;
     cout << "Please check the histograms for Truth branch for Elab,Plab and dircos for each particle" <<endl;
@@ -69,7 +69,7 @@ void	chrisForTHSProject::ProcessEvent()
 	cout << "Events: " << GetEventNumber() << "  Events Accepted: " << nEventsWritten << endl;
     }
 
-  Int_t mc =1; //0 for production data, non-zero for simulation
+  Int_t mc =0; //0 for production data, non-zero for simulation
 
   if(!mc){
 
@@ -212,12 +212,14 @@ void	chrisForTHSProject::ProcessEvent()
 	    fEventInfo.SetTarPol(flinPol);
 	    //Circular polarisation
 	    fEventInfo.SetBeamPol( CircPol(fenergyBeam, ePol ));
+	    PCirc = CircPol(fenergyBeam, ePol );
 	    ftaggChannel = GetTagger()->GetTaggedChannel(i);
 	    part.SetDetector(ftaggChannel);
 	    fglasgowTaggerPhoton.SetPxPyPzE(0,0,fenergyBeam, fenergyBeam);  //TLorentzVector(HSLorentzVector)
 	    part.SetP4(fglasgowTaggerPhoton);
 	    part.SetPDGcode(-22);
 	    part.SetTime(ftaggedTime);
+ 	    part.SetVertex(flinPol,0,PCirc*fbeamHelicity);
 	    Particles.push_back(part);
 	  } //Closing for NTagged.
       
@@ -276,12 +278,14 @@ void	chrisForTHSProject::ProcessEvent()
 	    fEventInfo.SetTarPol(flinPol);
 	    //Circular Polarisation
 	    fEventInfo.SetBeamPol( CircPol(fenergyBeam, ePol ));	
+	    PCirc =  CircPol(fenergyBeam, ePol );
 	    //Tagger Channel
 	    ftaggChannel  = GetTagger()->GetTaggedChannel(l) ;
 	    part3.SetDetector(ftaggChannel);
 	    part3.SetP4(fglasgowTaggerPhoton);
 	    part3.SetPDGcode(-22);
 	    part3.SetTime(ftaggedTime);
+ 	    part3.SetVertex(flinPol,0,PCirc*fbeamHelicity);
 	    Particles.push_back(part3);
 
 	  } //Closing for NTagged.

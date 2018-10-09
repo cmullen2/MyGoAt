@@ -57,6 +57,7 @@ class	chrisForTHSProject  : public chrisPPhysics
   Double_t feventNo;
   Double_t fenergyBeam;
   Double_t fenergySum;
+  Double_t PCirc;
 
   Int_t fmultiplicity;
   Int_t fedgePlane;

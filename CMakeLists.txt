@@ -217,6 +217,17 @@ add_executable(PionECorrection
 target_link_libraries(PionECorrection ${LIBS} ${ROOT_LIBRARIES} ${HS_LIBRARIES} )
 
 
+add_executable(PionNucClassification
+   ${GOAT_BASE}
+   ${GOAT_GHIST}
+   inc/chrisPPhysics.h
+   src/chrisPPhysics.cc
+   inc/PionNucleonClassification.h
+   src/PionNucleonClassification.cc
+   src/PionNucleonClassification_example_main.cc
+   )
+target_link_libraries(PionNucClassification ${LIBS} ${ROOT_LIBRARIES} ${HS_LIBRARIES} )
+
 # install some scripts to the bin directory
 # by creating symlinks
 file(GLOB CORE_EXTRA_SCRIPTS "scripts/*")
