@@ -34,8 +34,6 @@ class	PionNucleonClassification  : public chrisPPhysics
   //Branches in the trees
   vector<THSParticle> Particles;
   vector<THSParticle> Generated;
-  THSParticle part;
-  THSParticle Gen;
   Double_t TruthPLab=0;
   Double_t TruthELab=0;
   Double_t TruthTheta=0;
@@ -44,24 +42,19 @@ class	PionNucleonClassification  : public chrisPPhysics
   Double_t DeltaE=0;
   Double_t DetectedTheta=0;
   THSEventInfo fEventInfo;
-  Double_t X =0;
-  Double_t X2=0;
-  Double_t Y =0;
-  Double_t Y2=0;
-  Double_t Z=0;
-  Double_t Numerator=-1;
   TLorentzVector fcbPhoton;
   TLorentzVector fglasgowTaggerPhoton;
   TLorentzVector beam;
   TLorentzVector frootino;
-  Double_t DE = 1.2;
 //Mott Measurements runs closest 14579,14673,14777,14893,15029,15122,15426,15584,15949
   Double_t fbeamHelicity;
   Double_t ftaggedTime;
   Double_t feventNo;
   Double_t fenergyBeam;
   Double_t fenergySum;
-  Double_t generatedPDGs[3]={2112, 211, 2112}; //For Neutron Pi0 to be tested (2212=proton according to root website , 2112 = Neutron)
+//  Double_t generatedPDGs[4]={2212, 2212,-211,-22}; 
+//  Double_t generatedPDGs[3]={1E4,1E4, -22}; //For Neutron Pi0 to be tested (2212=proton according to root website , 2112 = Neutron)
+  Double_t generatedPDGs[4]={2212,1E4,1E4, -22}; 
   Int_t fmultiplicity;
   Int_t fedgePlane;
   Int_t ftaggChannel;

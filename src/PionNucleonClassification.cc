@@ -7,7 +7,7 @@ PionNucleonClassification::PionNucleonClassification()
   treePi0 =  new TTree("HSParticles","Event selection tree"); //Proton/Neutron pi0 final state tree   
   treePi0->Branch("Particles",&Particles);
   treePi0->Branch("Generated",&Generated);
-//  treePi0->Branch("EventInfo",&fEventInfo);
+  //  treePi0->Branch("EventInfo",&fEventInfo);
 
 }
 
@@ -39,8 +39,6 @@ Bool_t	PionNucleonClassification::Start()
       return kFALSE;
     }
   SetAsPhysicsFile();
-  //cout<<" tree ? "<<treePi0<<endl;
-  //treePi0->SetDirectory(gDirectory);
   TraverseValidEvents();
 
   return kTRUE;
@@ -58,43 +56,49 @@ void	PionNucleonClassification::ProcessEvent()
   Generated.clear();
   Particles.clear();
 
-  part.Clear();
-  Gen.Clear();
-  if (GetRootinos()->GetNParticles()==1){ //Need to know each particle!!!!
+  for(Int_t j=0; j<(GetTruth()->GetfNMC()+1); j++){ //push back the 4 particles but not beam here?
 
-    //Truth Info
-    TruthPLab = 1000*(GetTruth()->GettruthPlab(1));
-    TruthELab = 1000*(GetTruth()->GettruthElab(1));
-    //   TruthTheta = atan2((( (GetTruth()->GettruthPlab(1))*1000*(GetTruth()->Getdircos(3)) )^2 + ( (GetTruth()->GettruthPlab(1)) *1000* (GetTruth()->Getdircos(4)) )^2 )^0.5, GetTruth()->GettruthPlab(1)*1000*GetTruth()->Getdircos(5) ); //tan-1 ( (x^2+y^2)/z  )
-    X = ( (GetTruth()->GettruthPlab(1))*1000*(GetTruth()->Getdircos(3)) ) ;
-    X2= X*X;
-    Y =( (GetTruth()->GettruthPlab(1)) *1000* (GetTruth()->Getdircos(4)) ) ;
-    Y2= Y*Y;
-    Z = (GetTruth()->GettruthPlab(1)*1000*GetTruth()->Getdircos(5)); //tan-1 ( (x^2+y^2)/z  )
-
-    Numerator = sqrt(X2 + Y2)  ;
-    TruthTheta = atan2( Numerator,Z ) ;
-
-    frootino = GetRootinos()->Particle(0);
-    particleindex=GetRootinos()->GetTrackIndex(0);//Set as -1 in header so will break if has any unexpected behaviour
-
-    DetectedParticleE = frootino.E();
-    DetectedTheta = frootino.Theta();
-    DetectedClusterE = GetRootinos()->GetClusterEnergy(0);
-    DeltaE = TruthELab - DetectedParticleE;
-
-    Gen.SetXYZT(X,Y,Z,TruthELab);
-    //	Gen.SetVertex();  //Is This needed?
-    Gen.SetPDGcode(-211);
+    THSParticle Gen;
+    if(j<GetTruth()->GetfNMC()){
+      Gen.SetXYZT(1000 * (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(0+(j*3)) ), 1000 *  (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(1+(j*3))), 1000 * (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(2+(j*3))), 1000*GetTruth()->GettruthElab(j));
+    }
+    else{
+      Gen.SetXYZT(1000 * (GetTruth()->GettruthBeam(3)) * (GetTruth()->GettruthBeam(0)), 1000 *  (GetTruth()->GettruthBeam(3)) * (GetTruth()->GettruthBeam(1)), 1000 * (GetTruth()->GettruthBeam(3)) * (GetTruth()->GettruthBeam(2)), 1000*GetTruth()->GettruthBeam(4));
+    }
+    Gen.SetPDGcode(generatedPDGs[j]);
+    Gen.SetVertex(GetTruth()->GettruthVertex(0),GetTruth()->GettruthVertex(1),GetTruth()->GettruthVertex(2));
     Generated.push_back(Gen);
- 
-    part.SetP4(frootino);
-    part.SetPDGcode(-211);
-    part.SetDetector(GetTracks()->GetDetectors(particleindex ));
-    Particles.push_back(part);
-  } //closing 2 photons and 1 rootino.  
+    Gen.Clear();
+  }
+
+
+  //Add in a generated bit similar to bit from PPi0 analysis. Add a particles bit for two rootinos and add new info like cluster time rms central cluster ncrystals in cluster etc. Separate by dcorrect in haspect
+  //
+
+
+  if (GetRootinos()->GetNParticles()==2){ //Need to know each particle!!!!
+    for(Int_t i=0;i<GetRootinos()->GetNParticles();i++){
+      THSParticle part;
+      frootino = GetRootinos()->Particle(i);
+      particleindex=GetRootinos()->GetTrackIndex(i);
+     cout << "Particle " <<i << "  ClusterEnergy=" << GetRootinos()->GetClusterEnergy(i)<< " particleindex="<<particleindex<<endl;
+      part.SetP4(frootino);
+      part.SetPDGcode(1E4);
+      part.SetEdep(GetRootinos()->GetClusterEnergy(i));
+      part.SetDoca(GetRootinos()->GetClusterSize(i));
+      part.SetDeltaE(GetRootinos()->GetCentralCrystal(i));
+      part.SetEMWPC0(GetRootinos()->GetMWPC0Energy(i));
+      part.SetEMWPC1(GetRootinos()->GetMWPC1Energy(i));
+      part.SetPreE(GetRootinos()->GetCentralVeto(i));
+      part.SetEPid(GetRootinos()->GetVetoEnergy(i));
+      part.SetDetector(GetRootinos()->GetDetectors(i));
+      //    GetRootinos()->GetPIDEnergy(i);
+      Particles.push_back(part);
+      part.Clear();
+    }
+  } //closing 2  rootinos.  
   
-//*************************************************************************************************************************************
+  //*************************************************************************************************************************************
  
   treePi0->Fill();
   nEventsWritten++;
@@ -108,16 +112,7 @@ void	PionNucleonClassification::ProcessScalerRead()
 
 Bool_t	PionNucleonClassification::Write()
 {
-//cout << treePi0->GetDirectory()->GetName() << endl;
-//treePi0->GetDirectory()->Print(); 
- treePi0->Write(); 
-  //treePi0->FlushBaskets();
+  treePi0->Write(); 
   treePi0->Reset();
- /* delete treePi0;
- treePi0=nullptr;
-  treePi0 =  new TTree("HSParticles","Event selection tree"); //Proton/Neutron pi0 final state tree   
-  treePi0->Branch("Particles",&Particles);
-  treePi0->Branch("Generated",&Generated);
-  treePi0->Branch("EventInfo",&fEventInfo);*/
   return 0; 
 }
