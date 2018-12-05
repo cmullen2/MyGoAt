@@ -123,11 +123,11 @@ void	chrisForTHSProject::ProcessEvent()
     if(planesetting=="Pos" ) flinPol = 1;
     if(planesetting=="Fla" ) flinPol = 0; 
 
-
+    //Should j=1?? I think 0 ????
     for(Int_t j=1; j<(GetTruth()->GetfNMC()+1); j++){ //push back the 4 particles but not beam here?
 
-       THSParticle Gen;
-       if(j<GetTruth()->GetfNMC()){
+      THSParticle Gen;
+      if(j<GetTruth()->GetfNMC()){
 	Gen.SetXYZT(1000 * (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(0+(j*3)) ), 1000 *  (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(1+(j*3))), 1000 * (GetTruth()->GettruthPlab(j)) * (GetTruth()->Getdircos(2+(j*3))), 1000*GetTruth()->GettruthElab(j));
       }
       else{
@@ -173,7 +173,7 @@ void	chrisForTHSProject::ProcessEvent()
     fbeamHelicity = -1;
   }
   
-  if(GetTagger()->GetNTagged()<200){  
+  if(GetTagger()->GetNTagged()<120){  
     if(GetTagger()->GetNTagged()>0){  
       //************************************************************************************************************************
 
@@ -191,6 +191,17 @@ void	chrisForTHSProject::ProcessEvent()
 	    part.SetPDGcode(22);
 	    part.SetTime(GetTracks()->GetTime(j));//Should this be using gettrack index then get time on the index?Yes but since the particles are all photons trackNum=photonNum,see below for alternative
 	    part.SetDetector(GetTracks()->GetDetectors(j)); //DETECTOR_NONE = 0,DETECTOR_NaI = 1, DETECTOR_PID = 2, DETECTOR_MWPC = 4, DETECTOR_BaF2 = 8, DETECTOR_PbWO4 = 16, DETECTOR_Veto = 32,(Additive)
+
+	    //Adding deltaE E info (dummy for neutron channel)
+	    part.SetEPid(GetTracks()->GetVetoEnergy(j));
+	    part.SetEMWPC0(GetTracks()->GetMWPC0Energy(j));
+	    part.SetEMWPC1(GetTracks()->GetMWPC1Energy(j));
+	    part.SetEdep(GetTracks()->GetClusterEnergy(j));//ClusterEnergy
+	    part.SetDoca(GetTracks()->GetClusterSize(j));//ClusterSize
+	    part.SetDeltaE(GetTracks()->GetCentralCrystal(j));//CentralCrystal
+	    part.SetPreE(GetTracks()->GetCentralVeto(j));//CentralVeto
+
+
 	    Particles.push_back(part);
 
 	  } //Closing For NParticles 
@@ -245,6 +256,15 @@ void	chrisForTHSProject::ProcessEvent()
 	  part.SetPDGcode(2212);
 	  part.SetTime(GetTracks()->GetTime(particleindex));
 	  part.SetDetector(GetTracks()->GetDetectors(particleindex));
+	  part.SetEPid(GetTracks()->GetVetoEnergy(particleindex));
+	  part.SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
+	  part.SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
+	  part.SetEdep(GetTracks()->GetClusterEnergy(particleindex));//ClusterEnergy
+	  part.SetDoca(GetTracks()->GetClusterSize(particleindex));//ClusterSize
+	  part.SetDeltaE(GetTracks()->GetCentralCrystal(particleindex));//CentralCrystal
+	  part.SetPreE(GetTracks()->GetCentralVeto(particleindex));//CentralVeto
+
+
 	  Particles.push_back(part);
 	  part.Clear();//clear or reset??
 
@@ -257,6 +277,14 @@ void	chrisForTHSProject::ProcessEvent()
 	    part2.SetPDGcode(22);
 	    part2.SetTime(GetTracks()->GetTime(particleindex));
 	    part2.SetDetector(GetTracks()->GetDetectors(particleindex));
+	    part2.SetEPid(GetTracks()->GetVetoEnergy(particleindex));
+	    part2.SetEMWPC0(GetTracks()->GetMWPC0Energy(particleindex));
+	    part2.SetEMWPC1(GetTracks()->GetMWPC1Energy(particleindex));
+	    part2.SetEdep(GetTracks()->GetClusterEnergy(particleindex));//ClusterEnergy
+	    part2.SetDoca(GetTracks()->GetClusterSize(particleindex));//ClusterSize
+	    part2.SetDeltaE(GetTracks()->GetCentralCrystal(particleindex));//CentralCrystal
+	    part2.SetPreE(GetTracks()->GetCentralVeto(particleindex));//CentralVeto
+
 	    Particles.push_back(part2);  
 	  } //Closing For NParticles 
 
